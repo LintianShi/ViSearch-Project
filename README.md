@@ -1,2 +1,49 @@
 # Visibility-Checking
-Checking visibility consistency on trace
+## Trace的格式
+
+* 一个Trace使用JSON表示
+
+* 格式如下例为
+
+  ```json
+  {
+  	"SUBPROGRAMS":
+  	[
+  		{
+  			"INVOCATIONS":
+  			[
+  				{"METHOD NAME":"put","ARGUMENTS":[1,0]},
+  				{"METHOD NAME":"contains","ARGUMENTS":[0]},
+  				{"METHOD NAME":"put","ARGUMENTS":[2,2]}
+  			]
+  		}, 
+  		{
+  			"INVOCATIONS":
+  			[
+  				{"METHOD NAME":"put","ARGUMENTS":[0,0]},
+  				{"METHOD NAME":"put","ARGUMENTS":[1,1]},
+  				{"METHOD NAME":"put","ARGUMENTS":[3,3]}
+  			]
+  		}
+  	],
+  	"HBS":
+  	[
+  		{
+  			"HAPPENBEFORE":
+  			[
+  				{"A":1,"B":5}
+  			]
+  		},
+  		{
+  			"HAPPENBEFORE":
+  			[
+  				{"A":1,"B":4}
+  			]
+  		}
+  	]
+  }
+  
+  
+  ```
+
+* 需要解释的是，"HAPPENBEFORE"中包含了一系列的happen-before关系。"A"表示先发生的invocation的编号，"B"表示后发生的invocation的编号。编号方法为：假设一共有m个SubProgram，$SubProgram_i$具有$l_i$个invocation，那么$SubProgram_i$的第j个invocation的编号为$(\sum_{k=0}^{i-1}l_k) + j$.
