@@ -6,15 +6,15 @@
 		[
 			{"METHOD NAME":"put","ARGUMENTS":[1,0]},
 			{"METHOD NAME":"contains","ARGUMENTS":[0]},
-			{"METHOD NAME":"put","ARGUMENTS":[2,2]}
+			{"METHOD NAME":"put","ARGUMENTS":[1,2]}
 		]
 	}, 
 	{
 		"INVOCATIONS":
 		[
-			{"METHOD NAME":"put","ARGUMENTS":[0,0]},
-			{"METHOD NAME":"put","ARGUMENTS":[1,1]},
-			{"METHOD NAME":"put","ARGUMENTS":[3,3]}
+			{"METHOD NAME":"put","ARGUMENTS":[2,0]},
+			{"METHOD NAME":"put","ARGUMENTS":[2,1]},
+			{"METHOD NAME":"put","ARGUMENTS":[2,3]}
 		]
 	}
 	],

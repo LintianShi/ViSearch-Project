@@ -44,7 +44,7 @@ public class Program {
     }
 
     public static void main(String[] args) throws Exception {
-        File filename = new File("test.json");
+        File filename = new File("test1.json");
         Long filelength = filename.length();
         byte[] filecontent = new byte[filelength.intValue()];
         FileInputStream in = new FileInputStream(filename);
@@ -57,7 +57,9 @@ public class Program {
         List<HappenBeforeGraph> list = program.generateHappenBeforeGraphs();
         for (HappenBeforeGraph g : list) {
             System.out.println("--------------start---------------");
-            g.print();
+            //g.print();
+            List<Linearization> lins = g.generateLins();
+            System.out.println(lins);
             System.out.println("--------------end---------------");
         }
     }
