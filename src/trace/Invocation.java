@@ -1,3 +1,5 @@
+package trace;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 
@@ -9,6 +11,9 @@ public class Invocation {
     private String methodName;
     @JSONField(name = "ARGUMENTS", ordinal = 2)
     private List<Object> arguments = new ArrayList<Object>();
+    @JSONField(name = "VISIBILITY", ordinal = 3)
+    private String visibility;
+    private int id;
 
     public Invocation() {
         ;
@@ -34,10 +39,26 @@ public class Invocation {
         return arguments;
     }
 
-//    @Override
-//    public String toString() {
-//
-//    }
+    public String getVisibility() {
+        return visibility;
+    }
+
+    public void setVisibility(String visibility) {
+        this.visibility = visibility;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
 
     public static void main(String[] args) {
         Invocation invocation = new Invocation();

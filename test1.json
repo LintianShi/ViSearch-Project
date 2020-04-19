@@ -4,17 +4,17 @@
 	{
 		"INVOCATIONS":
 		[
-			{"METHOD NAME":"put","ARGUMENTS":[1,0]},
-			{"METHOD NAME":"contains","ARGUMENTS":[0]},
-			{"METHOD NAME":"put","ARGUMENTS":[1,2]}
+			{"METHOD NAME":"put","ARGUMENTS":[1,0],"VISIBILITY":"COMPLETE"},
+			{"METHOD NAME":"contains","ARGUMENTS":[0],"VISIBILITY":"MONOTONIC"},
+			{"METHOD NAME":"put","ARGUMENTS":[1,2],"VISIBILITY":"COMPLETE"}
 		]
 	}, 
 	{
 		"INVOCATIONS":
 		[
-			{"METHOD NAME":"put","ARGUMENTS":[2,0]},
-			{"METHOD NAME":"put","ARGUMENTS":[2,1]},
-			{"METHOD NAME":"put","ARGUMENTS":[2,3]}
+			{"METHOD NAME":"put","ARGUMENTS":[2,0],"VISIBILITY":"COMPLETE"},
+			{"METHOD NAME":"put","ARGUMENTS":[2,1],"VISIBILITY":"COMPLETE"},
+			{"METHOD NAME":"put","ARGUMENTS":[2,3],"VISIBILITY":"COMPLETE"}
 		]
 	}
 	],

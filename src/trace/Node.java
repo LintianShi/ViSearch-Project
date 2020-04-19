@@ -1,15 +1,18 @@
+package trace;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import visibility.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
-public class Node {
+public class Node implements Visibility  {
     private Invocation invocation;
     private List<Node> nexts = new ArrayList<>();
     private List<Node> prevs = new ArrayList<>();
     private int threshold = 0;
-    private int id;
 
     public Node() {
         ;
@@ -17,8 +20,10 @@ public class Node {
 
     public Node(Invocation invocation, int id) {
         this.invocation = invocation;
-        this.id = id;
+        invocation.setId(id);
     }
+
+
 
     public boolean checkThreshold() {
         return threshold == prevs.size();
@@ -44,7 +49,7 @@ public class Node {
     }
 
     public int getId() {
-        return id;
+        return invocation.getId();
     }
 
     public List<Node> getNexts() {
@@ -59,6 +64,24 @@ public class Node {
         return invocation;
     }
 
+    public Set<Node> vis(Linearization prefixLin) {
+        String visibility = getInvocation().getVisibility();
+        if (visibility.equals("COMPLETE")) {
+            return new CompleteVisibility().vis(prefixLin);
+        } else if (visibility.equals("CAUSAL")) {
+            return new CausalVisibility().vis(prefixLin);
+        } else if (visibility.equals("PEER")) {
+            return new PeerVisibility().vis(prefixLin);
+        } else if (visibility.equals("MONOTONIC")) {
+            return new MonotonicVisibility().vis(prefixLin);
+        } else if (visibility.equals("BASIC")) {
+            return new BasicVisibility().vis(prefixLin);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public String toString() {
        String temp = "\"INVOCATION\":" + JSON.toJSONString(invocation);
 //       + ", {\"NEXTS\":[";
@@ -67,5 +90,10 @@ public class Node {
 //       }
 //       return temp + "]}";
         return temp;
+    }
+
+    @Override
+    public int hashCode() {
+        return getId();
     }
 }
