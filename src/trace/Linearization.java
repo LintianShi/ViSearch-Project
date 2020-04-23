@@ -2,12 +2,11 @@ package trace;
 
 import com.alibaba.fastjson.JSON;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class Linearization {
     private List<Node> lin = new ArrayList<>();
+    private HashMap<Node, Set<Node>> visibility = new HashMap<>();
 
     public Linearization() {
         ;
@@ -17,6 +16,29 @@ public class Linearization {
         for (Node node : stack) {
             lin.add(node);
         }
+    }
+
+    public Linearization(Stack<Node> stack, HashMap<Node, Set<Node>> visibility) {
+        for (Node node : stack) {
+            lin.add(node);
+        }
+        this.visibility = visibility;
+    }
+
+    public void setVisibility(HashMap<Node, Set<Node>> visibility) {
+        this.visibility = visibility;
+    }
+
+    public void cleanVisibility() {
+        visibility = new HashMap<>();
+    }
+
+    public Set<Node> getNodeVisibility(Node node) {
+        return visibility.get(node);
+    }
+
+    public void updateNodeVisibility(Node node, Set<Node> vis) {
+        visibility.put(node, vis);
     }
 
     public List<Node> getLin() {
@@ -43,6 +65,7 @@ public class Linearization {
             for (int i = 0; i <= index; i++) {
                 sub.add(lin.get(i));
             }
+            sub.setVisibility(visibility);
             return sub;
         }
     }
