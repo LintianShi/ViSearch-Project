@@ -79,3 +79,74 @@ public class Node {
 ## Vis谓词检测
 
 * 实现了weak、basic、monotonic、peer、causal、complete的vis谓词检测
+
+## 抽象数据结构AbstractDataType
+
+* 定义了抽象数据结构AbstractDataType类
+
+* 有String invoke(Invocation invocation)方法。根据invocation的methodName反射出AbstractDataType中的对应方法进行执行
+
+  ```java
+  public final String invoke(Invocation invocation) throws Exception {
+          String methodName = invocation.getMethodName();
+          Class clazz = this.getClass();
+          Method method = clazz.getDeclaredMethod(methodName, Invocation.class);
+          method.setAccessible(true);
+          return (String)method.invoke(this, invocation);
+      }
+  ```
+
+  执行的返回值使用字符串表示
+
+* 若要实现一个具体的数据结构，只要实现一个AbstractDataType子类即可
+
+  例如MyHashMap类，内置了一个java.util.HashSet，并实现了put、contains方法包装了HashSet.put和HashSet.contains
+
+  ```java
+  public class MyHashMap extends AbstractDataType {
+      HashMap<Integer, Integer> data = new HashMap<>();
+      private String put(Invocation invocation) {
+          Integer key = (Integer) invocation.getArguments().get(0);
+          Integer value = (Integer) invocation.getArguments().get(1);
+          Integer ret = data.put(key, value);
+          if (ret == null) {
+              return "N";
+          } else {
+              return Integer.toString(ret);
+          }
+      }
+      private String contains(Invocation invocation) {
+          boolean result = data.containsValue(invocation.getArguments().get(0));
+          if (result) {
+              return "T";
+          } else {
+              return "F";
+          }
+      }
+  }
+  ```
+
+  
+
+## AbstractDataType的执行
+
+* AbstractDataType执行需要有三个参数，一个数据结构的实现Impl、一个Linearization lin、一个在lin下的visibility关系vis。
+
+* 执行过程伪代码如下
+
+  ```python
+  let ret = {}
+  for (let invocation in lin) {
+      let seq = vis(invocation)
+      for (let i in seq) {
+      	let res = Impl.invoke(seq)
+          if (i is last of seq) {
+          	ret.append(res)
+          }
+      }
+      Impl.reset()
+  }
+  yield ret
+  ```
+
+  

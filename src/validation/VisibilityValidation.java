@@ -1,6 +1,8 @@
 package validation;
 
 import com.alibaba.fastjson.JSON;
+import execution.AbstractDataType;
+import execution.MyHashMap;
 import trace.HappenBeforeGraph;
 import trace.Linearization;
 import trace.Node;
@@ -41,23 +43,46 @@ public class VisibilityValidation {
 
     public void check() {
         List<Linearization> lins = generateLinearazations();
-        Linearization lin = lins.get(5);
+        Linearization lin = lins.get(2);
         System.out.println(lin.toString());
         List<LinVisibility> linVisibilities = lin.generateAllNodeVisibility();
         System.out.println(linVisibilities.size());
         Specification specification = new Specification();
         specification.setSpecification("put", "COMPLETE");
         //specification.setSpecification("contains", "WEAK");
-        //specification.setSpecification("contains", "BASIC");
-        specification.setSpecification("contains", "MONOTONIC");
+        //specification.setSpecification("contains", "MONOTONIC");
+        specification.setSpecification("contains", "PEER");
         int sum = 0;
         for (LinVisibility l : linVisibilities) {
             if (filter(lin, l, specification)) {
                 sum++;
-                System.out.println(l);
+                System.out.println(l.toString());
+                System.out.println(execute(new MyHashMap(), lin, l));
             }
         }
         System.out.println(sum);
+    }
+
+    public ArrayList<String> execute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
+        ArrayList<String> rets = new ArrayList<>();
+        try {
+            for (int i = 0; i < lin.size(); i++) {
+                Set<Node> vis = visibility.getNodeVisibility(lin.get(i));
+                for (int j = 0; j <= i; j++) {
+                    Node node = lin.get(j);
+                    if (vis.contains(node)) {
+                        String ret = adt.invoke(node.getInvocation());
+                        if (i == j) {
+                            rets.add(ret);
+                        }
+                    }
+                }
+                adt.reset();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rets;
     }
 
     public boolean filter(Linearization linearization, LinVisibility linVisibility, Specification specification) {
