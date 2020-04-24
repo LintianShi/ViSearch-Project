@@ -72,7 +72,7 @@ public class Node {
 //        } else if (visibility.equals("PEER")) {
 //            return new PeerVisibilityPredicate().vis(prefixLin);
 //        } else if (visibility.equals("MONOTONIC")) {
-//            return new MonotonicVisibility().vis(prefixLin);
+//            return new MonotonicVisibilityPredicate().vis(prefixLin);
 //        } else if (visibility.equals("BASIC")) {
 //            return new BasicVisibilityPredicate().vis(prefixLin);
 //        } else {

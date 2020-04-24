@@ -7,9 +7,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CausalVisibilityPredicate extends VisibilityPredicate {
-    public boolean vis(Set<Node> visibility, Linearization prefixLin) {
+    public boolean check(Set<Node> visibility, Linearization prefixLin, LinVisibility linVisibility) {
+        if (!new BasicVisibilityPredicate().check(visibility, prefixLin, linVisibility)) {
+            return false;
+        }
         for (Node n : visibility) {
-            if (!visibility.containsAll(prefixLin.getNodeVisibility(n))) {
+            if (!visibility.containsAll(linVisibility.getNodeVisibility(n))) {
                 return false;
             }
         }

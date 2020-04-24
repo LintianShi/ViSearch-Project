@@ -72,6 +72,10 @@ public class Node {
 * 使用回溯法生成所有的Linearization
 * 一个Linearization就是一个Node的序列。Node中不仅包含了一个Invocation，还有整个DAG图的信息，Vis关系需要这些信息。
 
-## 定义Vis谓词
+## 基于Linearization生成Vis信息
 
-* 实现了weak、basic、monotonic、peer、causal、complete的vis谓词
+* 定义了LinVisibility类，用于表示一个Linearization里的所有操作可能对应的一个vis关系
+
+## Vis谓词检测
+
+* 实现了weak、basic、monotonic、peer、causal、complete的vis谓词检测

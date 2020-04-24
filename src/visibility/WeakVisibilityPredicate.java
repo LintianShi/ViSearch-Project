@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class WeakVisibilityPredicate extends VisibilityPredicate {
-    public boolean vis(Set<Node> visibility, Linearization prefixLin) {
+    public boolean check(Set<Node> visibility, Linearization prefixLin, LinVisibility linVisibility) {
         return true;
     }
 }
