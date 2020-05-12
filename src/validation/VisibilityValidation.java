@@ -39,7 +39,7 @@ public class VisibilityValidation {
         return lins;
     }
 
-    public Set<Behaviour> check(Specification specification) {
+    public Set<Behaviour> check(Specification specification, AbstractDataType adt) {
         HashSet<Behaviour> behaviours = new HashSet<>();
         List<Linearization> lins = generateLinearazations();
         for (Linearization lin : lins) {
@@ -47,7 +47,7 @@ public class VisibilityValidation {
             for (LinVisibility l : linVisibilities) {
                 if (filter(lin, l, specification)) {
                     System.out.println(l.toString());
-                    Behaviour behaviour = execute(new MyHashMap(), lin, l);
+                    Behaviour behaviour = execute(adt, lin, l);
                     System.out.println(behaviour);
                     behaviours.add(behaviour);
                 }
@@ -131,7 +131,7 @@ public class VisibilityValidation {
         //specification.setSpecification("contains", "WEAK");
         specification.setSpecification("contains", "MONOTONIC");
         //specification.setSpecification("contains", "PEER");
-        Set<Behaviour> behaviours = vv.check(specification);
+        Set<Behaviour> behaviours = vv.check(specification, new MyHashMap());
         System.out.println(behaviours);
     }
 }

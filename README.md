@@ -46,13 +46,13 @@
   
   ```
 
-* 需要解释的是，"HAPPENBEFORE"中包含了一系列的happen-before关系。"A"表示先发生的invocation的编号，"B"表示后发生的invocation的编号。编号方法为：假设一共有m个SubProgram，$SubProgram_i$具有$l_i$个invocation，那么$SubProgram_i$的第j个invocation的编号为$(\sum_{k=0}^{i-1}l_k) + j$.
+* 需要解释的是，"HAPPENBEFORE"中包含了一系列的happen-before关系。"A"表示先发生的invocation的编号，"B"表示后发生的invocation的编号。
 
 ## 构建基于Happen-Before的DAG
 
 * <po, hbs>包含了若干的hb，基于一个hb可以生成一个对应的DAG
 
-* DAG中的节点包含以下信息：invocation，nexts，prevs，id
+* DAG中的节点包含以下信息：invocation，nexts，prevs，id, pairID
 
 ```java
 public class Node {
@@ -60,12 +60,19 @@ public class Node {
     private List<Node> nexts = new ArrayList<>();
     private List<Node> prevs = new ArrayList<>();
     private int id;
+    private Pair<Integer, Integer> pairID;
 }
 ```
 
 * nexts和prevs包含了所有的基于hb关系的后继和前驱
 
-* id为每个invocation的unique id，用于识别invocation
+* id为每个invocation的unique id，用于识别invocation，以全序的形式
+
+  编号方法为：假设一共有m个SubProgram，$SubProgram_i$具有$l_i$个invocation，那么$SubProgram_i$的第j个invocation的编号为$(\sum_{k=0}^{i-1}l_k) + j$.
+
+* pairID也唯一标识了一个invocation，不过是以偏序的形式
+
+  编号方法为：假设一共有m个SubProgram，$SubProgram_i$具有$l_i$个invocation，那么$SubProgram_i$的第j个invocation的编号为**<i, j>**.
 
 ## 基于DAG生成所有的Linearization
 
@@ -150,3 +157,19 @@ public class Node {
   ```
 
   
+
+# Specification类
+
+* 增加了一个Specification类，用Map保存了Method及其对应的Vis类型
+
+# Behaviour类
+
+* 增加了一个Behaviour类，保存了一个trace中对应invocation在某次执行时的返回值
+
+# VisibilityValidation类
+
+* loadTrace函数从一个json文件中加载一个trace
+
+* check函数的参数为Specification和AbstractDataType，返回值为Behaviour的集合。
+
+  即传入一个Vis的规约和一个抽象数据结构的实现，返回在该trace下所有可能的执行结果
