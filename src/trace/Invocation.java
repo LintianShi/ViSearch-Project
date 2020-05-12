@@ -6,6 +6,8 @@ import com.alibaba.fastjson.annotation.JSONField;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
 public class Invocation {
     @JSONField(name = "METHOD NAME", ordinal = 1)
@@ -13,6 +15,7 @@ public class Invocation {
     @JSONField(name = "ARGUMENTS", ordinal = 2)
     private List<Object> arguments = new ArrayList<Object>();
     private int id;
+    private Pair<Integer, Integer> pairID;
 
     public static HashMap<String, String> visibility = new HashMap<>();
 
@@ -46,6 +49,14 @@ public class Invocation {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Pair<Integer, Integer> getPairID() {
+        return pairID;
+    }
+
+    public void setPairID(Pair<Integer, Integer> pairID) {
+        this.pairID = pairID;
     }
 
     @Override

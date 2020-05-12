@@ -3,10 +3,7 @@ package validation;
 import com.alibaba.fastjson.JSON;
 import execution.AbstractDataType;
 import execution.MyHashMap;
-import trace.HappenBeforeGraph;
-import trace.Linearization;
-import trace.Node;
-import trace.Program;
+import trace.*;
 import visibility.*;
 
 import java.beans.Visibility;
@@ -27,6 +24,7 @@ public class VisibilityValidation {
             in.read(filecontent);
             String jsonfile = new String(filecontent, "UTF-8");
             program = JSON.parseObject(jsonfile, Program.class);
+            program.assignID();
             happenBeforeGraphs = program.generateHappenBeforeGraphs();
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
@@ -41,30 +39,37 @@ public class VisibilityValidation {
         return lins;
     }
 
-    public void check() {
+    public Set<Behaviour> check(Specification specification) {
+        HashSet<Behaviour> behaviours = new HashSet<>();
         List<Linearization> lins = generateLinearazations();
-        Linearization lin = lins.get(2);
-        System.out.println(lin.toString());
-        List<LinVisibility> linVisibilities = lin.generateAllNodeVisibility();
-        System.out.println(linVisibilities.size());
-        Specification specification = new Specification();
-        specification.setSpecification("put", "COMPLETE");
-        //specification.setSpecification("contains", "WEAK");
-        //specification.setSpecification("contains", "MONOTONIC");
-        specification.setSpecification("contains", "PEER");
-        int sum = 0;
-        for (LinVisibility l : linVisibilities) {
-            if (filter(lin, l, specification)) {
-                sum++;
-                System.out.println(l.toString());
-                System.out.println(execute(new MyHashMap(), lin, l));
+        for (Linearization lin : lins) {
+            List<LinVisibility> linVisibilities = lin.generateAllNodeVisibility();
+            for (LinVisibility l : linVisibilities) {
+                if (filter(lin, l, specification)) {
+                    System.out.println(l.toString());
+                    Behaviour behaviour = execute(new MyHashMap(), lin, l);
+                    System.out.println(behaviour);
+                    behaviours.add(behaviour);
+                }
             }
         }
-        System.out.println(sum);
+        return behaviours;
+//        Linearization lin = lins.get(2);
+//        System.out.println(lin.toString());
+//
+//        System.out.println(linVisibilities.size());
+//        Specification specification = new Specification();
+//        specification.setSpecification("put", "COMPLETE");
+//        //specification.setSpecification("contains", "WEAK");
+//        //specification.setSpecification("contains", "MONOTONIC");
+//        specification.setSpecification("contains", "PEER");
+//        int sum = 0;
+//
+//        System.out.println(sum);
     }
 
-    public ArrayList<String> execute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
-        ArrayList<String> rets = new ArrayList<>();
+    public Behaviour execute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
+        Behaviour rets = new Behaviour();
         try {
             for (int i = 0; i < lin.size(); i++) {
                 Set<Node> vis = visibility.getNodeVisibility(lin.get(i));
@@ -73,7 +78,7 @@ public class VisibilityValidation {
                     if (vis.contains(node)) {
                         String ret = adt.invoke(node.getInvocation());
                         if (i == j) {
-                            rets.add(ret);
+                            rets.add(i, ret);
                         }
                     }
                 }
@@ -121,6 +126,12 @@ public class VisibilityValidation {
     public static void main(String[] args) {
         VisibilityValidation vv = new VisibilityValidation();
         vv.loadTrace("test1.json");
-        vv.check();
+        Specification specification = new Specification();
+        specification.setSpecification("put", "COMPLETE");
+        //specification.setSpecification("contains", "WEAK");
+        //specification.setSpecification("contains", "MONOTONIC");
+        specification.setSpecification("contains", "PEER");
+        Set<Behaviour> behaviours = vv.check(specification);
+        System.out.println(behaviours);
     }
 }

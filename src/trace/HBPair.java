@@ -3,17 +3,17 @@ package trace;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 
-public class Pair {
+public class HBPair {
     @JSONField(name = "A", ordinal = 1)
     private Integer a;
     @JSONField(name = "B", ordinal = 2)
     private Integer b;
 
-    public Pair() {
+    public HBPair() {
         ;
     }
 
-    public Pair(Integer a, Integer b) {
+    public HBPair(Integer a, Integer b) {
         this.a = a;
         this.b = b;
     }
@@ -35,9 +35,9 @@ public class Pair {
     }
 
     public static void main(String[] args) {
-        Pair pair = new Pair(1,2);
+        HBPair hbPair = new HBPair(1,2);
         HappenBefore happenBefore = new HappenBefore();
-        happenBefore.addHappenBefore(pair);
+        happenBefore.addHappenBefore(hbPair);
         System.out.println(JSON.toJSONString(happenBefore));
     }
 }

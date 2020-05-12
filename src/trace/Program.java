@@ -2,6 +2,7 @@ package trace;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -44,6 +45,17 @@ public class Program {
             graphs.add(new HappenBeforeGraph(subPrograms, hb));
         }
         return graphs;
+    }
+
+    public void assignID() {
+        int index = 0;
+        for (int i = 0; i < subPrograms.size(); i++) {
+            for (int j = 0; j < subPrograms.get(i).size(); j++) {
+                subPrograms.get(i).get(j).setPairID(new ImmutablePair<>(i, j));
+                subPrograms.get(i).get(j).setId(index);
+                index++;
+            }
+        }
     }
 
     public String toString() {

@@ -1,7 +1,5 @@
 package trace;
 
-import com.alibaba.fastjson.JSON;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,9 +32,9 @@ public class HappenBeforeGraph {
         }
 
         for (int i = 0; i < happenBefore.size(); i++) {
-            Pair pair = happenBefore.get(i);
-            nodes.get(pair.getA()).addNextNode(nodes.get(pair.getB()));
-            nodes.get(pair.getB()).addPrevNode(nodes.get(pair.getA()));
+            HBPair hbPair = happenBefore.get(i);
+            nodes.get(hbPair.getA()).addNextNode(nodes.get(hbPair.getB()));
+            nodes.get(hbPair.getB()).addPrevNode(nodes.get(hbPair.getA()));
         }
     }
 

@@ -7,25 +7,25 @@ import java.util.List;
 
 public class HappenBefore {
     @JSONField(name="HAPPENBEFORE")
-    private List<Pair> happenBefore = new ArrayList<>();
+    private List<HBPair> happenBefore = new ArrayList<>();
 
     public HappenBefore() {
         ;
     }
 
-    public void addHappenBefore(Pair pair) {
-        happenBefore.add(pair);
+    public void addHappenBefore(HBPair hbPair) {
+        happenBefore.add(hbPair);
     }
 
-    public List<Pair> getHappenBefore() {
+    public List<HBPair> getHappenBefore() {
         return happenBefore;
     }
 
-    public void setHappenBefore(List<Pair> happenBefore) {
+    public void setHappenBefore(List<HBPair> happenBefore) {
         this.happenBefore = happenBefore;
     }
 
-    public Pair get(int i) {
+    public HBPair get(int i) {
         if (i >= 0 && i < happenBefore.size()) {
             return happenBefore.get(i);
         } else {
