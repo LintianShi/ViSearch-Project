@@ -23,13 +23,13 @@
 		{
 			"HAPPENBEFORE":
 			[
-				//{"A":1,"B":5}
+				{"PREV":[0,1],"NEXT":[1,1]}
 			]
 		},
 		{
 			"HAPPENBEFORE":
 			[
-				//{"A":1,"B":4}
+				{"PREV":[0,1],"NEXT":[1,2]}
 			]
 		}
 	]

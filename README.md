@@ -31,13 +31,13 @@
   		{
   			"HAPPENBEFORE":
   			[
-  				{"A":1,"B":5}
+  				{"PREV":[0,1],"NEXT":[1,1]}
   			]
   		},
   		{
   			"HAPPENBEFORE":
   			[
-  				{"A":1,"B":4}
+  				{"PREV":[0,1],"NEXT":[1,2]}
   			]
   		}
   	]
@@ -46,7 +46,7 @@
   
   ```
 
-* 需要解释的是，"HAPPENBEFORE"中包含了一系列的happen-before关系。"A"表示先发生的invocation的编号，"B"表示后发生的invocation的编号。
+* 需要解释的是，"HAPPENBEFORE"中包含了一系列的happen-before关系。"PREV"表示先发生的invocation的编号，"NEXT"表示后发生的invocation的编号。
 
 ## 构建基于Happen-Before的DAG
 
@@ -66,11 +66,11 @@ public class Node {
 
 * nexts和prevs包含了所有的基于hb关系的后继和前驱
 
-* id为每个invocation的unique id，用于识别invocation，以全序的形式
+* id为每个invocation的unique id，用于识别invocation
 
   编号方法为：假设一共有m个SubProgram，$SubProgram_i$具有$l_i$个invocation，那么$SubProgram_i$的第j个invocation的编号为$(\sum_{k=0}^{i-1}l_k) + j$.
 
-* pairID也唯一标识了一个invocation，不过是以偏序的形式
+* pairID也唯一标识了一个invocation，不过是以数对的形式
 
   编号方法为：假设一共有m个SubProgram，$SubProgram_i$具有$l_i$个invocation，那么$SubProgram_i$的第j个invocation的编号为**<i, j>**.
 

@@ -1,5 +1,7 @@
 package trace;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,9 +35,18 @@ public class HappenBeforeGraph {
 
         for (int i = 0; i < happenBefore.size(); i++) {
             HBPair hbPair = happenBefore.get(i);
-            nodes.get(hbPair.getA()).addNextNode(nodes.get(hbPair.getB()));
-            nodes.get(hbPair.getB()).addPrevNode(nodes.get(hbPair.getA()));
+            nodes.get(transferPairToID(subPrograms, hbPair.getPrev())).addNextNode(nodes.get(transferPairToID(subPrograms, hbPair.getNext())));
+            nodes.get(transferPairToID(subPrograms, hbPair.getNext())).addPrevNode(nodes.get(transferPairToID(subPrograms, hbPair.getPrev())));
         }
+    }
+
+    public int transferPairToID(List<SubProgram> subPrograms, Pair<Integer, Integer> pair) {
+        int id = 0;
+        for (int i = 0; i < pair.getLeft(); i++) {
+            id += subPrograms.get(i).size();
+        }
+        id += pair.getRight();
+        return id;
     }
 
     public List<Linearization> generateLins() {

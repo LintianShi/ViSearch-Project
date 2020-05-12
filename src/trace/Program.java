@@ -63,7 +63,7 @@ public class Program {
     }
 
     public static void main(String[] args) throws Exception {
-        File filename = new File("test1.json");
+        File filename = new File("test-lins.json");
         Long filelength = filename.length();
         byte[] filecontent = new byte[filelength.intValue()];
         FileInputStream in = new FileInputStream(filename);
