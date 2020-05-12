@@ -78,7 +78,7 @@ public class VisibilityValidation {
                     if (vis.contains(node)) {
                         String ret = adt.invoke(node.getInvocation());
                         if (i == j) {
-                            rets.add(i, ret);
+                            rets.add(node.getId(), ret);
                         }
                     }
                 }
@@ -129,8 +129,8 @@ public class VisibilityValidation {
         Specification specification = new Specification();
         specification.setSpecification("put", "COMPLETE");
         //specification.setSpecification("contains", "WEAK");
-        //specification.setSpecification("contains", "MONOTONIC");
-        specification.setSpecification("contains", "PEER");
+        specification.setSpecification("contains", "MONOTONIC");
+        //specification.setSpecification("contains", "PEER");
         Set<Behaviour> behaviours = vv.check(specification);
         System.out.println(behaviours);
     }
