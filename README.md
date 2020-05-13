@@ -162,14 +162,25 @@ public class Node {
 
 * 增加了一个Specification类，用Map保存了Method及其对应的Vis类型
 
+# OperationTypes类
+
+* 记录了CRDT中操作的类型：UPDATE、QUERY、QUERY-UPDATE
+
 # Behaviour类
 
 * 增加了一个Behaviour类，保存了一个trace中对应invocation在某次执行时的返回值
 
-# VisibilityValidation类
+# Validation类
 
 * loadTrace函数从一个json文件中加载一个trace
 
-* check函数的参数为Specification和AbstractDataType，返回值为Behaviour的集合。
+* visibilityRelaxationCheck函数的参数为Specification和AbstractDataType，返回值为Behaviour的集合。
 
-  即传入一个Vis的规约和一个抽象数据结构的实现，返回在该trace下所有可能的执行结果
+  即传入一个Vis的规约和一个抽象数据结构的实现，返回在该trace下所有可能的执行结果。
+
+* visibilityRelaxationCheck函数首先根据hb有向无环图生成所有的Linearization，然后根据每一个Linearization枚举vis关系，并使用规约Specification的谓词进行检测，最后对符合条件的Linearization和对应的vis关系进行执行，得到Behaviour结果
+* RALinCheck函数的参数为OperationTypes和AbstractDataType，返回值为Behaviour的集合。
+
+* RALinCheck函数和visibilityRelaxationCheck函数类似，区别在于
+  * RALinCheck函数只使用CausalVisibility的谓词进行检测，筛选出符合CausalVisibility的Linearization和对应的vis关系
+  * 在AbstractDataType上，UPDATE操作会执行在其前面的所有UPDATE操作；QUERY操作会执行其vis集合里所有的UPDATE操作

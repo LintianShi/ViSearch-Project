@@ -1,0 +1,30 @@
+{
+	"SUBPROGRAMS":
+	[
+	{
+		"INVOCATIONS":
+		[
+			{"METHOD NAME":"addAfter","ARGUMENTS":["","a"]},
+			{"METHOD NAME":"addAfter","ARGUMENTS":["a", "c"]},
+			{"METHOD NAME":"read","ARGUMENTS":[]}
+		]
+	}, 
+	{
+		"INVOCATIONS":
+		[
+			{"METHOD NAME":"addAfter","ARGUMENTS":["a","b"]},
+			{"METHOD NAME":"read","ARGUMENTS":[]}
+		]
+	}
+	],
+	"HBS":
+	[
+		{
+			"HAPPENBEFORE":
+			[
+				{"PREV":[0,0],"NEXT":[1,0]}
+			]
+		}
+	]
+}
+

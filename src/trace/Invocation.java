@@ -14,10 +14,14 @@ public class Invocation {
     private String methodName;
     @JSONField(name = "ARGUMENTS", ordinal = 2)
     private List<Object> arguments = new ArrayList<Object>();
-    private int id;
-    private Pair<Integer, Integer> pairID;
 
-    public static HashMap<String, String> visibility = new HashMap<>();
+    private int id;
+    @JSONField(serialize=false)
+    private Pair<Integer, Integer> pairID;
+    @JSONField(serialize=false)
+    private String operationType = "UPDATE";
+    @JSONField(serialize=false)
+    public transient static HashMap<String, String> visibility = new HashMap<>();
 
     public Invocation() {
         ;
@@ -57,6 +61,14 @@ public class Invocation {
 
     public void setPairID(Pair<Integer, Integer> pairID) {
         this.pairID = pairID;
+    }
+
+    public String getOperationType() {
+        return operationType;
+    }
+
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
     }
 
     @Override

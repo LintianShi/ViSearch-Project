@@ -3,6 +3,7 @@ package trace;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import validation.OperationTypes;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -58,12 +59,25 @@ public class Program {
         }
     }
 
+    public void extendQueryUpdate(OperationTypes operationTypes) {
+        for (SubProgram subProgram : subPrograms) {
+            for (Invocation invocation : subProgram.getInvocations()) {
+                String operationType = operationTypes.getOperationType(invocation.getMethodName());
+                if (operationType != null) {
+                    invocation.setOperationType(operationType);
+                } else {
+                    invocation.setOperationType("UPDATE");
+                }
+            }
+        }
+    }
+
     public String toString() {
         return JSON.toJSONString(this);
     }
 
     public static void main(String[] args) throws Exception {
-        File filename = new File("test-lins.json");
+        File filename = new File("ralin1.json");
         Long filelength = filename.length();
         byte[] filecontent = new byte[filelength.intValue()];
         FileInputStream in = new FileInputStream(filename);
