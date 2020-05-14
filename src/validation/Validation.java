@@ -1,15 +1,17 @@
 package validation;
 
 import com.alibaba.fastjson.JSON;
-import execution.AbstractDataType;
-import execution.MyHashMap;
-import execution.RGA;
+import datatype.AbstractDataType;
+import datatype.RGA;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import trace.*;
 import visibility.*;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.*;
+import java.util.function.Function;
 
 public class Validation {
     private Program program;
@@ -51,29 +53,9 @@ public class Validation {
             List<LinVisibility> linVisibilities = lin.generateAllNodeVisibility();
             for (LinVisibility l : linVisibilities) {
                 if (filter(lin, l, specification)) {
-                    System.out.println(lin.toString());
-                    System.out.println(l.toString());
-                    Behaviour behaviour = execute(adt, lin, l);
-                    System.out.println(behaviour);
-                    behaviours.add(behaviour);
-                }
-            }
-        }
-        return behaviours;
-    }
-
-    public Set<Behaviour> RALinCheck(OperationTypes operationTypes, AbstractDataType adt) {
-        program.extendQueryUpdate(operationTypes);
-        initializeHappenBeforeGraphs();
-        HashSet<Behaviour> behaviours = new HashSet<>();
-        List<Linearization> lins = generateLinearazations();
-        for (Linearization lin : lins) {
-            List<LinVisibility> linVisibilities = lin.generateAllNodeVisibility();
-            for (LinVisibility l : linVisibilities) {
-                if (filter(lin, l, "CAUSAL")) {
                     //System.out.println(lin.toString());
                     //System.out.println(l.toString());
-                    Behaviour behaviour = crdtExecute(adt, lin, l);
+                    Behaviour behaviour = execute(adt, lin, l);
                     //System.out.println(behaviour);
                     behaviours.add(behaviour);
                 }
@@ -82,7 +64,33 @@ public class Validation {
         return behaviours;
     }
 
-    private Behaviour crdtExecute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
+    public Set<Behaviour> RALinCheck(OperationTypes operationTypes, QueryUpdateExtension queryUpdateExtension, AbstractDataType adt) {
+        program.extendQueryUpdate(operationTypes, queryUpdateExtension);
+        initializeHappenBeforeGraphs();
+        HashSet<Behaviour> behaviours = new HashSet<>();
+        List<Linearization> lins = generateLinearazations();
+        System.out.println(lins.size());
+        int sum = 0;
+        for (Linearization lin : lins) {
+            //System.out.println("sync");
+            List<LinVisibility> linVisibilities = lin.generateAllNodeVisibility();
+            //System.out.println("ack");
+            for (LinVisibility l : linVisibilities) {
+                if (filter(lin, l, "CAUSAL")) {
+                    sum++;
+                    //System.out.println(lin.toString());
+                    //System.out.println(l.toString());
+                    Behaviour behaviour = crdtExecute(adt, lin, l);
+                    //System.out.println(behaviour);
+                    behaviours.add(behaviour);
+                }
+            }
+        }
+        //System.out.println(sum);
+        return behaviours;
+    }
+
+    public Behaviour crdtExecute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
         Behaviour rets = new Behaviour();
         try {
             for (int i = 0; i < lin.size(); i++) {
@@ -117,7 +125,7 @@ public class Validation {
         return rets;
     }
 
-    private Behaviour execute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
+    public Behaviour execute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
         Behaviour rets = new Behaviour();
         try {
             for (int i = 0; i < lin.size(); i++) {
@@ -205,25 +213,32 @@ public class Validation {
     }
 
     public static void main(String[] args) {
-//        Validation vv = new Validation();
-//        vv.loadTrace("test1.json");
-//        Specification specification = new Specification();
-//        specification.setSpecification("put", "COMPLETE");
-//        //specification.setSpecification("contains", "WEAK");
-//        specification.setSpecification("contains", "MONOTONIC");
-//        //specification.setSpecification("contains", "PEER");
-//        Set<Behaviour> behaviours = vv.visibilityRelaxationCheck(specification, new MyHashMap());
-//        System.out.println(behaviours);
-
+        /*RA-Lin Check with QUERYUPDATE*/
         Validation vv = new Validation();
-        vv.loadTrace("ralin1.json");
+        vv.loadTrace("ralin2.json");
         OperationTypes operationTypes = new OperationTypes();
-        operationTypes.setOperationType("addAfter", "UPDATE");
+        operationTypes.setOperationType("add", "UPDATE");
         operationTypes.setOperationType("read", "QUERY");
-        Set<Behaviour> behaviours = vv.RALinCheck(operationTypes, new RGA());
-        for (Behaviour behaviour : behaviours) {
-            behaviour.printRetTrace();
-            System.out.println();
-        }
+        operationTypes.setOperationType("remove", "QUERYUPDATE");
+        QueryUpdateExtension queryUpdateExtension = new QueryUpdateExtension();
+        queryUpdateExtension.setMethodMapFunction("remove", new Function<Invocation, Pair<Invocation, Invocation>>() {
+            @Override
+            public Pair<Invocation, Invocation> apply(Invocation invocation) {
+                Invocation invocation1 = new Invocation();
+                invocation1.setOperationType("QUERY");
+                invocation1.setMethodName("readIds");
+                invocation1.setArguments(invocation.getArguments());
+                Invocation invocation2 = new Invocation();
+                invocation2.setOperationType("UPDATE");
+                invocation2.setMethodName("rem");
+
+                return new ImmutablePair<>(invocation1, invocation2);
+            }
+        });
+        Set<Behaviour> behaviours = vv.RALinCheck(operationTypes, queryUpdateExtension, new RGA());
+//        for (Behaviour behaviour : behaviours) {
+//            behaviour.printRetTrace();
+//            System.out.println();
+//        }
     }
 }

@@ -60,6 +60,7 @@ public class Linearization {
         for (Node node : lin) {
             result.put(node, generateNodeVisibility(node));
         }
+        //System.out.println("good");
         List<LinVisibility> linVisibilities = new ArrayList<>();
         int index[] = new int[lin.size()];
         for (int i = 0; i < index.length; i++) {
@@ -67,6 +68,7 @@ public class Linearization {
         }
 
         do {
+            //System.out.println(Arrays.toString(index));
             LinVisibility v = new LinVisibility();
             for (int i = 0; i < lin.size(); i++) {
                 Node n = lin.get(i);
@@ -97,7 +99,9 @@ public class Linearization {
         Linearization prefixLin = prefix(node);
         List<Set<Node>> result = new ArrayList<>();
         Stack<Node> stack = new Stack<>();
+        //System.out.println("ping" + node.getInvocation().getPairID().toString());
         generateNodeVisibility(prefixLin, 0, stack, result);
+        //System.out.println("pong" + node.getInvocation().getPairID().toString());
         return result;
     }
 

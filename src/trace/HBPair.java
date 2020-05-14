@@ -36,6 +36,14 @@ public class HBPair {
         this.next = next;
     }
 
+    public void increasePrev() {
+        prev[1]++;
+    }
+
+    public void increaseNext() {
+        next[1]++;
+    }
+
     public static void main(String[] args) {
 //        HBPair hbPair = new HBPair(1,2);
 //        HappenBefore happenBefore = new HappenBefore();

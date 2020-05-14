@@ -166,6 +166,20 @@ public class Node {
 
 * 记录了CRDT中操作的类型：UPDATE、QUERY、QUERY-UPDATE
 
+# QueryUpdateExtension类
+
+* 包含了一个HashMap< String, Function<Invocation, Pair<Invocation, Invocation> > > map
+
+* 规定了一个类型为Query-Update的操作如何映射成一个Query操作和一个Update操作
+
+* Program类利用OperationTypes类和QueryUpdateExtension类对整个History进行拓展
+
+  ```java
+  public void extendQueryUpdate(OperationTypes operationTypes, QueryUpdateExtension queryUpdateExtension)
+  ```
+
+  
+
 # Behaviour类
 
 * 增加了一个Behaviour类，保存了一个trace中对应invocation在某次执行时的返回值
@@ -184,3 +198,7 @@ public class Node {
 * RALinCheck函数和visibilityRelaxationCheck函数类似，区别在于
   * RALinCheck函数只使用CausalVisibility的谓词进行检测，筛选出符合CausalVisibility的Linearization和对应的vis关系
   * 在AbstractDataType上，UPDATE操作会执行在其前面的所有UPDATE操作；QUERY操作会执行其vis集合里所有的UPDATE操作
+
+# Test包
+
+* 整合了一系列的测试样例
