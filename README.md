@@ -46,11 +46,15 @@
   
   ```
 
-* 需要解释的是，"HAPPENBEFORE"中包含了一系列的happen-before关系。"PREV"表示先发生的invocation的编号，"NEXT"表示后发生的invocation的编号。
+* SUBPROGRAMS记录了代码的program order
+
+* HBS记录了代码的Happen-Before关系
+
+* 需要解释的是，"HAPPENBEFORE"中包含了一系列的happen-before关系。"PREV"表示先发生的invocation的编号，"NEXT"表示后发生的invocation的编号。编号的前一项指的是进程编号，后一项指的是操作在进程中编号。
 
 ## 构建基于Happen-Before的DAG
 
-* <po, hbs>包含了若干的hb，基于一个hb可以生成一个对应的DAG
+* <po, hbs>包含了若干组的hb，基于一组hb可以生成一个对应的DAG
 
 * DAG中的节点包含以下信息：invocation，nexts，prevs，id, pairID
 
@@ -64,7 +68,7 @@ public class Node {
 }
 ```
 
-* nexts和prevs包含了所有的基于hb关系的后继和前驱
+* nexts和prevs包含了一个节点基于偏序关系的后继和前驱
 
 * id为每个invocation的unique id，用于识别invocation
 
@@ -76,16 +80,40 @@ public class Node {
 
 ## 基于DAG生成所有的Linearization
 
-* 使用回溯法生成所有的Linearization
+* 使用回溯法生成所有的Linearization，即在一个偏序关系里找到一个与其不矛盾的全序关系
+
+* 具体算法为：
+
+  ```java
+  int index[process_num] = {0, 0, ... ,0}
+  void generateLin(int[] index, Stack<Node> stack) {
+  	if (isEnd(stack)) {
+  		yield lin;
+  	}
+  	for (int i = 0; i < index.length; i++) {
+  		if (isValid(node(index[i])) {
+  			stack.push(node(index[i]));
+  			index[i]++;
+  			generateLin(index, stack);
+  			index[i]--;
+  			stack.pop();
+  		}
+  	}
+  }
+  ```
+
 * 一个Linearization就是一个Node的序列。Node中不仅包含了一个Invocation，还有整个DAG图的信息，Vis关系需要这些信息。
 
 ## 基于Linearization生成Vis信息
 
 * 定义了LinVisibility类，用于表示一个Linearization里的所有操作可能对应的一个vis关系
+* 在一个序列lin中，第k个操作的vis集合有$2^{k-1}$个，即前k-1个操作的幂集。
+* 所以一个序列lin，假设包含了n个操作，那么就有$2^{0}*2^{1}*\ldots*2^{k-1}=2^{\sum_{k=0}^{n-1}k}$组vis关系
 
 ## Vis谓词检测
 
 * 实现了weak、basic、monotonic、peer、causal、complete的vis谓词检测
+* 用于一组vis关系是否满足相应规约
 
 ## 抽象数据结构AbstractDataType
 
