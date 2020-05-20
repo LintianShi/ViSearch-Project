@@ -76,6 +76,11 @@ public class Invocation {
         return id;
     }
 
+    @Override
+    public String toString() {
+        return methodName + ":" + arguments.toString();
+    }
+
     public static void main(String[] args) {
         Invocation invocation = new Invocation();
         invocation.setMethodName("put");

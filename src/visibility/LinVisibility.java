@@ -1,14 +1,14 @@
 package visibility;
 
-import trace.Node;
+import trace.HBGNode;
 
 import java.util.HashMap;
 import java.util.Set;
 
 public class LinVisibility {
-    private HashMap<Node, Set<Node>> visibility = new HashMap<>();
+    private HashMap<HBGNode, Set<HBGNode>> visibility = new HashMap<>();
 
-    public void setVisibility(HashMap<Node, Set<Node>> visibility) {
+    public void setVisibility(HashMap<HBGNode, Set<HBGNode>> visibility) {
         this.visibility = visibility;
     }
 
@@ -16,11 +16,11 @@ public class LinVisibility {
         visibility = new HashMap<>();
     }
 
-    public Set<Node> getNodeVisibility(Node node) {
+    public Set<HBGNode> getNodeVisibility(HBGNode node) {
         return visibility.get(node);
     }
 
-    public void updateNodeVisibility(Node node, Set<Node> vis) {
+    public void updateNodeVisibility(HBGNode node, Set<HBGNode> vis) {
         visibility.put(node, vis);
     }
 

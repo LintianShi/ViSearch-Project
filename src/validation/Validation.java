@@ -97,7 +97,7 @@ public class Validation {
                 Invocation targetInvocation = lin.get(i).getInvocation();
                 if (targetInvocation.getOperationType().equals("UPDATE")) {
                     for (int j = 0; j <= i; j++) {
-                        Node node = lin.get(j);
+                        HBGNode node = lin.get(j);
                         if (node.getInvocation().getOperationType().equals("UPDATE")) {
                             String ret = adt.invoke(node.getInvocation());
                             if (i == j) {
@@ -106,9 +106,9 @@ public class Validation {
                         }
                     }
                 } else if (targetInvocation.getOperationType().equals("QUERY")) {
-                    Set<Node> vis = visibility.getNodeVisibility(lin.get(i));
+                    Set<HBGNode> vis = visibility.getNodeVisibility(lin.get(i));
                     for (int j = 0; j <= i; j++) {
-                        Node node = lin.get(j);
+                        HBGNode node = lin.get(j);
                         if (node.getInvocation().getOperationType().equals("UPDATE") && vis.contains(node)) {
                             adt.invoke(node.getInvocation());
                         } else if (i == j) {
@@ -129,9 +129,9 @@ public class Validation {
         Behaviour rets = new Behaviour();
         try {
             for (int i = 0; i < lin.size(); i++) {
-                Set<Node> vis = visibility.getNodeVisibility(lin.get(i));
+                Set<HBGNode> vis = visibility.getNodeVisibility(lin.get(i));
                 for (int j = 0; j <= i; j++) {
-                    Node node = lin.get(j);
+                    HBGNode node = lin.get(j);
                     if (vis.contains(node)) {
                         String ret = adt.invoke(node.getInvocation());
                         if (i == j) {
@@ -150,7 +150,7 @@ public class Validation {
     private boolean filter(Linearization linearization, LinVisibility linVisibility, String specification) {
         for (int i = 0; i < linearization.size(); i++) {
             Linearization prefixLin = linearization.prefix(i);
-            Set<Node> vis = linVisibility.getNodeVisibility(linearization.get(i));
+            Set<HBGNode> vis = linVisibility.getNodeVisibility(linearization.get(i));
             VisibilityPredicate predicate;
             if (specification == null) {
                 predicate = new CompleteVisibilityPredicate();
@@ -180,7 +180,7 @@ public class Validation {
     private boolean filter(Linearization linearization, LinVisibility linVisibility, Specification specification) {
         for (int i = 0; i < linearization.size(); i++) {
             Linearization prefixLin = linearization.prefix(i);
-            Set<Node> vis = linVisibility.getNodeVisibility(linearization.get(i));
+            Set<HBGNode> vis = linVisibility.getNodeVisibility(linearization.get(i));
             String spec = specification.getSpecification(linearization.get(i).getInvocation().getMethodName());
             VisibilityPredicate predicate;
             if (spec == null) {

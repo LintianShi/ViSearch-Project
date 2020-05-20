@@ -1,23 +1,21 @@
 package trace;
 
 import com.alibaba.fastjson.JSON;
-import visibility.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-public class Node {
+public class HBGNode {
     private Invocation invocation;
-    private List<Node> nexts = new ArrayList<>();
-    private List<Node> prevs = new ArrayList<>();
+    private List<HBGNode> nexts = new ArrayList<>();
+    private List<HBGNode> prevs = new ArrayList<>();
     private int threshold = 0;
 
-    public Node() {
+    public HBGNode() {
         ;
     }
 
-    public Node(Invocation invocation, int id) {
+    public HBGNode(Invocation invocation, int id) {
         this.invocation = invocation;
         invocation.setId(id);
     }
@@ -29,21 +27,21 @@ public class Node {
     }
 
     public void increaseThreshlod() {
-        for (Node node : nexts) {
+        for (HBGNode node : nexts) {
             node.threshold++;
         }
     }
 
     public void decreaseThreshlod() {
-        for (Node node : nexts) {
+        for (HBGNode node : nexts) {
             node.threshold--;
         }
     }
 
-    public void addNextNode(Node next) {
+    public void addNextNode(HBGNode next) {
         nexts.add(next);
     }
-    public void addPrevNode(Node prev) {
+    public void addPrevNode(HBGNode prev) {
         prevs.add(prev);
     }
 
@@ -51,11 +49,11 @@ public class Node {
         return invocation.getId();
     }
 
-    public List<Node> getNexts() {
+    public List<HBGNode> getNexts() {
         return nexts;
     }
 
-    public List<Node> getPrevs() {
+    public List<HBGNode> getPrevs() {
         return prevs;
     }
 
@@ -63,7 +61,7 @@ public class Node {
         return invocation;
     }
 
-//    public Set<Node> vis(Linearization prefixLin) {
+//    public Set<HBGNode> vis(Linearization prefixLin) {
 //        String visibility = Invocation.visibility.get(getInvocation().getMethodName());
 //        if (visibility.equals("COMPLETE")) {
 //            return new CompleteVisibilityPredicate().vis(prefixLin);
@@ -84,7 +82,7 @@ public class Node {
     public String toString() {
        String temp = "\"INVOCATION\":" + JSON.toJSONString(invocation);
 //       + ", {\"NEXTS\":[";
-//       for (Node n : nexts) {
+//       for (HBGNode n : nexts) {
 //           temp += JSON.toJSONString(n.getInvocation()) + " ";
 //       }
 //       return temp + "]}";
