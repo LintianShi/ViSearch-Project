@@ -110,6 +110,19 @@ public class Program {
         return JSON.toJSONString(this);
     }
 
+    public static HappenBeforeGraph load(String fileName) throws Exception {
+        File filename = new File(fileName);
+        Long filelength = filename.length();
+        byte[] filecontent = new byte[filelength.intValue()];
+        FileInputStream in = new FileInputStream(filename);
+        in.read(filecontent);
+        String jsonfile = new String(filecontent, "UTF-8");
+        Program program = JSON.parseObject(jsonfile, Program.class);
+
+        List<HappenBeforeGraph> list = program.generateHappenBeforeGraphs();
+        return list.get(0);
+    }
+
     public static void main(String[] args) throws Exception {
         File filename = new File("ralin1.json");
         Long filelength = filename.length();

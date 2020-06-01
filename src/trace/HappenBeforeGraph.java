@@ -2,12 +2,9 @@ package trace;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
-public class HappenBeforeGraph {
+public class HappenBeforeGraph implements Iterable<HBGNode> {
     private List<HBGNode> startNodes = new ArrayList<>();
     private HashMap<Integer, HBGNode> nodes = new HashMap<>();
     private int[][] programOrders;
@@ -38,6 +35,14 @@ public class HappenBeforeGraph {
             nodes.get(transferPairToID(subPrograms, hbPair.getPrev())).addNextNode(nodes.get(transferPairToID(subPrograms, hbPair.getNext())));
             nodes.get(transferPairToID(subPrograms, hbPair.getNext())).addPrevNode(nodes.get(transferPairToID(subPrograms, hbPair.getPrev())));
         }
+    }
+
+    public Iterator<HBGNode> iterator() {
+        return nodes.values().iterator();
+    }
+
+    public int size() {
+        return nodes.size();
     }
 
     public int transferPairToID(List<SubProgram> subPrograms, Pair<Integer, Integer> pair) {

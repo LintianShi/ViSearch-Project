@@ -5,7 +5,7 @@ import visibility.LinVisibility;
 
 import java.util.*;
 
-public class Linearization {
+public class Linearization implements Iterable<HBGNode> {
     private List<HBGNode> lin = new ArrayList<>();
 
     public Linearization() {
@@ -26,12 +26,32 @@ public class Linearization {
         lin.add(node);
     }
 
+    public void addAll(Linearization linearization) {
+        for (HBGNode node : linearization) {
+            lin.add(node);
+        }
+    }
+
+    public boolean contains(HBGNode node) {
+        return lin.contains(node);
+    }
+
+    public void removeLast() {
+        lin.remove(lin.size() - 1);
+    }
+
+
+
     public HBGNode get(int index) {
         return lin.get(index);
     }
 
     public int size() {
         return lin.size();
+    }
+
+    public Iterator<HBGNode> iterator() {
+        return lin.iterator();
     }
 
     public Linearization prefix(int index) {
