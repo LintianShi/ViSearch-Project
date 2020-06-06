@@ -2,8 +2,7 @@ package trace;
 
 import com.alibaba.fastjson.JSON;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class HBGNode {
     private Invocation invocation;
@@ -57,6 +56,19 @@ public class HBGNode {
         return prevs;
     }
 
+    public Set<HBGNode> getAllPrevs() {
+        Queue<HBGNode> queue = new ArrayDeque<>(getPrevs());
+        Set<HBGNode> results = new HashSet<>();
+        while (!queue.isEmpty()) {
+            HBGNode node = ((ArrayDeque<HBGNode>) queue).poll();
+            results.add(node);
+            for (HBGNode prev : node.getPrevs()) {
+                queue.offer(prev);
+            }
+        }
+        return results;
+    }
+
     public Invocation getInvocation() {
         return invocation;
     }
@@ -80,13 +92,14 @@ public class HBGNode {
 
     @Override
     public String toString() {
-       String temp = "\"INVOCATION\":" + JSON.toJSONString(invocation);
+//       String temp = "\"INVOCATION\":" + JSON.toJSONString(invocation);
 //       + ", {\"NEXTS\":[";
 //       for (HBGNode n : nexts) {
 //           temp += JSON.toJSONString(n.getInvocation()) + " ";
 //       }
 //       return temp + "]}";
-        return temp;
+//        return temp;
+        return Integer.toString(getId());
     }
 
     @Override

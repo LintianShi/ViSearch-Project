@@ -24,6 +24,10 @@ public class LinVisibility {
         visibility.put(node, vis);
     }
 
+    public void removeNodeVisibility(HBGNode node) {
+        visibility.remove(node);
+    }
+
     public String toString() {
         return visibility.toString();
     }

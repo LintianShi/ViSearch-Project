@@ -125,7 +125,7 @@ public class Validation {
         return rets;
     }
 
-    public Behaviour execute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
+    public static Behaviour execute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
         Behaviour rets = new Behaviour();
         try {
             for (int i = 0; i < lin.size(); i++) {

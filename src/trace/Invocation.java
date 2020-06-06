@@ -14,6 +14,8 @@ public class Invocation {
     private String methodName;
     @JSONField(name = "ARGUMENTS", ordinal = 2)
     private List<Object> arguments = new ArrayList<Object>();
+    @JSONField(name = "RETVALUE", ordinal = 3)
+    private String retValue;
 
     private int id;
     @JSONField(serialize=false)
@@ -25,6 +27,14 @@ public class Invocation {
 
     public Invocation() {
         ;
+    }
+
+    public void setRetValue(String retValue) {
+        this.retValue = retValue;
+    }
+
+    public String getRetValue() {
+        return retValue;
     }
 
     public void setMethodName(String name) {

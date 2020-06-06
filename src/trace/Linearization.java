@@ -32,6 +32,14 @@ public class Linearization implements Iterable<HBGNode> {
         }
     }
 
+    public String getRetValueTrace(int index) {
+        ArrayList<String> retTrace = new ArrayList<>();
+        for (int i = 0; i < index; i++) {
+            retTrace.add(lin.get(i).getInvocation().getRetValue());
+        }
+        return  retTrace.toString();
+    }
+
     public boolean contains(HBGNode node) {
         return lin.contains(node);
     }
@@ -40,7 +48,9 @@ public class Linearization implements Iterable<HBGNode> {
         lin.remove(lin.size() - 1);
     }
 
-
+    public HBGNode getLast() {
+        return lin.get(lin.size() - 1);
+    }
 
     public HBGNode get(int index) {
         return lin.get(index);
@@ -139,11 +149,16 @@ public class Linearization implements Iterable<HBGNode> {
     }
 
     public String toString() {
-        String temp = new String("{");
-        for (HBGNode n : lin) {
-            temp += JSON.toJSONString(n.getInvocation()) + "; ";
+//        String temp = new String("{");
+//        for (HBGNode n : lin) {
+//            temp += JSON.toJSONString(n.getInvocation()) + "; ";
+//        }
+//
+//        return temp + "}";
+        ArrayList<Integer> list = new ArrayList<>();
+        for (HBGNode node : lin) {
+            list.add(node.getId());
         }
-
-        return temp + "}";
+        return list.toString();
     }
 }

@@ -12,7 +12,7 @@ public class MyHashMap extends AbstractDataType {
         Integer value = (Integer) invocation.getArguments().get(1);
         Integer ret = data.put(key, value);
         if (ret == null) {
-            return "N";
+            return "null";
         } else {
             return Integer.toString(ret);
         }
@@ -21,9 +21,19 @@ public class MyHashMap extends AbstractDataType {
     private String contains(Invocation invocation) {
         boolean result = data.containsValue(invocation.getArguments().get(0));
         if (result) {
-            return "T";
+            return "true";
         } else {
-            return "F";
+            return "false";
+        }
+    }
+
+    private String get(Invocation invocation) {
+        Integer key = (Integer) invocation.getArguments().get(0);
+        Integer ret = data.get(key);
+        if (ret == null) {
+            return "null";
+        } else {
+            return Integer.toString(ret);
         }
     }
 

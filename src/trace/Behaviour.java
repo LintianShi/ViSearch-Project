@@ -10,7 +10,7 @@ public class Behaviour {
 
     public void add(Integer id, String retValue) {
         retValues.put(id, retValue);
-        retTrace.add(Integer.toString(id) + "=" + retValue);
+        retTrace.add(retValue);
     }
 
     public int size() {
@@ -31,7 +31,7 @@ public class Behaviour {
 
     @Override
     public String toString() {
-        return retValues.toString();
+        return retTrace.toString();
     }
 
     @Override
