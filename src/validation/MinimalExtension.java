@@ -79,9 +79,40 @@ public class MinimalExtension {
         String retTrace = linearization.getRetValueTrace(linearization.size());
         HBGNode node = linearization.getLast();
         SubsetNode head = generateAllSubsets(ext);
-        traverse(base, head, adt, retTrace, results);
+        BFTraverse(base, head, adt, retTrace, results);
         linVisibility.removeNodeVisibility(node);
         return results;
+    }
+
+    private void BFTraverse(Set<HBGNode> base, SubsetNode node, AbstractDataType adt, String retTrace, List<Set<HBGNode>> results) {
+        Queue<SubsetNode> queue = new ArrayDeque<>();
+        queue.offer(node);
+        while (!queue.isEmpty()) {
+            SubsetNode subsetNode = queue.poll();
+            subsetNode.visited = true;
+            if (!subsetNode.valid) {
+                continue;
+            }
+            Set<HBGNode> vis = new HashSet<>(base);
+            vis.addAll(subsetNode.getSubset());
+            linVisibility.updateNodeVisibility(linearization.getLast(), vis);
+            String excuteTrace = Validation.execute(adt, linearization, linVisibility).toString();
+//            System.out.println(retTrace);
+//            System.out.println(excuteTrace);
+//            System.out.println();
+            if (excuteTrace.equals(retTrace)) {
+                results.add(vis);
+                for (SubsetNode next : subsetNode.getNexts()) {
+                    invalidate(next);
+                }
+            } else {
+                for (SubsetNode next : subsetNode.getNexts()) {
+                    if (!next.visited) {
+                        queue.offer(next);
+                    }
+                }
+            }
+        }
     }
 
     private void traverse(Set<HBGNode> base, SubsetNode node, AbstractDataType adt, String retTrace, List<Set<HBGNode>> results) {
@@ -230,6 +261,7 @@ public class MinimalExtension {
         private Set<HBGNode> subset;
         private List<SubsetNode> nexts = new ArrayList();
         public boolean valid = true;
+        public boolean visited = false;
         public SubsetNode(Set<HBGNode> subset) {
             this.subset = subset;
         }
