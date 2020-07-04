@@ -58,9 +58,9 @@ public class MinimalExtension {
         Set<HBGNode> visible = new HashSet<>();
         HBGNode node = linearization.get(linearization.size() - 1);
         Set<HBGNode> prevs = node.getAllPrevs();
-//        for (HBGNode prev : prevs) {
-//            visible.addAll(linVisibility.getNodeVisibility(prev));
-//        }
+        for (HBGNode prev : prevs) {
+            visible.addAll(linVisibility.getNodeVisibility(prev));
+        }
         visible.addAll(prevs);
         visible.add(node);
 
