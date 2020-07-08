@@ -43,7 +43,7 @@ public class TestRALinCheck {
             }
         });
 
-        File filename = new File("ralin2.json");
+        File filename = new File("ralin1.json");
         Long filelength = filename.length();
         byte[] filecontent = new byte[filelength.intValue()];
         FileInputStream in = new FileInputStream(filename);

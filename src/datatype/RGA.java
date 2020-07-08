@@ -18,7 +18,7 @@ public class RGA extends AbstractDataType {
                 data.add(index + 1, second);
             }
         }
-        return "N";
+        return "null";
     }
 
     private String read(Invocation invocation) {

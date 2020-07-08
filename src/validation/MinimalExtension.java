@@ -9,11 +9,17 @@ import java.util.*;
 
 public class MinimalExtension {
     private HappenBeforeGraph happenBeforeGraph;
+    private OperationTypes operationTypes;
     private Linearization linearization = new Linearization();
     private LinVisibility linVisibility = new LinVisibility();
 
     public MinimalExtension(HappenBeforeGraph happenBeforeGraph) {
         this.happenBeforeGraph = happenBeforeGraph;
+    }
+
+    public MinimalExtension(HappenBeforeGraph happenBeforeGraph, OperationTypes operationTypes) {
+        this.happenBeforeGraph = happenBeforeGraph;
+        this.operationTypes = operationTypes;
     }
 
     public boolean checkConsistency(HashMap<String, Set<String>> results, AbstractDataType adt) {
