@@ -41,4 +41,8 @@ public class MyHashMap extends AbstractDataType {
     public void reset() {
         data = new HashMap<>();
     }
+
+    public void print() {
+        System.out.println(data.toString());
+    }
 }

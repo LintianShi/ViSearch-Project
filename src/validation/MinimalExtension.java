@@ -102,7 +102,7 @@ public class MinimalExtension {
             Set<HBGNode> vis = new HashSet<>(base);
             vis.addAll(subsetNode.getSubset());
             linVisibility.updateNodeVisibility(linearization.getLast(), vis);
-            String excuteTrace = Validation.execute(adt, linearization, linVisibility).toString();
+            String excuteTrace = Validation.crdtExecute(adt, linearization, linVisibility).toString();
 //            System.out.println(retTrace);
 //            System.out.println(excuteTrace);
 //            System.out.println();

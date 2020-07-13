@@ -3,5 +3,5 @@ package generator;
 import trace.Invocation;
 
 public interface InvocationGenerator {
-    Invocation generator();
+    Invocation generate(String methodName);
 }

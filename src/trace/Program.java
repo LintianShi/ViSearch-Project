@@ -123,7 +123,7 @@ public class Program {
         return list.get(0);
     }
 
-    public static HappenBeforeGraph load(String fileName, OperationTypes operationTypes) throws Exception {
+    public static HappenBeforeGraph load(String fileName, OperationTypes operationTypes, QueryUpdateExtension queryUpdateExtension) throws Exception {
         File filename = new File(fileName);
         Long filelength = filename.length();
         byte[] filecontent = new byte[filelength.intValue()];
@@ -131,7 +131,8 @@ public class Program {
         in.read(filecontent);
         String jsonfile = new String(filecontent, "UTF-8");
         Program program = JSON.parseObject(jsonfile, Program.class);
-        program.extendQueryUpdate(operationTypes, null);
+        program.assignID();
+        program.extendQueryUpdate(operationTypes, queryUpdateExtension);
 
         List<HappenBeforeGraph> list = program.generateHappenBeforeGraphs();
         return list.get(0);

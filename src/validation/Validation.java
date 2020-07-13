@@ -2,6 +2,7 @@ package validation;
 
 import com.alibaba.fastjson.JSON;
 import datatype.AbstractDataType;
+import datatype.ORSet;
 import datatype.RGA;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -90,7 +91,7 @@ public class Validation {
         return behaviours;
     }
 
-    public Behaviour crdtExecute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
+    public static Behaviour crdtExecute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
         Behaviour rets = new Behaviour();
         try {
             for (int i = 0; i < lin.size(); i++) {
@@ -113,7 +114,8 @@ public class Validation {
                             adt.invoke(node.getInvocation());
                         } else if (i == j) {
                             String ret = adt.invoke(node.getInvocation());
-                            rets.add(node.getId(), ret);
+                            if (ret != null)
+                                rets.add(node.getId(), ret);
                         }
                     }
                 }

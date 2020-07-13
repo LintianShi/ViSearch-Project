@@ -155,9 +155,9 @@ public class Linearization implements Iterable<HBGNode> {
 //        }
 //
 //        return temp + "}";
-        ArrayList<Integer> list = new ArrayList<>();
+        ArrayList<String> list = new ArrayList<>();
         for (HBGNode node : lin) {
-            list.add(node.getId());
+            list.add(node.getId() + "=" + node.getInvocation().getMethodName());
         }
         return list.toString();
     }

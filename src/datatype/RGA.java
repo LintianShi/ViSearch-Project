@@ -3,6 +3,7 @@ package datatype;
 import trace.Invocation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class RGA extends AbstractDataType {
     private ArrayList<String> data = new ArrayList<>();
@@ -32,5 +33,10 @@ public class RGA extends AbstractDataType {
     @Override
     public void reset() {
         data = new ArrayList<>();
+    }
+
+    @Override
+    public void print() {
+        System.out.println("print: " + data.toString());
     }
 }
