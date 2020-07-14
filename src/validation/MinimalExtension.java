@@ -22,7 +22,7 @@ public class MinimalExtension {
         this.operationTypes = operationTypes;
     }
 
-    public boolean checkConsistency(HashMap<String, Set<String>> results, AbstractDataType adt) {
+    public boolean checkConsistency(Map<String, Set<String>> results, AbstractDataType adt) {
         if (isComplete()) {
             String lin = linearization.toString();
             String vis = linVisibility.toString();
@@ -103,9 +103,9 @@ public class MinimalExtension {
             vis.addAll(subsetNode.getSubset());
             linVisibility.updateNodeVisibility(linearization.getLast(), vis);
             String excuteTrace = Validation.crdtExecute(adt, linearization, linVisibility).toString();
-//            System.out.println(retTrace);
-//            System.out.println(excuteTrace);
-//            System.out.println();
+            System.out.println(retTrace);
+            System.out.println(excuteTrace);
+            System.out.println();
             if (excuteTrace.equals(retTrace)) {
                 results.add(vis);
                 for (SubsetNode next : subsetNode.getNexts()) {

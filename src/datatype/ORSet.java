@@ -13,7 +13,8 @@ public class ORSet extends AbstractDataType {
         data.put(invocation.getId(), (String)invocation.getArguments().get(0));
         //return "{" + Integer.toString(invocation.getId()) + ", " + (String)invocation.getArguments().get(0) + "}";
         //System.out.println("add-" + data.toString());
-        return (String)invocation.getArguments().get(0) + ":" + Integer.toString(invocation.getId());
+        //return (String)invocation.getArguments().get(0) + ":" + Integer.toString(invocation.getId());
+        return invocation.getRetValue();
     }
 
     public String readIds(Invocation invocation) {
@@ -28,22 +29,20 @@ public class ORSet extends AbstractDataType {
         }
         queryUpdateCache.put(invocation.getId() + 1, set);
         //System.out.println("readIds-" + data.toString());
-        return "readIds:" + result.toString();
-        //return invocation.getRetValue();
+        //return "readIds:" + result.toString();
+        return invocation.getRetValue();
     }
 
     public String rem(Invocation invocation) {
         Set<Integer> arg = queryUpdateCache.get(invocation.getId());
         ArrayList<Map.Entry<Integer, String>> result = new ArrayList<>();
-        String removeEle = new String("blank");
         for (Integer i : arg) {
-            removeEle = data.get(i);
             result.add(new AbstractMap.SimpleEntry<>(i, data.get(i)));
             data.remove(i);
         }
         //System.out.println("remove-" + data.toString());
-        return "rem:" + result.toString();
-        //return "rem:" + removeEle;
+        //return "rem:" + result.toString();
+        return invocation.getRetValue();
     }
 
     public String read(Invocation invocation) {
