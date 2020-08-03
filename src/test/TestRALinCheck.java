@@ -5,14 +5,13 @@ import datatype.ORSet;
 import datatype.RGA;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import trace.*;
+import history.*;
 import validation.OperationTypes;
 import validation.Validation;
 import visibility.LinVisibility;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,7 +43,7 @@ public class TestRALinCheck {
             }
         });
 
-        File filename = new File("ralin2.json");
+        File filename = new File("ralin1.json");
         Long filelength = filename.length();
         byte[] filecontent = new byte[filelength.intValue()];
         FileInputStream in = new FileInputStream(filename);
@@ -74,7 +73,7 @@ public class TestRALinCheck {
         Linearization linearization = linearizations.get(9);
         LinVisibility visibility = new LinVisibility();
 
-        HashSet<Node> temp = new HashSet<>();
+        HashSet<HBGNode> temp = new HashSet<>();
         temp.add(linearization.get(0));
         temp.add(linearization.get(1));
         temp.add(linearization.get(2));

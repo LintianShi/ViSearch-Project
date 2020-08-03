@@ -1,6 +1,6 @@
 package datatype;
 
-import trace.Invocation;
+import history.Invocation;
 
 import java.lang.reflect.Method;
 
@@ -14,4 +14,6 @@ public abstract class AbstractDataType {
     }
 
     public abstract void reset();
+
+    public abstract void print();
 }

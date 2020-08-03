@@ -1,0 +1,38 @@
+{
+	"SUBPROGRAMS":
+	[
+	{
+		"INVOCATIONS":
+		[
+			{"METHOD NAME":"put","ARGUMENTS":[1,0],"RETVALUE":"null"},
+			{"METHOD NAME":"contains","ARGUMENTS":[0],"RETVALUE":"false"}
+		]
+	}, 
+	{
+		"INVOCATIONS":
+		[
+			{"METHOD NAME":"get","ARGUMENTS":[1],"RETVALUE":"0"},
+			{"METHOD NAME":"put","ARGUMENTS":[1,1],"RETVALUE":"0"}
+		]
+	},
+	{
+		"INVOCATIONS":
+		[
+			{"METHOD NAME":"put","ARGUMENTS":[0,0],"RETVALUE":"null"},
+			{"METHOD NAME":"contains","ARGUMENTS":[0],"RETVALUE":"true"}
+		]
+	}
+	],
+	"HBS":
+	[
+		{
+			"HAPPENBEFORE":
+			[
+				{"PREV":[0,0],"NEXT":[1,1]},
+				{"PREV":[0,0],"NEXT":[2,1]},
+				{"PREV":[2,0],"NEXT":[1,1]}
+			]
+		}
+	]
+}
+

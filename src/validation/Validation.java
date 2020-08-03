@@ -5,7 +5,7 @@ import datatype.AbstractDataType;
 import datatype.RGA;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import trace.*;
+import history.*;
 import visibility.*;
 
 import java.io.File;
@@ -90,14 +90,14 @@ public class Validation {
         return behaviours;
     }
 
-    public Behaviour crdtExecute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
+    public static Behaviour crdtExecute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
         Behaviour rets = new Behaviour();
         try {
             for (int i = 0; i < lin.size(); i++) {
                 Invocation targetInvocation = lin.get(i).getInvocation();
                 if (targetInvocation.getOperationType().equals("UPDATE")) {
                     for (int j = 0; j <= i; j++) {
-                        Node node = lin.get(j);
+                        HBGNode node = lin.get(j);
                         if (node.getInvocation().getOperationType().equals("UPDATE")) {
                             String ret = adt.invoke(node.getInvocation());
                             if (i == j) {
@@ -106,14 +106,15 @@ public class Validation {
                         }
                     }
                 } else if (targetInvocation.getOperationType().equals("QUERY")) {
-                    Set<Node> vis = visibility.getNodeVisibility(lin.get(i));
+                    Set<HBGNode> vis = visibility.getNodeVisibility(lin.get(i));
                     for (int j = 0; j <= i; j++) {
-                        Node node = lin.get(j);
+                        HBGNode node = lin.get(j);
                         if (node.getInvocation().getOperationType().equals("UPDATE") && vis.contains(node)) {
                             adt.invoke(node.getInvocation());
                         } else if (i == j) {
                             String ret = adt.invoke(node.getInvocation());
-                            rets.add(node.getId(), ret);
+                            if (ret != null)
+                                rets.add(node.getId(), ret);
                         }
                     }
                 }
@@ -125,13 +126,13 @@ public class Validation {
         return rets;
     }
 
-    public Behaviour execute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
+    public static Behaviour execute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
         Behaviour rets = new Behaviour();
         try {
             for (int i = 0; i < lin.size(); i++) {
-                Set<Node> vis = visibility.getNodeVisibility(lin.get(i));
+                Set<HBGNode> vis = visibility.getNodeVisibility(lin.get(i));
                 for (int j = 0; j <= i; j++) {
-                    Node node = lin.get(j);
+                    HBGNode node = lin.get(j);
                     if (vis.contains(node)) {
                         String ret = adt.invoke(node.getInvocation());
                         if (i == j) {
@@ -150,7 +151,7 @@ public class Validation {
     private boolean filter(Linearization linearization, LinVisibility linVisibility, String specification) {
         for (int i = 0; i < linearization.size(); i++) {
             Linearization prefixLin = linearization.prefix(i);
-            Set<Node> vis = linVisibility.getNodeVisibility(linearization.get(i));
+            Set<HBGNode> vis = linVisibility.getNodeVisibility(linearization.get(i));
             VisibilityPredicate predicate;
             if (specification == null) {
                 predicate = new CompleteVisibilityPredicate();
@@ -180,7 +181,7 @@ public class Validation {
     private boolean filter(Linearization linearization, LinVisibility linVisibility, Specification specification) {
         for (int i = 0; i < linearization.size(); i++) {
             Linearization prefixLin = linearization.prefix(i);
-            Set<Node> vis = linVisibility.getNodeVisibility(linearization.get(i));
+            Set<HBGNode> vis = linVisibility.getNodeVisibility(linearization.get(i));
             String spec = specification.getSpecification(linearization.get(i).getInvocation().getMethodName());
             VisibilityPredicate predicate;
             if (spec == null) {

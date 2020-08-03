@@ -1,6 +1,6 @@
 package datatype;
 
-import trace.Invocation;
+import history.Invocation;
 
 import java.util.ArrayList;
 
@@ -18,7 +18,7 @@ public class RGA extends AbstractDataType {
                 data.add(index + 1, second);
             }
         }
-        return "N";
+        return "null";
     }
 
     private String read(Invocation invocation) {
@@ -32,5 +32,10 @@ public class RGA extends AbstractDataType {
     @Override
     public void reset() {
         data = new ArrayList<>();
+    }
+
+    @Override
+    public void print() {
+        System.out.println("print: " + data.toString());
     }
 }

@@ -1,6 +1,6 @@
 package datatype;
 
-import trace.Invocation;
+import history.Invocation;
 
 import java.util.*;
 
@@ -11,7 +11,10 @@ public class ORSet extends AbstractDataType {
 
     public String add(Invocation invocation) {
         data.put(invocation.getId(), (String)invocation.getArguments().get(0));
-        return "{" + Integer.toString(invocation.getId()) + ", " + (String)invocation.getArguments().get(0) + "}";
+        //return "{" + Integer.toString(invocation.getId()) + ", " + (String)invocation.getArguments().get(0) + "}";
+        //System.out.println("add-" + data.toString());
+        //return (String)invocation.getArguments().get(0) + ":" + Integer.toString(invocation.getId());
+        return invocation.getRetValue();
     }
 
     public String readIds(Invocation invocation) {
@@ -24,9 +27,10 @@ public class ORSet extends AbstractDataType {
                 result.add(entry);
             }
         }
-
         queryUpdateCache.put(invocation.getId() + 1, set);
-        return result.toString();
+        //System.out.println("readIds-" + data.toString());
+        //return "readIds:" + result.toString();
+        return invocation.getRetValue();
     }
 
     public String rem(Invocation invocation) {
@@ -36,15 +40,23 @@ public class ORSet extends AbstractDataType {
             result.add(new AbstractMap.SimpleEntry<>(i, data.get(i)));
             data.remove(i);
         }
-        return result.toString();
+        //System.out.println("remove-" + data.toString());
+        //return "rem:" + result.toString();
+        return invocation.getRetValue();
     }
 
     public String read(Invocation invocation) {
-        Set<String> result = new HashSet<>();
+        Set<Map.Entry<Integer, String>> result = new HashSet<>();
         for (Map.Entry<Integer, String> entry : data.entrySet()) {
-            result.add(entry.getValue());
+            result.add(entry);
         }
-        return result.toString();
+        //System.out.println("read-" + data.toString());
+        return data.toString();
+    }
+
+    @Override
+    public void print() {
+        System.out.println("print: " + data.toString());
     }
 
     @Override

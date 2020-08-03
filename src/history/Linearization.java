@@ -1,37 +1,66 @@
-package trace;
+package history;
 
-import com.alibaba.fastjson.JSON;
 import visibility.LinVisibility;
 
 import java.util.*;
 
-public class Linearization {
-    private List<Node> lin = new ArrayList<>();
+public class Linearization implements Iterable<HBGNode> {
+    private List<HBGNode> lin = new ArrayList<>();
 
     public Linearization() {
         ;
     }
 
-    public Linearization(Stack<Node> stack) {
-        for (Node node : stack) {
+    public Linearization(Stack<HBGNode> stack) {
+        for (HBGNode node : stack) {
             lin.add(node);
         }
     }
 
-    public List<Node> getLin() {
+    public List<HBGNode> getLin() {
         return lin;
     }
 
-    public void add(Node node) {
+    public void add(HBGNode node) {
         lin.add(node);
     }
 
-    public Node get(int index) {
+    public void addAll(Linearization linearization) {
+        for (HBGNode node : linearization) {
+            lin.add(node);
+        }
+    }
+
+    public String getRetValueTrace(int index) {
+        ArrayList<String> retTrace = new ArrayList<>();
+        for (int i = 0; i < index; i++) {
+            retTrace.add(lin.get(i).getInvocation().getRetValue());
+        }
+        return  retTrace.toString();
+    }
+
+    public boolean contains(HBGNode node) {
+        return lin.contains(node);
+    }
+
+    public void removeLast() {
+        lin.remove(lin.size() - 1);
+    }
+
+    public HBGNode getLast() {
+        return lin.get(lin.size() - 1);
+    }
+
+    public HBGNode get(int index) {
         return lin.get(index);
     }
 
     public int size() {
         return lin.size();
+    }
+
+    public Iterator<HBGNode> iterator() {
+        return lin.iterator();
     }
 
     public Linearization prefix(int index) {
@@ -46,7 +75,7 @@ public class Linearization {
         }
     }
 
-    public Linearization prefix(Node node) {
+    public Linearization prefix(HBGNode node) {
         for (int i = 0; i < lin.size(); i++) {
             if (node.equals(lin.get(i))) {
                 return prefix(i);
@@ -56,8 +85,8 @@ public class Linearization {
     }
 
     public List<LinVisibility> generateAllNodeVisibility() {
-        HashMap<Node, List<Set<Node>>> result = new HashMap<>();
-        for (Node node : lin) {
+        HashMap<HBGNode, List<Set<HBGNode>>> result = new HashMap<>();
+        for (HBGNode node : lin) {
             result.put(node, generateNodeVisibility(node));
         }
         //System.out.println("good");
@@ -71,7 +100,7 @@ public class Linearization {
             //System.out.println(Arrays.toString(index));
             LinVisibility v = new LinVisibility();
             for (int i = 0; i < lin.size(); i++) {
-                Node n = lin.get(i);
+                HBGNode n = lin.get(i);
                 v.updateNodeVisibility(n, result.get(n).get(index[i]));
             }
             linVisibilities.add(v);
@@ -80,7 +109,7 @@ public class Linearization {
         return  linVisibilities;
     }
 
-    private boolean updateIndex(int[] index, HashMap<Node, List<Set<Node>>> result) {
+    private boolean updateIndex(int[] index, HashMap<HBGNode, List<Set<HBGNode>>> result) {
         index[index.length  - 1]++;
         for (int i = index.length  - 1; i >= 0; i--) {
             if (index[i] == result.get(lin.get(i)).size()) {
@@ -95,19 +124,19 @@ public class Linearization {
         return true;
     }
 
-    private List<Set<Node>> generateNodeVisibility(Node node) {
+    private List<Set<HBGNode>> generateNodeVisibility(HBGNode node) {
         Linearization prefixLin = prefix(node);
-        List<Set<Node>> result = new ArrayList<>();
-        Stack<Node> stack = new Stack<>();
+        List<Set<HBGNode>> result = new ArrayList<>();
+        Stack<HBGNode> stack = new Stack<>();
         //System.out.println("ping" + node.getInvocation().getPairID().toString());
         generateNodeVisibility(prefixLin, 0, stack, result);
         //System.out.println("pong" + node.getInvocation().getPairID().toString());
         return result;
     }
 
-    private void generateNodeVisibility(Linearization prefixLin, int index, Stack<Node> stack, List<Set<Node>> result) {
+    private void generateNodeVisibility(Linearization prefixLin, int index, Stack<HBGNode> stack, List<Set<HBGNode>> result) {
         if (index == prefixLin.size() - 1) {
-            Set<Node> temp = new HashSet<>(stack);
+            Set<HBGNode> temp = new HashSet<>(stack);
             temp.add(prefixLin.get(index));
             result.add(temp);
             return;
@@ -119,11 +148,16 @@ public class Linearization {
     }
 
     public String toString() {
-        String temp = new String("{");
-        for (Node n : lin) {
-            temp += JSON.toJSONString(n.getInvocation()) + "; ";
+//        String temp = new String("{");
+//        for (HBGNode n : lin) {
+//            temp += JSON.toJSONString(n.getInvocation()) + "; ";
+//        }
+//
+//        return temp + "}";
+        ArrayList<String> list = new ArrayList<>();
+        for (HBGNode node : lin) {
+            list.add(node.getId() + "=" + node.getInvocation().getMethodName());
         }
-
-        return temp + "}";
+        return list.toString();
     }
 }

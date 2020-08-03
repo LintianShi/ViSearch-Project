@@ -1,7 +1,7 @@
 package test;
 
 import datatype.MyHashMap;
-import trace.Behaviour;
+import history.Behaviour;
 import validation.Specification;
 import validation.Validation;
 

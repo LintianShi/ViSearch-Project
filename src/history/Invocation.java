@@ -1,4 +1,4 @@
-package trace;
+package history;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
@@ -6,7 +6,7 @@ import com.alibaba.fastjson.annotation.JSONField;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import org.apache.commons.lang3.tuple.ImmutablePair;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 public class Invocation {
@@ -14,6 +14,8 @@ public class Invocation {
     private String methodName;
     @JSONField(name = "ARGUMENTS", ordinal = 2)
     private List<Object> arguments = new ArrayList<Object>();
+    @JSONField(name = "RETVALUE", ordinal = 3)
+    private String retValue;
 
     private int id;
     @JSONField(serialize=false)
@@ -25,6 +27,14 @@ public class Invocation {
 
     public Invocation() {
         ;
+    }
+
+    public void setRetValue(String retValue) {
+        this.retValue = retValue;
+    }
+
+    public String getRetValue() {
+        return retValue;
     }
 
     public void setMethodName(String name) {
@@ -74,6 +84,11 @@ public class Invocation {
     @Override
     public int hashCode() {
         return id;
+    }
+
+    @Override
+    public String toString() {
+        return methodName + ":" + arguments.toString();
     }
 
     public static void main(String[] args) {

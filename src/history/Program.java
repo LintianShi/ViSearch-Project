@@ -1,4 +1,4 @@
-package trace;
+package history;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
@@ -6,12 +6,9 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import validation.OperationTypes;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Function;
 
@@ -108,6 +105,34 @@ public class Program {
 
     public String toString() {
         return JSON.toJSONString(this);
+    }
+
+    public static HappenBeforeGraph load(String fileName) throws Exception {
+        File filename = new File(fileName);
+        Long filelength = filename.length();
+        byte[] filecontent = new byte[filelength.intValue()];
+        FileInputStream in = new FileInputStream(filename);
+        in.read(filecontent);
+        String jsonfile = new String(filecontent, "UTF-8");
+        Program program = JSON.parseObject(jsonfile, Program.class);
+
+        List<HappenBeforeGraph> list = program.generateHappenBeforeGraphs();
+        return list.get(0);
+    }
+
+    public static HappenBeforeGraph load(String fileName, OperationTypes operationTypes, QueryUpdateExtension queryUpdateExtension) throws Exception {
+        File filename = new File(fileName);
+        Long filelength = filename.length();
+        byte[] filecontent = new byte[filelength.intValue()];
+        FileInputStream in = new FileInputStream(filename);
+        in.read(filecontent);
+        String jsonfile = new String(filecontent, "UTF-8");
+        Program program = JSON.parseObject(jsonfile, Program.class);
+        program.assignID();
+        program.extendQueryUpdate(operationTypes, queryUpdateExtension);
+
+        List<HappenBeforeGraph> list = program.generateHappenBeforeGraphs();
+        return list.get(0);
     }
 
     public static void main(String[] args) throws Exception {

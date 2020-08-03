@@ -4,16 +4,16 @@
 	{
 		"INVOCATIONS":
 		[
-			{"METHOD NAME":"addAfter","ARGUMENTS":["","a"]},
-			{"METHOD NAME":"addAfter","ARGUMENTS":["a", "c"]},
-			{"METHOD NAME":"read","ARGUMENTS":[]}
+			{"METHOD NAME":"addAfter","ARGUMENTS":["","a"],"RETVALUE":"null"},
+			{"METHOD NAME":"addAfter","ARGUMENTS":["a", "c"],"RETVALUE":"null"},
+			{"METHOD NAME":"read","ARGUMENTS":[],"RETVALUE":"ac"}
 		]
 	}, 
 	{
 		"INVOCATIONS":
 		[
-			{"METHOD NAME":"addAfter","ARGUMENTS":["a","b"]},
-			{"METHOD NAME":"read","ARGUMENTS":[]}
+			{"METHOD NAME":"addAfter","ARGUMENTS":["a","b"],"RETVALUE":"null"},
+			{"METHOD NAME":"read","ARGUMENTS":[],"RETVALUE":"ab"}
 		]
 	}
 	],

@@ -1,8 +1,7 @@
-package trace;
+package history;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Behaviour {
     private HashMap<Integer, String> retValues = new HashMap<>();
@@ -10,7 +9,7 @@ public class Behaviour {
 
     public void add(Integer id, String retValue) {
         retValues.put(id, retValue);
-        retTrace.add(Integer.toString(id) + "=" + retValue);
+        retTrace.add(retValue);
     }
 
     public int size() {
@@ -31,7 +30,7 @@ public class Behaviour {
 
     @Override
     public String toString() {
-        return retValues.toString();
+        return retTrace.toString();
     }
 
     @Override
