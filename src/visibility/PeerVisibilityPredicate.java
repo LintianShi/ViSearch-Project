@@ -1,7 +1,7 @@
 package visibility;
 
-import trace.HBGNode;
-import trace.Linearization;
+import history.HBGNode;
+import history.Linearization;
 
 import java.util.Set;
 

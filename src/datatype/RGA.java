@@ -1,9 +1,8 @@
 package datatype;
 
-import trace.Invocation;
+import history.Invocation;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class RGA extends AbstractDataType {
     private ArrayList<String> data = new ArrayList<>();

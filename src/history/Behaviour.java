@@ -1,8 +1,7 @@
-package trace;
+package history;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class Behaviour {
     private HashMap<Integer, String> retValues = new HashMap<>();

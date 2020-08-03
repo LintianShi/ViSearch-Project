@@ -3,10 +3,10 @@ package test;
 import datatype.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import trace.HappenBeforeGraph;
-import trace.Invocation;
-import trace.Program;
-import trace.QueryUpdateExtension;
+import history.HappenBeforeGraph;
+import history.Invocation;
+import history.Program;
+import history.QueryUpdateExtension;
 import validation.MinimalExtension;
 import validation.OperationTypes;
 

@@ -1,10 +1,9 @@
-package trace;
+package history;
 
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.HashMap;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class QueryUpdateExtension {
     private HashMap<String, Function<Invocation, Pair<Invocation, Invocation>>> map = new HashMap<>();

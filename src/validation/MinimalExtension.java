@@ -2,7 +2,7 @@ package validation;
 
 import datatype.AbstractDataType;
 import datatype.MyHashMap;
-import trace.*;
+import history.*;
 import visibility.LinVisibility;
 
 import java.util.*;

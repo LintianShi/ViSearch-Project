@@ -1,6 +1,6 @@
 package generator;
 
-import trace.Invocation;
+import history.Invocation;
 
 public class RGAInvocationGenerator {
     private Invocation generateRead() {

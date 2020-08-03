@@ -1,6 +1,6 @@
 package visibility;
 
-import trace.HBGNode;
+import history.HBGNode;
 
 import java.util.HashMap;
 import java.util.Set;

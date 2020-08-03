@@ -1,6 +1,6 @@
 package datatype;
 
-import trace.Invocation;
+import history.Invocation;
 
 import java.util.HashMap;
 

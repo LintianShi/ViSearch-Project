@@ -1,8 +1,7 @@
 package datatype;
 
-import trace.Invocation;
+import history.Invocation;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class SimpleSet extends AbstractDataType {

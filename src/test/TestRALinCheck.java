@@ -5,7 +5,7 @@ import datatype.ORSet;
 import datatype.RGA;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import trace.*;
+import history.*;
 import validation.OperationTypes;
 import validation.Validation;
 import visibility.LinVisibility;
