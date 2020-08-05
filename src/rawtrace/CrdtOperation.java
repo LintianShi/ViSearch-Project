@@ -2,6 +2,7 @@ package rawtrace;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CrdtOperation {
     public static enum CRDT_OPERATION_TYPE { PREPARE, EFFECT}
@@ -12,6 +13,12 @@ public class CrdtOperation {
     private String crdtName;
     private ArrayList<String> arguments = new ArrayList<>();
     private VectorClock vectorClock = new VectorClock();
+
+    private int uniqueID;
+    private boolean origin = false;
+
+    private List<CrdtOperation> hbs = new ArrayList<>();
+    private CrdtOperation po = null;
 
     public CrdtOperation() {
         ;
@@ -36,6 +43,12 @@ public class CrdtOperation {
         }
         if (this.type == CRDT_OPERATION_TYPE.EFFECT)
             this.vectorClock = new VectorClock(r2[r2.length - 1]);
+
+        String id = operationName + "," + crdtName;
+        for (String arg : arguments) {
+            id += "," + arg;
+        }
+        this.uniqueID = id.hashCode();
     }
 
     public long getTimeStamp() {
@@ -62,6 +75,34 @@ public class CrdtOperation {
         return vectorClock;
     }
 
+    public int getUniqueID() {
+        return uniqueID;
+    }
+
+    public List<CrdtOperation> getHbs() {
+        return hbs;
+    }
+
+    public void addHb(CrdtOperation hb) {
+        this.hbs.add(hb);
+    }
+
+    public CrdtOperation getPo() {
+        return po;
+    }
+
+    public void setPo(CrdtOperation po) {
+        this.po = po;
+    }
+
+    public boolean isOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(boolean origin) {
+        this.origin = origin;
+    }
+
     public void print() {
         System.out.print("Time Stamp: ");
         System.out.println(timeStamp);
@@ -79,6 +120,33 @@ public class CrdtOperation {
         }
         System.out.println();
         System.out.println("Vector Clock: " + vectorClock.toString());
+    }
+
+//    public int hashCode() {
+//        return uniqueID;
+//    }
+//
+//    @Override
+//    public boolean equals(Object obj) {
+//        return uniqueID == obj.hashCode();
+//    }
+
+    public String toString() {
+        String result = Long.toString(timeStamp) + ", ";
+        if (type == CRDT_OPERATION_TYPE.PREPARE) {
+            result += "PREPARE: ";
+        } else if (type == CRDT_OPERATION_TYPE.EFFECT) {
+            result += "EFFECT: ";
+        }
+        result += operationName + " " + crdtName + " ";
+        for (String arg : arguments) {
+            result += arg + " ";
+        }
+        result += vectorClock.toString();
+        for (CrdtOperation hb : hbs) {
+            result += "Hb: " + hb.toString();
+        }
+        return result;
     }
 
     public static void main(String[] args) throws Exception {
