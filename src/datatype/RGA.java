@@ -1,6 +1,7 @@
 package datatype;
 
 import history.Invocation;
+import rawtrace.CrdtOperation;
 
 import java.util.ArrayList;
 
@@ -27,6 +28,10 @@ public class RGA extends AbstractDataType {
             res += data.get(i);
         }
         return res;
+    }
+
+    public Invocation transformCrdtOperation(CrdtOperation crdtOperation) {
+        return null;
     }
 
     @Override

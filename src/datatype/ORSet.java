@@ -1,6 +1,7 @@
 package datatype;
 
 import history.Invocation;
+import rawtrace.CrdtOperation;
 
 import java.util.*;
 
@@ -52,6 +53,10 @@ public class ORSet extends AbstractDataType {
         }
         //System.out.println("read-" + data.toString());
         return data.toString();
+    }
+
+    public Invocation transformCrdtOperation(CrdtOperation crdtOperation) {
+        return null;
     }
 
     @Override

@@ -1,8 +1,16 @@
 package rawtrace;
 
+import datatype.AbstractDataType;
+import history.HBGNode;
+import history.HappenBeforeGraph;
+import history.Invocation;
+import history.QueryUpdateExtension;
+import validation.OperationTypes;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CrdtTrace {
@@ -57,6 +65,8 @@ public class CrdtTrace {
                 c = c.getPo();
             }
         }
+        adjustHappenBeforeRelation();
+        removeRedundantEffect();
     }
 
     private void addHappenBeforeRelation(CrdtOperation c, CrdtOperation head) {
@@ -73,12 +83,108 @@ public class CrdtTrace {
         }
     }
 
+    private void adjustHappenBeforeRelation() {
+        for (CrdtOperation head : starts) {
+            CrdtOperation c = head;
+            while (c != null) {
+                if (c.getType() == CrdtOperation.CRDT_OPERATION_TYPE.EFFECT && c.isOrigin()) {
+                    ArrayList<CrdtOperation> newHbList = new ArrayList<>();
+                    for (CrdtOperation next : c.getHbs()) {
+                        CrdtOperation newHb = findNextOriginEffect(next);
+                        if (newHb != null) {
+                            newHbList.add(newHb);
+                        }
+                    }
+                    c.setHbs(newHbList);
+                }
+                c = c.getPo();
+            }
+        }
+    }
+
+    private CrdtOperation findNextOriginEffect(CrdtOperation operation) {
+        while (operation != null)
+        {
+            if (operation.isOrigin()) {
+                return operation;
+            }
+            operation = operation.getPo();
+        }
+        return null;
+    }
+
+    private void removeRedundantEffect() {
+        ArrayList<CrdtOperation> newStarts = new ArrayList<>();
+        for (CrdtOperation head : starts) {
+            CrdtOperation current = head;
+            CrdtOperation prev = null;
+            while (current != null) {
+                if (!current.isOrigin()) {
+                    if (prev == null) {
+                        head = current.getPo();
+                        prev = null;
+                        current = head;
+                    } else {
+                        prev.setPo(current.getPo());
+                        current = current.getPo();
+                    }
+                } else {
+                    prev = current;
+                    current = current.getPo();
+                }
+            }
+            newStarts.add(head);
+        }
+        starts = newStarts;
+    }
+
+    public HappenBeforeGraph generateHappenBeforeGraph(AbstractDataType adt) {
+        HashMap<Integer, HBGNode> invocationMap = new HashMap<>();
+        for (CrdtOperation head : starts) {
+            CrdtOperation c = head;
+            while (c != null) {
+                Invocation invocation = adt.transformCrdtOperation(c);
+                invocationMap.put(c.getUniqueID(), new HBGNode(invocation, c.getUniqueID()));
+            }
+        }
+
+        for (CrdtOperation head : starts) {
+            CrdtOperation c = head;
+            while (c != null) {
+                HBGNode node = invocationMap.get(c.getUniqueID());
+                HBGNode poNode = invocationMap.get(c.getPo().getUniqueID());
+                node.addNextNode(poNode);
+                poNode.addPrevNode(node);
+                for (CrdtOperation hbOp : c.getHbs()) {
+                    HBGNode nextNode = invocationMap.get(hbOp.getUniqueID());
+                    node.addNextNode(nextNode);
+                    nextNode.addPrevNode(node);
+                }
+            }
+        }
+
+        List<HBGNode> startNodes = new ArrayList<>();
+        for (CrdtOperation head : starts) {
+            startNodes.add(invocationMap.get(head.getUniqueID()));
+        }
+        return new HappenBeforeGraph(startNodes);
+    }
+
+    public void extendQueryUpdate(OperationTypes operationTypes, QueryUpdateExtension queryUpdateExtension) {
+        for (CrdtOperation head : starts) {
+            CrdtOperation c = head;
+            while (c != null) {
+                
+            }
+        }
+    }
+
     public void print() {
         int i = 0;
         for (CrdtOperation head : starts) {
             System.out.println("Server" + Integer.toString(i) + ":");
             CrdtOperation c = head;
-            for (int j = 0; j < 22; j++) {
+            for (int j = 0; c != null && j < 22; j++) {
                 System.out.println(c.toString());
                 c = c.getPo();
             }

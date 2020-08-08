@@ -1,6 +1,7 @@
 package datatype;
 
 import history.Invocation;
+import rawtrace.CrdtOperation;
 
 import java.util.HashSet;
 
@@ -19,6 +20,10 @@ public class SimpleSet extends AbstractDataType {
 
     public String read(Invocation invocation) {
         return data.toString();
+    }
+
+    public Invocation transformCrdtOperation(CrdtOperation crdtOperation) {
+        return null;
     }
 
     @Override

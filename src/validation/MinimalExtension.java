@@ -207,7 +207,7 @@ public class MinimalExtension {
             for (HBGNode node : temp) {
                 boolean flag = true;
                 for (HBGNode prev : node.getPrevs()) {
-                    if (!linearization.contains(prev)) {
+                    if (!linearization.contains(prev)) {    //节点所有的前驱必须都已经被包含在全序里
                         flag = false;
                         break;
                     }
@@ -217,7 +217,7 @@ public class MinimalExtension {
                 }
             }
             for (HBGNode node : happenBeforeGraph) {
-                if (node.getPrevs().isEmpty() && !linearization.contains(node)) {
+                if (node.getPrevs().isEmpty() && !linearization.contains(node)) {   //没有前驱的节点
                     adjacencyNodes.add(node);
                 }
             }

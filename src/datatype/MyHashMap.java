@@ -1,6 +1,7 @@
 package datatype;
 
 import history.Invocation;
+import rawtrace.CrdtOperation;
 
 import java.util.HashMap;
 
@@ -35,6 +36,10 @@ public class MyHashMap extends AbstractDataType {
         } else {
             return Integer.toString(ret);
         }
+    }
+
+    public Invocation transformCrdtOperation(CrdtOperation crdtOperation) {
+        return null;
     }
 
     @Override

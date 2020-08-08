@@ -1,6 +1,7 @@
 package datatype;
 
 import history.Invocation;
+import rawtrace.CrdtOperation;
 
 import java.lang.reflect.Method;
 
@@ -12,6 +13,8 @@ public abstract class AbstractDataType {
         method.setAccessible(true);
         return (String)method.invoke(this, invocation);
     }
+
+    public abstract Invocation transformCrdtOperation(CrdtOperation crdtOperation);
 
     public abstract void reset();
 

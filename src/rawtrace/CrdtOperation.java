@@ -83,8 +83,16 @@ public class CrdtOperation {
         return hbs;
     }
 
+    public void setHbs(List<CrdtOperation> hbs) {
+        this.hbs = hbs;
+    }
+
     public void addHb(CrdtOperation hb) {
         this.hbs.add(hb);
+    }
+
+    public void removeHb(CrdtOperation hb) {
+        this.hbs.remove(hb);
     }
 
     public CrdtOperation getPo() {
@@ -131,7 +139,7 @@ public class CrdtOperation {
 //        return uniqueID == obj.hashCode();
 //    }
 
-    public String toString() {
+    public String toString(Boolean withHb) {
         String result = Long.toString(timeStamp) + ", ";
         if (type == CRDT_OPERATION_TYPE.PREPARE) {
             result += "PREPARE: ";
@@ -143,10 +151,16 @@ public class CrdtOperation {
             result += arg + " ";
         }
         result += vectorClock.toString();
-        for (CrdtOperation hb : hbs) {
-            result += "Hb: " + hb.toString();
+        if (withHb) {
+            for (CrdtOperation hb : hbs) {
+                result += " = Hb: " + hb.toString(false);
+            }
         }
         return result;
+    }
+
+    public String toString() {
+        return toString(true);
     }
 
     public static void main(String[] args) throws Exception {
