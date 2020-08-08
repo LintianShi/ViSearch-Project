@@ -171,12 +171,7 @@ public class CrdtTrace {
     }
 
     public void extendQueryUpdate(OperationTypes operationTypes, QueryUpdateExtension queryUpdateExtension) {
-        for (CrdtOperation head : starts) {
-            CrdtOperation c = head;
-            while (c != null) {
-                
-            }
-        }
+        
     }
 
     public void print() {
