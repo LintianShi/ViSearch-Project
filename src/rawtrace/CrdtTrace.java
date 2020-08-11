@@ -1,10 +1,12 @@
 package rawtrace;
 
 import datatype.AbstractDataType;
+import datatype.RRpq;
 import history.HBGNode;
 import history.HappenBeforeGraph;
 import history.Invocation;
 import history.QueryUpdateExtension;
+import test.TestMinimalRALinCheck;
 import validation.OperationTypes;
 
 import java.io.BufferedReader;
@@ -15,6 +17,7 @@ import java.util.List;
 
 public class CrdtTrace {
     private List<CrdtOperation> starts = new ArrayList<>();
+    private int size;
 
     public CrdtTrace() {
         ;
@@ -33,7 +36,9 @@ public class CrdtTrace {
             String str;
             CrdtOperation head = null;
             CrdtOperation tail = null;
-            while ((str = br.readLine()) != null) {
+            int num = 0;
+            while ((str = br.readLine()) != null && num < 10) {
+                num++;
                 CrdtOperation temp = new CrdtOperation(str);
                 if (head == null) {
                     head = temp;
@@ -87,7 +92,8 @@ public class CrdtTrace {
         for (CrdtOperation head : starts) {
             CrdtOperation c = head;
             while (c != null) {
-                if (c.getType() == CrdtOperation.CRDT_OPERATION_TYPE.EFFECT && c.isOrigin()) {
+                if (c.isOrigin()) {
+                    size++;
                     ArrayList<CrdtOperation> newHbList = new ArrayList<>();
                     for (CrdtOperation next : c.getHbs()) {
                         CrdtOperation newHb = findNextOriginEffect(next);
@@ -145,6 +151,7 @@ public class CrdtTrace {
             while (c != null) {
                 Invocation invocation = adt.transformCrdtOperation(c);
                 invocationMap.put(c.getUniqueID(), new HBGNode(invocation, c.getUniqueID()));
+                c = c.getPo();
             }
         }
 
@@ -152,14 +159,18 @@ public class CrdtTrace {
             CrdtOperation c = head;
             while (c != null) {
                 HBGNode node = invocationMap.get(c.getUniqueID());
-                HBGNode poNode = invocationMap.get(c.getPo().getUniqueID());
-                node.addNextNode(poNode);
-                poNode.addPrevNode(node);
+                HBGNode poNode = (c.getPo() != null) ? invocationMap.get(c.getPo().getUniqueID()) : null;
+                if (poNode != null) {
+                    node.addNextNode(poNode);
+                    poNode.addPrevNode(node);
+                }
+
                 for (CrdtOperation hbOp : c.getHbs()) {
                     HBGNode nextNode = invocationMap.get(hbOp.getUniqueID());
                     node.addNextNode(nextNode);
                     nextNode.addPrevNode(node);
                 }
+                c = c.getPo();
             }
         }
 
@@ -167,11 +178,15 @@ public class CrdtTrace {
         for (CrdtOperation head : starts) {
             startNodes.add(invocationMap.get(head.getUniqueID()));
         }
-        return new HappenBeforeGraph(startNodes);
+        return new HappenBeforeGraph(startNodes, invocationMap);
     }
 
     public void extendQueryUpdate(OperationTypes operationTypes, QueryUpdateExtension queryUpdateExtension) {
-        
+
+    }
+
+    public int size() {
+        return size;
     }
 
     public void print() {
@@ -189,11 +204,15 @@ public class CrdtTrace {
 
     public static void main(String[] args) {
         List<String> fileList = new ArrayList<>();
-        for (int i = 0; i <= 4; i++) {
-            fileList.add("server" + Integer.toString(i) + "_crdt.trc");
+        for (int i = 0; i < 9; i++) {
+            fileList.add("trace/server" + Integer.toString(i) + "_crdt.trc");
         }
         CrdtTrace trace = new CrdtTrace(fileList);
         trace.extendHappenBeforeRelation();
-        trace.print();
+        //trace.print();
+
+        HappenBeforeGraph happenBeforeGraph = trace.generateHappenBeforeGraph(new RRpq());
+        System.out.println(trace.size());
+        TestMinimalRALinCheck.minimalExtensionRaLinCheck(happenBeforeGraph, null, null, new RRpq());
     }
 }

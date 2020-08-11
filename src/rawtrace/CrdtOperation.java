@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CrdtOperation {
-    public static enum CRDT_OPERATION_TYPE { PREPARE, EFFECT}
+    public static enum CRDT_OPERATION_TYPE { PREPARE, EFFECT, USER_LOG}
 
     private long timeStamp;
     private CRDT_OPERATION_TYPE type;
@@ -33,12 +33,15 @@ public class CrdtOperation {
             this.type = CRDT_OPERATION_TYPE.PREPARE;
         else if (r2[0].equals("EFFECT:")) {
             this.type = CRDT_OPERATION_TYPE.EFFECT;
+        } else if (r2[0].equals("user_log:")) {
+            this.origin = true;
+            this.type = CRDT_OPERATION_TYPE.USER_LOG;
         } else {
             System.err.println("No such CRDT Operation Type");
         }
         this.operationName = r2[1];
         this.crdtName = r2[2];
-        for (int i = 3; i < r2.length - 1; i++) {
+        for (int i = 3; i < r2.length - (this.type == CRDT_OPERATION_TYPE.EFFECT ? 1 : 0); i++) {
             this.arguments.add(r2[i]);
         }
         if (this.type == CRDT_OPERATION_TYPE.EFFECT)
@@ -118,6 +121,8 @@ public class CrdtOperation {
             System.out.println("Operation Type: PREPARE");
         else if (type == CRDT_OPERATION_TYPE.EFFECT)
             System.out.println("Operation Type: EFFECT");
+        else if (type == CRDT_OPERATION_TYPE.USER_LOG)
+            System.out.println("Operation Type: USER_LOG");
         else
             System.out.println("Operation Type: UNKNOWN");
         System.out.println("Operation Name: " + operationName);
@@ -145,16 +150,20 @@ public class CrdtOperation {
             result += "PREPARE: ";
         } else if (type == CRDT_OPERATION_TYPE.EFFECT) {
             result += "EFFECT: ";
+        } else if (type == CRDT_OPERATION_TYPE.USER_LOG) {
+            result += "USER_LOG: ";
         }
         result += operationName + " " + crdtName + " ";
         for (String arg : arguments) {
             result += arg + " ";
         }
-        result += vectorClock.toString();
+        if (type == CRDT_OPERATION_TYPE.EFFECT)
+            result += vectorClock.toString();
         if (withHb) {
             for (CrdtOperation hb : hbs) {
                 result += " = Hb: " + hb.toString(false);
             }
+            result += " = Hb: " + po.toString(false);
         }
         return result;
     }

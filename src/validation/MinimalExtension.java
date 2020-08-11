@@ -12,6 +12,7 @@ public class MinimalExtension {
     private OperationTypes operationTypes;
     private Linearization linearization = new Linearization();
     private LinVisibility linVisibility = new LinVisibility();
+    private boolean find = false;
 
     public MinimalExtension(HappenBeforeGraph happenBeforeGraph) {
         this.happenBeforeGraph = happenBeforeGraph;
@@ -22,7 +23,12 @@ public class MinimalExtension {
         this.operationTypes = operationTypes;
     }
 
+
     public boolean checkConsistency(Map<String, Set<String>> results, AbstractDataType adt) {
+        //System.out.println("check");
+        if (find == true) {
+            return true;
+        }
         if (isComplete()) {
             String lin = linearization.toString();
             String vis = linVisibility.toString();
@@ -34,13 +40,13 @@ public class MinimalExtension {
                 set.add(vis);
                 results.put(lin, set);
             }
+            find = true;
             return true;
         }
         List<Linearization> lins = linExtensions();
         for (Linearization lin : lins) {
             int linSize = lin.size();
             linearization.addAll(lin);
-
             List<Set<HBGNode>> visibilities = visExtensions(adt);
             for (Set<HBGNode> vis : visibilities) {
                 linVisibility.updateNodeVisibility(linearization.getLast(), vis);
@@ -61,6 +67,7 @@ public class MinimalExtension {
     }
 
     private List<Set<HBGNode>> visExtensions(AbstractDataType adt) {
+        System.out.println("vis extension");
         Set<HBGNode> visible = new HashSet<>();
         HBGNode node = linearization.get(linearization.size() - 1);
         Set<HBGNode> prevs = node.getAllPrevs();
@@ -81,19 +88,24 @@ public class MinimalExtension {
     }
 
     private List<Set<HBGNode>> generateMinimalVis(Set<HBGNode> base, List<HBGNode> ext, AbstractDataType adt) {
+        //System.out.println("minimal vis");
         List<Set<HBGNode>> results = new ArrayList<>();
         String retTrace = linearization.getRetValueTrace(linearization.size());
         HBGNode node = linearization.getLast();
         SubsetNode head = generateAllSubsets(ext);
         BFTraverse(base, head, adt, retTrace, results);
+        System.out.println("BFT over");
         linVisibility.removeNodeVisibility(node);
+
         return results;
     }
 
     private void BFTraverse(Set<HBGNode> base, SubsetNode node, AbstractDataType adt, String retTrace, List<Set<HBGNode>> results) {
+        System.out.println("BFT");
         Queue<SubsetNode> queue = new ArrayDeque<>();
         queue.offer(node);
         while (!queue.isEmpty()) {
+            System.out.println(queue.size());
             SubsetNode subsetNode = queue.poll();
             subsetNode.visited = true;
             if (!subsetNode.valid) {
@@ -108,6 +120,7 @@ public class MinimalExtension {
             System.out.println();
             if (excuteTrace.equals(retTrace)) {
                 results.add(vis);
+                System.out.println("hit" + Integer.toString(subsetNode.getNexts().size()));
                 for (SubsetNode next : subsetNode.getNexts()) {
                     invalidate(next);
                 }
@@ -132,9 +145,9 @@ public class MinimalExtension {
         vis.addAll(node.getSubset());
         linVisibility.updateNodeVisibility(linearization.getLast(), vis);
         String excuteTrace = Validation.execute(adt, linearization, linVisibility).toString();
-//        System.out.println(retTrace);
-//        System.out.println(excuteTrace);
-//        System.out.println();
+        System.out.println(retTrace);
+        System.out.println(excuteTrace);
+        System.out.println();
         if (excuteTrace.equals(retTrace)) {
             results.add(vis);
             for (SubsetNode next : node.getNexts()) {
@@ -150,20 +163,24 @@ public class MinimalExtension {
     private static void invalidate(SubsetNode node) {
         node.valid = false;
         for (SubsetNode next : node.getNexts()) {
-            invalidate(next);
+            if (next.valid == true)
+                invalidate(next);
         }
     }
 
     private static SubsetNode generateAllSubsets(List<HBGNode> candidate) {
+        //System.out.println("generateAllSubsets 1");
         Stack<HBGNode> stack = new Stack<>();
         List<Set<HBGNode>> results = new ArrayList<>();
         generateAllSubsets(candidate, 0, stack, results);
+        System.out.println("ok");
         SubsetNode head = null;
         List<SubsetNode> subsets = new ArrayList<>(results.size());
         for (Set<HBGNode> result : results) {
             subsets.add(new SubsetNode(result));
         }
 
+        System.out.println("size:" + Integer.toString(subsets.size()));
         for (int i = 0; i < subsets.size(); i++) {
             if (subsets.get(i).getSubset().size() == 0) {
                 head = subsets.get(i);
@@ -175,10 +192,12 @@ public class MinimalExtension {
                 }
             }
         }
+        System.out.println("ok1");
         return head;
     }
 
     private static void generateAllSubsets(List<HBGNode> candidate, int index, Stack<HBGNode> stack, List<Set<HBGNode>> results) {
+        //System.out.println("generateAllSubsets: " + Integer.toString(index) + ": " + Integer.toString(candidate.size()));
         if (candidate.size() == index) {
             Set<HBGNode> temp = new HashSet<>(stack);
             results.add(temp);
@@ -192,6 +211,7 @@ public class MinimalExtension {
 
 
     private List<Linearization> linExtensions() {
+        System.out.println("lin extension");
         Set<HBGNode> adjacencyNodes = new HashSet<>();
         if (linearization.size() == 0) {
             for (HBGNode node : happenBeforeGraph) {

@@ -9,8 +9,9 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
     private HashMap<Integer, HBGNode> nodes = new HashMap<>();
     private int[][] programOrders;
 
-    public HappenBeforeGraph(List<HBGNode> startNodes) {
+    public HappenBeforeGraph(List<HBGNode> startNodes, HashMap<Integer, HBGNode> map) {
         this.startNodes = startNodes;
+        this.nodes = map;
     }
 
     public HappenBeforeGraph(List<SubProgram> subPrograms, HappenBefore happenBefore) {
