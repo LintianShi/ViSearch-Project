@@ -84,6 +84,7 @@ public class MinimalExtension {
             }
         }
 
+        //candidate.clear();
         return generateMinimalVis(visible, candidate, adt);
     }
 
@@ -115,12 +116,15 @@ public class MinimalExtension {
             vis.addAll(subsetNode.getSubset());
             linVisibility.updateNodeVisibility(linearization.getLast(), vis);
             String excuteTrace = Validation.crdtExecute(adt, linearization, linVisibility).toString();
+//            if (linearization.getLast().getInvocation().getMethodName().equals("rwfzmax")) {
+//                System.out.println(linVisibility.getNodeVisibility(linearization.getLast()));
+//                System.out.println(linearization.getLast().getAllPrevs());
+//            }
             System.out.println(retTrace);
             System.out.println(excuteTrace);
             System.out.println();
             if (excuteTrace.equals(retTrace)) {
                 results.add(vis);
-                System.out.println("hit" + Integer.toString(subsetNode.getNexts().size()));
                 for (SubsetNode next : subsetNode.getNexts()) {
                     invalidate(next);
                 }

@@ -97,7 +97,8 @@ public class HBGNode {
 //       }
 //       return temp + "]}";
 //        return temp;
-        return Integer.toString(getId());
+        //return Integer.toString(getId());
+        return invocation.toString();
     }
 
     @Override

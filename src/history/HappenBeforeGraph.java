@@ -133,6 +133,14 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         }
     }
 
+    public void printPrevs() {
+        for (Map.Entry<Integer, HBGNode> entry : nodes.entrySet()) {
+            if (entry.getValue().getInvocation().getMethodName().equals("rwfzmax")) {
+                System.out.println(entry.getValue().getAllPrevs());
+            }
+        }
+    }
+
     public static void main(String[] args) {
         ;
     }

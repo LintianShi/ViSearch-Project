@@ -116,6 +116,7 @@ public class RRpq extends AbstractDataType {
             invocation.setMethodName(crdtOperation.getOperationName());
             invocation.setRetValue(crdtOperation.getOperationName());
             ArrayList<String> args = crdtOperation.getArguments();
+
             if (crdtOperation.getOperationName().equals("rwfzadd")) {
                 Integer ele = Integer.parseInt(args.get(0));
                 Double value = Double.parseDouble(args.get(1));
@@ -124,6 +125,7 @@ public class RRpq extends AbstractDataType {
                 String ret = crdtOperation.getOperationName();
                 ret += ":" + Integer.toString(ele) + ":" + Double.toString(value);
                 invocation.setRetValue(ret);
+                invocation.setOperationType("UPDATE");
             } else if (crdtOperation.getOperationName().equals("rwfzincrby")) {
                 Integer ele = Integer.parseInt(args.get(0));
                 Double value = Double.parseDouble(args.get(1));
@@ -132,16 +134,19 @@ public class RRpq extends AbstractDataType {
                 String ret = crdtOperation.getOperationName();
                 ret += ":" + Integer.toString(ele) + ":" + Double.toString(value);
                 invocation.setRetValue(ret);
+                invocation.setOperationType("UPDATE");
             } else if (crdtOperation.getOperationName().equals("rwfzrem")) {
                 Integer ele = Integer.parseInt(args.get(0));
                 invocation.addArguments(ele);
                 String ret = crdtOperation.getOperationName();
                 ret += ":" + Integer.toString(ele);
                 invocation.setRetValue(ret);
+                invocation.setOperationType("UPDATE");
             } else if (crdtOperation.getOperationName().equals("rwfzscore")) {
                 String arg1 = args.get(0);
                 Integer ele = Integer.parseInt(arg1.substring(0, arg1.length() - 1));
                 invocation.addArguments(ele);
+                invocation.setOperationType("QUERY");
                 if (args.get(1).equals("NONE")) {
                     invocation.setRetValue(args.get(0) + args.get(1));
                 } else {
@@ -151,6 +156,7 @@ public class RRpq extends AbstractDataType {
             } else if (crdtOperation.getOperationName().equals("rwfzmax")) {
                 Double val = Double.parseDouble(args.get(1));
                 invocation.setRetValue(args.get(0) + Double.toString(val));
+                invocation.setOperationType("QUERY");
             } else {
                 System.err.println("No such method");
                 invocation = null;

@@ -163,7 +163,8 @@ public class CrdtOperation {
             for (CrdtOperation hb : hbs) {
                 result += " = Hb: " + hb.toString(false);
             }
-            result += " = Hb: " + po.toString(false);
+            if (po != null)
+                result += " = Hb: " + po.toString(false);
         }
         return result;
     }
