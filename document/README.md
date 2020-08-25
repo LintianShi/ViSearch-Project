@@ -19,8 +19,8 @@
 
 * 将各EFFECT之间用Po和Hb连接起来，就可以得到一个基于EFFECT操作服务端视角的DAG图。
 
-  ![avatar](server.png)
+  ![server.png](https://i.loli.net/2020/08/25/3YTSADyGNvr8i9Q.png)
 
 * 将非操作发起的EFFECT除去后，可以得到客户端视角的DAG图。
 
-  ![avatar](client.png)
+  ![client.png](https://i.loli.net/2020/08/25/sv4l7iPtCd8kcFX.png)
