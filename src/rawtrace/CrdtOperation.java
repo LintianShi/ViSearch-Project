@@ -12,7 +12,7 @@ public class CrdtOperation {
     private String operationName;
     private String crdtName;
     private ArrayList<String> arguments = new ArrayList<>();
-    private VectorClock vectorClock = new VectorClock();
+    private VectorClock vectorClock = new VectorClock();   //useless
 
     private int uniqueID;
     private boolean origin = false;
