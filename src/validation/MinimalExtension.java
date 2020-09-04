@@ -41,19 +41,27 @@ public class MinimalExtension {
                 results.put(lin, set);
             }
             find = true;
+            System.out.println("find!!!");
             return true;
         }
         List<Linearization> lins = linExtensions();
         for (Linearization lin : lins) {
             int linSize = lin.size();
             linearization.addAll(lin);
-            List<Set<HBGNode>> visibilities = visExtensions(adt);
-            for (Set<HBGNode> vis : visibilities) {
-                linVisibility.updateNodeVisibility(linearization.getLast(), vis);
-                checkConsistency(results, adt);
-                linVisibility.removeNodeVisibility(linearization.getLast());
+            Set<HBGNode> visible = getVisibleNodes();
+            List<HBGNode> candidate = getCandinateNodes(visible);
+            ManualRecurse manualRecurse = new ManualRecurse(candidate);
+            List<HBGNode> subset = null;
+            while ((subset = manualRecurse.enumerate()) != null) {
+                Set<HBGNode> vis = new HashSet<>(visible);
+                vis.addAll(subset);
+                if (excuteCheck(vis, adt)) {
+                    manualRecurse.prune(subset);
+                    linVisibility.updateNodeVisibility(linearization.getLast(), vis);
+                    checkConsistency(results, adt);
+                    linVisibility.removeNodeVisibility(linearization.getLast());
+                }
             }
-
 
             for (int i = 0; i < linSize; i++) {
                 linearization.removeLast();
@@ -64,6 +72,43 @@ public class MinimalExtension {
 
     private boolean isComplete() {
         return happenBeforeGraph.size() == linearization.size();
+    }
+
+    private Set<HBGNode> getVisibleNodes() {
+        System.out.println("get Visible Nodes");
+        Set<HBGNode> visible = new HashSet<>();
+        HBGNode node = linearization.get(linearization.size() - 1);
+        Set<HBGNode> prevs = node.getAllPrevs();
+        for (HBGNode prev : prevs) {
+            visible.addAll(linVisibility.getNodeVisibility(prev));
+        }
+        visible.addAll(prevs);
+        visible.add(node);
+        return visible;
+    }
+
+    private List<HBGNode> getCandinateNodes(Set<HBGNode> visible) {
+        List<HBGNode> candidate = new ArrayList<>();
+        for (HBGNode node1 : linearization) {
+            if (!visible.contains(node1)) {
+                candidate.add(node1);
+            }
+        }
+        return candidate;
+    }
+
+    private boolean excuteCheck(Set<HBGNode> vis, AbstractDataType adt) {
+        linVisibility.updateNodeVisibility(linearization.getLast(), vis);
+        String retTrace = linearization.getRetValueTrace(linearization.size());
+        String excuteTrace = Validation.crdtExecute(adt, linearization, linVisibility).toString();
+        System.out.println(retTrace);
+        System.out.println(excuteTrace);
+        System.out.println();
+        if (excuteTrace.equals(retTrace)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private List<Set<HBGNode>> visExtensions(AbstractDataType adt) {

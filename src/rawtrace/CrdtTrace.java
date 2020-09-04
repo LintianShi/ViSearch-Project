@@ -37,7 +37,7 @@ public class CrdtTrace {
             CrdtOperation head = null;
             CrdtOperation tail = null;
             int num = 0;
-            while ((str = br.readLine()) != null && num < 9) {
+            while ((str = br.readLine()) != null && num < 100) {
                 num++;
                 CrdtOperation temp = new CrdtOperation(str);
                 if (head == null) {
