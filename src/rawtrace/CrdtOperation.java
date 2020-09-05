@@ -14,6 +14,7 @@ public class CrdtOperation {
     private ArrayList<String> arguments = new ArrayList<>();
     private VectorClock vectorClock = new VectorClock();   //useless
 
+    private int id;
     private int uniqueID;
     private boolean origin = false;
 
@@ -47,11 +48,12 @@ public class CrdtOperation {
         if (this.type == CRDT_OPERATION_TYPE.EFFECT)
             this.vectorClock = new VectorClock(r2[r2.length - 1]);
 
-        String id = operationName + "," + crdtName;
+        String oprID = operationName + "," + crdtName;
         for (String arg : arguments) {
-            id += "," + arg;
+            oprID += "," + arg;
         }
-        this.uniqueID = id.hashCode();
+        this.id = oprID.hashCode();
+        this.uniqueID = (Long.toString(timeStamp) + "," + oprID).hashCode();
     }
 
     public long getTimeStamp() {
@@ -80,6 +82,9 @@ public class CrdtOperation {
 
     public int getUniqueID() {
         return uniqueID;
+    }
+    public int getID() {
+        return id;
     }
 
     public List<CrdtOperation> getHbs() {

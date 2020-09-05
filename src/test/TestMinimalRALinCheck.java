@@ -1,14 +1,12 @@
 package test;
 
 import datatype.*;
+import history.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import history.HappenBeforeGraph;
-import history.Invocation;
-import history.Program;
-import history.QueryUpdateExtension;
 import validation.MinimalExtension;
 import validation.OperationTypes;
+import visibility.LinVisibility;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,19 +14,27 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class TestMinimalRALinCheck {
-    public static Map<String, Set<String>> minimalExtensionRaLinCheck(HappenBeforeGraph happenBeforeGraph, OperationTypes operationTypes,
+    public static void minimalExtensionRaLinCheck(HappenBeforeGraph happenBeforeGraph, OperationTypes operationTypes,
                                                                       QueryUpdateExtension queryUpdateExtension, AbstractDataType adt) {
-        Map<String, Set<String>> results = new HashMap<>();
-        new MinimalExtension(happenBeforeGraph).checkConsistency(results, adt);
-        System.out.println(results.size());
-        for (Map.Entry<String, Set<String>> entry: results.entrySet()) {
-            System.out.println(entry.getKey().toString());
-            for (String vis : entry.getValue()) {
-                System.out.println(vis);
-            }
-            System.out.println();
+        MinimalExtension minimalExtension = new MinimalExtension(happenBeforeGraph);
+        minimalExtension.checkConsistency(adt);
+        Pair<Linearization, LinVisibility> result = minimalExtension.getResult();
+        System.out.println("====================Linearization====================");
+        for (HBGNode node : result.getLeft()) {
+            System.out.print(node.getInvocation().getRetValue() + ", ");
         }
-        return results;
+        System.out.println();
+
+        System.out.println("====================Visibility====================");
+        for (HBGNode node : result.getLeft()) {
+            System.out.print("#" + node.getInvocation().getRetValue() + " => { ");
+            for (HBGNode visNode : result.getLeft().prefix(node)) {
+                if (result.getRight().getNodeVisibility(node).contains(visNode)) {
+                    System.out.print(visNode.getInvocation().getRetValue() + ", ");
+                }
+            }
+            System.out.println(" }");
+        }
     }
 
     public static void testORSet() throws Exception {

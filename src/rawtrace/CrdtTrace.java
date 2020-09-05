@@ -79,7 +79,7 @@ public class CrdtTrace {
             if (!start.equals(head)) {
                 CrdtOperation o = start;
                 while (o != null) {
-                    if (c.getUniqueID() == o.getUniqueID()) {
+                    if (c.getID() == o.getID()) {
                         c.addHb(o);
                     }
                     o = o.getPo();
@@ -150,7 +150,7 @@ public class CrdtTrace {
             CrdtOperation c = head;
             while (c != null) {
                 Invocation invocation = adt.transformCrdtOperation(c);
-                invocationMap.put(c.getUniqueID(), new HBGNode(invocation, c.getUniqueID()));
+               invocationMap.put(c.getUniqueID(), new HBGNode(invocation, c.getUniqueID()));
                 c = c.getPo();
             }
         }
@@ -214,6 +214,7 @@ public class CrdtTrace {
         HappenBeforeGraph happenBeforeGraph = trace.generateHappenBeforeGraph(new RRpq());
         System.out.println("==Result==:");
         System.out.println(trace.size());
+
         //happenBeforeGraph.printPrevs();
         TestMinimalRALinCheck.minimalExtensionRaLinCheck(happenBeforeGraph, null, null, new RRpq());
     }

@@ -160,4 +160,11 @@ public class Linearization implements Iterable<HBGNode> {
         }
         return list.toString();
     }
+
+    @Override
+    public Object clone() {
+        Linearization newLin = new Linearization();
+        newLin.lin = new ArrayList<>(this.lin);
+        return newLin;
+    }
 }

@@ -3,9 +3,11 @@ package visibility;
 import history.HBGNode;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
-public class LinVisibility {
+public class LinVisibility implements Iterable<HBGNode> {
     private HashMap<HBGNode, Set<HBGNode>> visibility = new HashMap<>();
 
     public void setVisibility(HashMap<HBGNode, Set<HBGNode>> visibility) {
@@ -30,5 +32,16 @@ public class LinVisibility {
 
     public String toString() {
         return visibility.toString();
+    }
+
+    public Iterator<HBGNode> iterator() {
+        return visibility.keySet().iterator();
+    }
+
+    @Override
+    public Object clone() {
+        LinVisibility newVis = new LinVisibility();
+        newVis.visibility = new HashMap<>(this.visibility);
+        return newVis;
     }
 }
