@@ -42,6 +42,7 @@ public class MinimalExtension {
             return true;
         }
         List<Linearization> lins = linExtensions();
+        //System.out.println("Lins size: " + Integer.toString(lins.size()));
         for (Linearization lin : lins) {
             if (find) {
                 break;
@@ -54,7 +55,8 @@ public class MinimalExtension {
             List<HBGNode> subset = null;
             while ((subset = manualRecurse.enumerate()) != null && !find) {
                 Set<HBGNode> vis = new HashSet<>(visible);
-                vis.addAll(subset);
+                vis.addAll(visClosure(subset));
+
                 if (executeCheck(vis, adt)) {
                     manualRecurse.prune(subset);
                     linVisibility.updateNodeVisibility(linearization.getLast(), vis);
@@ -75,7 +77,7 @@ public class MinimalExtension {
     }
 
     private Set<HBGNode> getVisibleNodes() {
-        System.out.println("get Visible Nodes");
+        //System.out.println("get Visible Nodes");
         Set<HBGNode> visible = new HashSet<>();
         HBGNode node = linearization.get(linearization.size() - 1);
         Set<HBGNode> prevs = node.getAllPrevs();
@@ -97,6 +99,14 @@ public class MinimalExtension {
         return candidate;
     }
 
+    private Set<HBGNode> visClosure(List<HBGNode> vis) {
+        Set<HBGNode> closure = new HashSet<>(vis);
+        for (HBGNode node : vis) {
+            closure.addAll(node.getAllPrevs());
+        }
+        return closure;
+    }
+
     private boolean executeCheck(Set<HBGNode> vis, AbstractDataType adt) {
         if (find) {
             return false;
@@ -105,12 +115,15 @@ public class MinimalExtension {
         String retTrace = linearization.getRetValueTrace(linearization.size());
         String excuteTrace = Validation.crdtExecute(adt, linearization, linVisibility).toString();
         System.out.println(Integer.toString(linearization.size()) + "/" + Integer.toString(happenBeforeGraph.size()));
-        System.out.println(retTrace);
-        System.out.println(excuteTrace);
-        System.out.println();
         if (excuteTrace.equals(retTrace)) {
+//            System.out.println(retTrace);
+//            System.out.println(excuteTrace);
+//            System.out.println();
             return true;
         } else {
+//            System.out.println(retTrace);
+//            System.out.println(excuteTrace);
+//            System.out.println();
             return false;
         }
     }
@@ -264,7 +277,7 @@ public class MinimalExtension {
 
 
     private List<Linearization> linExtensions() {
-        System.out.println("lin extension");
+        //System.out.println("lin extension");
         Set<HBGNode> adjacencyNodes = new HashSet<>();
         if (linearization.size() == 0) {
             for (HBGNode node : happenBeforeGraph) {
@@ -278,6 +291,11 @@ public class MinimalExtension {
                 temp.addAll(node.getNexts());
             }
             for (HBGNode node : temp) {
+                if (linearization.contains(node)) {
+                    continue;
+                }
+                //System.out.println(node.getInvocation().getRetValue());
+                //System.out.println(node.getPrevs());
                 boolean flag = true;
                 for (HBGNode prev : node.getPrevs()) {
                     if (!linearization.contains(prev)) {    //节点所有的前驱必须都已经被包含在全序里
@@ -285,7 +303,8 @@ public class MinimalExtension {
                         break;
                     }
                 }
-                if (flag && !linearization.contains(node)) {
+                //System.out.println(flag);
+                if (flag) {
                     adjacencyNodes.add(node);
                 }
             }

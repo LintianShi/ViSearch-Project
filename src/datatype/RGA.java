@@ -34,6 +34,10 @@ public class RGA extends AbstractDataType {
         return null;
     }
 
+    public boolean isRelated(Invocation src, Invocation dest) {
+        return true;
+    }
+
     @Override
     public void reset() {
         data = new ArrayList<>();

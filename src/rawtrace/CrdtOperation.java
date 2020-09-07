@@ -52,6 +52,7 @@ public class CrdtOperation {
         for (String arg : arguments) {
             oprID += "," + arg;
         }
+        oprID += " " + this.vectorClock.toString();
         this.id = oprID.hashCode();
         this.uniqueID = (Long.toString(timeStamp) + "," + oprID).hashCode();
     }

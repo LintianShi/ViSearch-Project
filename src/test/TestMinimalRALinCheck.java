@@ -8,33 +8,42 @@ import validation.MinimalExtension;
 import validation.OperationTypes;
 import visibility.LinVisibility;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
 public class TestMinimalRALinCheck {
-    public static void minimalExtensionRaLinCheck(HappenBeforeGraph happenBeforeGraph, OperationTypes operationTypes,
+    public static void minimalExtensionRaLinCheck(String output, HappenBeforeGraph happenBeforeGraph, OperationTypes operationTypes,
                                                                       QueryUpdateExtension queryUpdateExtension, AbstractDataType adt) {
         MinimalExtension minimalExtension = new MinimalExtension(happenBeforeGraph);
         minimalExtension.checkConsistency(adt);
         Pair<Linearization, LinVisibility> result = minimalExtension.getResult();
-        System.out.println("====================Linearization====================");
-        for (HBGNode node : result.getLeft()) {
-            System.out.print(node.getInvocation().getRetValue() + ", ");
-        }
-        System.out.println();
-
-        System.out.println("====================Visibility====================");
-        for (HBGNode node : result.getLeft()) {
-            System.out.print("#" + node.getInvocation().getRetValue() + " => { ");
-            for (HBGNode visNode : result.getLeft().prefix(node)) {
-                if (result.getRight().getNodeVisibility(node).contains(visNode)) {
-                    System.out.print(visNode.getInvocation().getRetValue() + ", ");
-                }
+        try {
+            FileWriter fileWriter = new FileWriter(new File(output));
+            fileWriter.write("====================Linearization====================\n");
+            //System.out.println("====================Linearization====================");
+            for (HBGNode node : result.getLeft()) {
+                fileWriter.write(node.getInvocation().getRetValue() + ", ");
             }
-            System.out.println(" }");
+            fileWriter.write("\n");
+
+            fileWriter.write("====================Visibility====================\n");
+            for (HBGNode node : result.getLeft()) {
+                fileWriter.write("#" + node.getInvocation().getRetValue() + " => { ");
+                for (HBGNode visNode : result.getLeft().prefix(node)) {
+                    if (result.getRight().getNodeVisibility(node).contains(visNode)) {
+                        fileWriter.write(visNode.getInvocation().getRetValue() + ", ");
+                    }
+                }
+                fileWriter.write(" }\n");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     public static void testORSet() throws Exception {
@@ -73,7 +82,7 @@ public class TestMinimalRALinCheck {
 
         HappenBeforeGraph happenBeforeGraph = Program.load("ralin3-false.json", operationTypes, queryUpdateExtension);
 
-        minimalExtensionRaLinCheck(happenBeforeGraph,operationTypes,queryUpdateExtension, new ORSet());
+        //minimalExtensionRaLinCheck(happenBeforeGraph,operationTypes,queryUpdateExtension, new ORSet());
     }
 
     public static void testSimpleCounterExample() throws Exception {
@@ -83,7 +92,7 @@ public class TestMinimalRALinCheck {
         operationTypes.setOperationType("remove", "UPDATE");
         HappenBeforeGraph happenBeforeGraph = Program.load("ralin3-false.json", operationTypes, null);
 
-        minimalExtensionRaLinCheck(happenBeforeGraph,operationTypes,null, new SimpleSet());
+        //minimalExtensionRaLinCheck(happenBeforeGraph,operationTypes,null, new SimpleSet());
     }
 
 

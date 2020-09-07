@@ -37,7 +37,7 @@ public class CrdtTrace {
             CrdtOperation head = null;
             CrdtOperation tail = null;
             int num = 0;
-            while ((str = br.readLine()) != null && num < 100) {
+            while ((str = br.readLine()) != null && num < 500) {
                 num++;
                 CrdtOperation temp = new CrdtOperation(str);
                 if (head == null) {
@@ -205,7 +205,7 @@ public class CrdtTrace {
     public static void main(String[] args) {
         List<String> fileList = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
-            fileList.add("E:\\CRPQ-Redis\\ardominant-trace\\server" + Integer.toString(i) + "_crdt.trc");
+            fileList.add("E:\\CRPQ-Redis\\trace\\server" + Integer.toString(i) + "_crdt.trc");
         }
         CrdtTrace trace = new CrdtTrace(fileList);
         trace.extendHappenBeforeRelation();
@@ -214,8 +214,9 @@ public class CrdtTrace {
         HappenBeforeGraph happenBeforeGraph = trace.generateHappenBeforeGraph(new RRpq());
         System.out.println("==Result==:");
         System.out.println(trace.size());
-
+        System.out.println(happenBeforeGraph.size());
         //happenBeforeGraph.printPrevs();
-        TestMinimalRALinCheck.minimalExtensionRaLinCheck(happenBeforeGraph, null, null, new RRpq());
+        //happenBeforeGraph.print();
+        TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, null, null, new RRpq());
     }
 }

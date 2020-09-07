@@ -7,6 +7,7 @@ public class HBGNode {
     private List<HBGNode> nexts = new ArrayList<>();
     private List<HBGNode> prevs = new ArrayList<>();
     private int threshold = 0;
+    private Set<HBGNode> allPrevs = null;
 
     public HBGNode() {
         ;
@@ -36,10 +37,12 @@ public class HBGNode {
     }
 
     public void addNextNode(HBGNode next) {
-        nexts.add(next);
+        if (next != null)
+            nexts.add(next);
     }
     public void addPrevNode(HBGNode prev) {
-        prevs.add(prev);
+        if (prev != null)
+            prevs.add(prev);
     }
 
     public int getId() {
@@ -55,16 +58,25 @@ public class HBGNode {
     }
 
     public Set<HBGNode> getAllPrevs() {
-        Queue<HBGNode> queue = new ArrayDeque<>(getPrevs());
-        Set<HBGNode> results = new HashSet<>();
-        while (!queue.isEmpty()) {
-            HBGNode node = ((ArrayDeque<HBGNode>) queue).poll();
-            results.add(node);
-            for (HBGNode prev : node.getPrevs()) {
-                queue.offer(prev);
-            }
+        if (allPrevs != null) {
+            return allPrevs;
         }
-        return results;
+        allPrevs = new HashSet<>(prevs);
+        for (HBGNode prevNode : prevs) {
+            allPrevs.addAll(prevNode.getAllPrevs());
+        }
+        return allPrevs;
+//        Queue<HBGNode> queue = new ArrayDeque<>(getPrevs());
+//        Set<HBGNode> results = new HashSet<>();
+//        while (!queue.isEmpty()) {
+//            System.out.println(queue.size());
+//            HBGNode node = ((ArrayDeque<HBGNode>) queue).poll();
+//            results.add(node);
+//            for (HBGNode prev : node.getPrevs()) {
+//                queue.offer(prev);
+//            }
+//        }
+//        return results;
     }
 
     public Invocation getInvocation() {

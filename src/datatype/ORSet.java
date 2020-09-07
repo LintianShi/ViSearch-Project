@@ -59,6 +59,10 @@ public class ORSet extends AbstractDataType {
         return null;
     }
 
+    public boolean isRelated(Invocation src, Invocation dest) {
+        return true;
+    }
+
     @Override
     public void print() {
         System.out.println("print: " + data.toString());

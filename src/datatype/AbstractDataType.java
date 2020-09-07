@@ -16,6 +16,8 @@ public abstract class AbstractDataType {
 
     public abstract Invocation transformCrdtOperation(CrdtOperation crdtOperation);
 
+    public abstract boolean isRelated(Invocation src, Invocation dest);
+
     public abstract void reset();
 
     public abstract void print();

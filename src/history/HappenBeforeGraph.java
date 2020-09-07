@@ -128,8 +128,8 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
     }
 
     public void print() {
-        for (int i = 0; i < nodes.size(); i++) {
-            System.out.println(nodes.get(i));
+        for (HBGNode node : this) {
+            System.out.println(node.getInvocation().getRetValue());
         }
     }
 

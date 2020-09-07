@@ -34,7 +34,12 @@ public class RRpq extends AbstractDataType {
     private void shiftDown(int s)
     {
         int i = s, j = 2 * i + 1, tail = data.size() - 1;
-        Element temp = data.get(i);
+        Element temp;
+        if (i < data.size()) {
+            temp = data.get(i);
+        } else {
+            return;
+        }
         while (j <= tail)
         {
             if (j < tail && data.get(j).getVal().doubleValue() <= data.get(j + 1).getVal().doubleValue())
@@ -109,7 +114,26 @@ public class RRpq extends AbstractDataType {
         }
     }
 
-
+    public boolean isRelated(Invocation src, Invocation dest) {
+        if (src.getOperationType().equals("UPDATE")) {
+            return false;
+        } else if (src.getOperationType().equals("QUERY")) {
+            if (src.getMethodName().equals("rwfzscore")) {
+                Integer ele = (Integer) src.getArguments().get(0);
+                if (dest.getOperationType().equals("UPDATE") && (Integer) dest.getArguments().get(0) == ele) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if (src.getMethodName().equals("rwfzmax")) {
+                return true;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
 
 
     public Invocation transformCrdtOperation(CrdtOperation crdtOperation) {
