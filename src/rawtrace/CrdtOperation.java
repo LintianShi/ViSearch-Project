@@ -150,6 +150,12 @@ public class CrdtOperation {
 //        return uniqueID == obj.hashCode();
 //    }
 
+
+    @Override
+    public int hashCode() {
+        return getID();
+    }
+
     public String toString(Boolean withHb) {
         String result = Long.toString(timeStamp) + ", ";
         if (type == CRDT_OPERATION_TYPE.PREPARE) {
@@ -175,6 +181,7 @@ public class CrdtOperation {
         return result;
     }
 
+    @Override
     public String toString() {
         return toString(true);
     }

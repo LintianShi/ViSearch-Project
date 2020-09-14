@@ -8,10 +8,12 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
     private List<HBGNode> startNodes = new ArrayList<>();
     private HashMap<Integer, HBGNode> nodes = new HashMap<>();
     private int[][] programOrders;
+    private int threadNum;
 
     public HappenBeforeGraph(List<HBGNode> startNodes, HashMap<Integer, HBGNode> map) {
         this.startNodes = startNodes;
         this.nodes = map;
+        this.threadNum = startNodes.size();
     }
 
     public HappenBeforeGraph(List<SubProgram> subPrograms, HappenBefore happenBefore) {
@@ -40,6 +42,7 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
             nodes.get(transferPairToID(subPrograms, hbPair.getPrev())).addNextNode(nodes.get(transferPairToID(subPrograms, hbPair.getNext())));
             nodes.get(transferPairToID(subPrograms, hbPair.getNext())).addPrevNode(nodes.get(transferPairToID(subPrograms, hbPair.getPrev())));
         }
+        threadNum = subPrograms.size();
     }
 
     public Iterator<HBGNode> iterator() {
@@ -48,6 +51,10 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
 
     public int size() {
         return nodes.size();
+    }
+
+    public int getThreadNum() {
+        return threadNum;
     }
 
     public int transferPairToID(List<SubProgram> subPrograms, Pair<Integer, Integer> pair) {
@@ -119,6 +126,34 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         }
     }
 
+    private boolean checkBreakPoint(HBGNode breakPoint) {
+        List<HBGNode> prevs = breakPoint.getPrevs();
+        List<HBGNode> nexts = breakPoint.getNexts();
+        if (prevs.size() != threadNum || nexts.size() != threadNum) {
+            return false;
+        }
+
+        for (HBGNode prev : prevs) {
+            boolean flag = false;
+            if (prev.getPo() == breakPoint) {
+                continue;
+            }
+            for (HBGNode next : nexts) {
+                if (breakPoint.getPo() == breakPoint) {
+                    continue;
+                }
+                if (prev.getPo() == next) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (!flag) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private boolean isValid(HBGNode node) {
         return node.checkThreshold();
     }
@@ -129,7 +164,20 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
 
     public void print() {
         for (HBGNode node : this) {
-            System.out.println(node.getInvocation().getRetValue());
+            if (checkBreakPoint(node)) {
+                System.out.println("break point: " + node.getInvocation().getRetValue());
+                System.out.println("Prevs: ");
+                for (HBGNode prev : node.getPrevs()) {
+                    System.out.print(prev.getInvocation().getRetValue() + ", ");
+                }
+                System.out.println();
+                System.out.println("Nexts: ");
+                for (HBGNode next : node.getNexts()) {
+                    System.out.print(next.getInvocation().getRetValue() + ", ");
+                }
+                System.out.println();
+            }
+            //System.out.println(node.getNexts().size());
         }
     }
 

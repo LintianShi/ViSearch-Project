@@ -6,6 +6,7 @@ public class HBGNode {
     private Invocation invocation;
     private List<HBGNode> nexts = new ArrayList<>();
     private List<HBGNode> prevs = new ArrayList<>();
+    private HBGNode po;
     private int threshold = 0;
     private Set<HBGNode> allPrevs = null;
 
@@ -34,6 +35,14 @@ public class HBGNode {
         for (HBGNode node : nexts) {
             node.threshold--;
         }
+    }
+
+    public HBGNode getPo() {
+        return po;
+    }
+
+    public void setPo(HBGNode po) {
+        this.po = po;
     }
 
     public void addNextNode(HBGNode next) {

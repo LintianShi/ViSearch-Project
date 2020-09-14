@@ -13,10 +13,12 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class CrdtTrace {
     private List<CrdtOperation> starts = new ArrayList<>();
+    private int threadNum;
     private int size;
 
     public CrdtTrace() {
@@ -27,6 +29,11 @@ public class CrdtTrace {
         for (String fileName : fileNames) {
             starts.add(loadFile(fileName));
         }
+        this.threadNum = fileNames.size();
+    }
+
+    public int getThreadNum() {
+        return threadNum;
     }
 
     private CrdtOperation loadFile(String fileName) {
@@ -37,7 +44,7 @@ public class CrdtTrace {
             CrdtOperation head = null;
             CrdtOperation tail = null;
             int num = 0;
-            while ((str = br.readLine()) != null && num < 500) {
+            while ((str = br.readLine()) != null && num < 3000) {
                 num++;
                 CrdtOperation temp = new CrdtOperation(str);
                 if (head == null) {
@@ -70,8 +77,8 @@ public class CrdtTrace {
                 c = c.getPo();
             }
         }
-        adjustHappenBeforeRelation();
-        removeRedundantEffect();
+        //adjustHappenBeforeRelation();
+        //removeRedundantEffect();
     }
 
     private void addHappenBeforeRelation(CrdtOperation c, CrdtOperation head) {
@@ -86,6 +93,61 @@ public class CrdtTrace {
                 }
             }
         }
+    }
+
+    public void findBreakPoint() {
+        CrdtOperation[] currents = new CrdtOperation[starts.size()];
+        List<HashSet<CrdtOperation>> executed = new ArrayList<>();
+        int i = 0;
+        for (CrdtOperation crdtOperation : starts) {
+            while (crdtOperation != null && crdtOperation.getType() != CrdtOperation.CRDT_OPERATION_TYPE.EFFECT) {
+                crdtOperation = crdtOperation.getPo();
+            }
+            currents[i] = crdtOperation;
+            executed.add(new HashSet<CrdtOperation>());
+            i++;
+        }
+
+        do {
+            if (checkEventualConsistency(currents, executed)) {
+                System.out.println("find a breakpoint");
+            }
+            for (int k = 0; k < currents.length; k++) {
+                while (currents[k] != null && currents[k].getType() != CrdtOperation.CRDT_OPERATION_TYPE.EFFECT) {
+                    currents[k] = currents[k].getPo();
+                }
+            }
+        } while (isCheckEnd(currents));
+    }
+
+    private boolean isCheckEnd(CrdtOperation[] currents) {
+        for (int i = 0; i < currents.length; i++) {
+            if (currents[i] != null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkEventualConsistency(CrdtOperation[] currents, List<HashSet<CrdtOperation>> executed) {
+        for (int i = 0; i < currents.length; i++) {
+            if (currents[i] != null) {
+                executed.get(i).add(currents[i]);
+            }
+        }
+
+        for (int i = 0; i < currents.length; i++) {
+            if (!executed.get(i).equals(executed.get((i + 1) % currents.length))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void fromCrdtViewToAdtView() {
+        adjustHappenBeforeRelation();
+        removeRedundantEffect();
     }
 
     private void adjustHappenBeforeRelation() {
@@ -149,6 +211,7 @@ public class CrdtTrace {
         for (CrdtOperation head : starts) {
             CrdtOperation c = head;
             while (c != null) {
+                //c.print();
                 Invocation invocation = adt.transformCrdtOperation(c);
                invocationMap.put(c.getUniqueID(), new HBGNode(invocation, c.getUniqueID()));
                 c = c.getPo();
@@ -163,6 +226,7 @@ public class CrdtTrace {
                 if (poNode != null) {
                     node.addNextNode(poNode);
                     poNode.addPrevNode(node);
+                    node.setPo(poNode);
                 }
 
                 for (CrdtOperation hbOp : c.getHbs()) {
@@ -205,18 +269,20 @@ public class CrdtTrace {
     public static void main(String[] args) {
         List<String> fileList = new ArrayList<>();
         for (int i = 0; i < 9; i++) {
-            fileList.add("E:\\CRPQ-Redis\\trace\\server" + Integer.toString(i) + "_crdt.trc");
+            fileList.add("long-trace\\server" + Integer.toString(i) + "_crdt.trc");
         }
         CrdtTrace trace = new CrdtTrace(fileList);
         trace.extendHappenBeforeRelation();
         //trace.print();
+        trace.findBreakPoint();
+        trace.fromCrdtViewToAdtView();
 
         HappenBeforeGraph happenBeforeGraph = trace.generateHappenBeforeGraph(new RRpq());
         System.out.println("==Result==:");
         System.out.println(trace.size());
         System.out.println(happenBeforeGraph.size());
         //happenBeforeGraph.printPrevs();
-        //happenBeforeGraph.print();
-        TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, null, null, new RRpq());
+        happenBeforeGraph.print();
+        //TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, null, null, new RRpq());
     }
 }
