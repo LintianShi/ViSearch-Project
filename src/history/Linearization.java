@@ -84,6 +84,41 @@ public class Linearization implements Iterable<HBGNode> {
         return null;
     }
 
+    public Set<HBGNode> getAdjacencyNodes() {
+        Set<HBGNode> adjacencyNodes = new HashSet<>();
+        Set<HBGNode> expansion = new HashSet<>();
+        for (HBGNode node : lin) {
+            for (HBGNode next : node.getNexts()) {
+                if (!lin.contains(next)) {
+                    expansion.add(next);
+                }
+            }
+        }
+        for (HBGNode node : expansion) {
+            boolean flag = true;
+            for (HBGNode prev : node.getPrevs()) {
+                if (!lin.contains(prev)) {    //节点所有的前驱必须都已经被包含在全序里
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                adjacencyNodes.add(node);
+            }
+        }
+        return adjacencyNodes;
+    }
+
+    public List<Linearization> extendLin(Set<HBGNode> adjNodes) {
+        List<Linearization> extentLins = new ArrayList<>();
+        for (HBGNode node : adjNodes) {
+            Linearization linearization = (Linearization) this.clone();
+            linearization.add(node);
+            extentLins.add(linearization);
+        }
+        return extentLins;
+    }
+
     public List<LinVisibility> generateAllNodeVisibility() {
         HashMap<HBGNode, List<Set<HBGNode>>> result = new HashMap<>();
         for (HBGNode node : lin) {
@@ -148,12 +183,6 @@ public class Linearization implements Iterable<HBGNode> {
     }
 
     public String toString() {
-//        String temp = new String("{");
-//        for (HBGNode n : lin) {
-//            temp += JSON.toJSONString(n.getInvocation()) + "; ";
-//        }
-//
-//        return temp + "}";
         ArrayList<String> list = new ArrayList<>();
         for (HBGNode node : lin) {
             list.add(node.getId() + "=" + node.getInvocation().getMethodName());

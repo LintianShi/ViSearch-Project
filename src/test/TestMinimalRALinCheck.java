@@ -5,6 +5,7 @@ import history.*;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import validation.MinimalExtension;
+import validation.MinimalVisSearch;
 import validation.OperationTypes;
 import visibility.LinVisibility;
 
@@ -18,9 +19,10 @@ import java.util.function.Function;
 public class TestMinimalRALinCheck {
     public static void minimalExtensionRaLinCheck(String output, HappenBeforeGraph happenBeforeGraph, OperationTypes operationTypes,
                                                                       QueryUpdateExtension queryUpdateExtension, AbstractDataType adt) {
-        MinimalExtension minimalExtension = new MinimalExtension(happenBeforeGraph);
-        minimalExtension.checkConsistency(adt);
-        Pair<Linearization, LinVisibility> result = minimalExtension.getResult();
+        MinimalVisSearch vfs = new MinimalVisSearch();
+        vfs.init(happenBeforeGraph);
+        vfs.checkConsistency(adt);
+        Pair<Linearization, LinVisibility> result = vfs.getResult();
         try {
             FileWriter fileWriter = new FileWriter(new File(output));
             fileWriter.write("====================Linearization====================\n");

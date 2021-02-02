@@ -34,6 +34,10 @@ public class LinVisibility implements Iterable<HBGNode> {
         return visibility.toString();
     }
 
+    public int size() {
+        return visibility.size();
+    }
+
     public Iterator<HBGNode> iterator() {
         return visibility.keySet().iterator();
     }

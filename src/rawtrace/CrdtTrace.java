@@ -44,7 +44,7 @@ public class CrdtTrace {
             CrdtOperation head = null;
             CrdtOperation tail = null;
             int num = 0;
-            while ((str = br.readLine()) != null && num < 3000) {
+            while ((str = br.readLine()) != null && num < 55) {
                 num++;
                 CrdtOperation temp = new CrdtOperation(str);
                 if (head == null) {
@@ -268,13 +268,13 @@ public class CrdtTrace {
 
     public static void main(String[] args) {
         List<String> fileList = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
-            fileList.add("long-trace\\server" + Integer.toString(i) + "_crdt.trc");
+        for (int i = 0; i < 5; i++) {
+            fileList.add("run_trace\\run_test_78\\server" + Integer.toString(i) + "_crdt.trc");
         }
         CrdtTrace trace = new CrdtTrace(fileList);
         trace.extendHappenBeforeRelation();
         //trace.print();
-        trace.findBreakPoint();
+        //trace.findBreakPoint();
         trace.fromCrdtViewToAdtView();
 
         HappenBeforeGraph happenBeforeGraph = trace.generateHappenBeforeGraph(new RRpq());
@@ -282,7 +282,7 @@ public class CrdtTrace {
         System.out.println(trace.size());
         System.out.println(happenBeforeGraph.size());
         //happenBeforeGraph.printPrevs();
-        happenBeforeGraph.print();
-        //TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, null, null, new RRpq());
+        //happenBeforeGraph.print();
+        TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, null, null, new RRpq());
     }
 }

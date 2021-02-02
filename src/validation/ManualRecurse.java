@@ -72,8 +72,8 @@ public class ManualRecurse {
 
         List<HBGNode> subset = null;
         while ((subset = manualRecurse.enumerate()) != null) {
-//            if (subset.size() == 1 && subset.get(0) == 2)
-//            if (subset.size() == 2 && subset.get(0) == 3 && subset.get(1) == 4)
+//            if (subset.size() == 1 && subset.get(0).getId() == 2)
+//            if (subset.size() == 2 && subset.get(0).getId() == 3 && subset.get(1).getId() == 4)
 //            if (subset.size() == 0)
 //                manualRecurse.prune(subset);
             for (HBGNode node : subset) {

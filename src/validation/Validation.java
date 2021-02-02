@@ -113,8 +113,13 @@ public class Validation {
                             adt.invoke(node.getInvocation());
                         } else if (i == j) {
                             String ret = adt.invoke(node.getInvocation());
-                            if (ret != null)
+                            if (ret != null) {
                                 rets.add(node.getId(), ret);
+                                if (i == lin.size() - 1) {
+                                    System.out.println(node.getInvocation().getRetValue() + " + " + ret);
+                                }
+                            }
+
                         }
                     }
                 }
@@ -237,9 +242,9 @@ public class Validation {
             }
         });
         Set<Behaviour> behaviours = vv.RALinCheck(operationTypes, queryUpdateExtension, new RGA());
-//        for (Behaviour behaviour : behaviours) {
-//            behaviour.printRetTrace();
-//            System.out.println();
-//        }
+        for (Behaviour behaviour : behaviours) {
+            behaviour.printRetTrace();
+            System.out.println();
+        }
     }
 }

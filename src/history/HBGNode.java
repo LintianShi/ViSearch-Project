@@ -75,50 +75,14 @@ public class HBGNode {
             allPrevs.addAll(prevNode.getAllPrevs());
         }
         return allPrevs;
-//        Queue<HBGNode> queue = new ArrayDeque<>(getPrevs());
-//        Set<HBGNode> results = new HashSet<>();
-//        while (!queue.isEmpty()) {
-//            System.out.println(queue.size());
-//            HBGNode node = ((ArrayDeque<HBGNode>) queue).poll();
-//            results.add(node);
-//            for (HBGNode prev : node.getPrevs()) {
-//                queue.offer(prev);
-//            }
-//        }
-//        return results;
     }
 
     public Invocation getInvocation() {
         return invocation;
     }
 
-//    public Set<HBGNode> vis(Linearization prefixLin) {
-//        String visibility = Invocation.visibility.get(getInvocation().getMethodName());
-//        if (visibility.equals("COMPLETE")) {
-//            return new CompleteVisibilityPredicate().vis(prefixLin);
-//        } else if (visibility.equals("CAUSAL")) {
-//            return new CausalVisibilityPredicate().vis(prefixLin);
-//        } else if (visibility.equals("PEER")) {
-//            return new PeerVisibilityPredicate().vis(prefixLin);
-//        } else if (visibility.equals("MONOTONIC")) {
-//            return new MonotonicVisibilityPredicate().vis(prefixLin);
-//        } else if (visibility.equals("BASIC")) {
-//            return new BasicVisibilityPredicate().vis(prefixLin);
-//        } else {
-//            return null;
-//        }
-//    }
-
     @Override
-    public String toString() {
-//       String temp = "\"INVOCATION\":" + JSON.toJSONString(invocation);
-//       + ", {\"NEXTS\":[";
-//       for (HBGNode n : nexts) {
-//           temp += JSON.toJSONString(n.getInvocation()) + " ";
-//       }
-//       return temp + "]}";
-//        return temp;
-        //return Integer.toString(getId());
+    public String toString() { ;
         return invocation.toString();
     }
 
