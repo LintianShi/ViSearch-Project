@@ -1,8 +1,7 @@
 package datatype;
 
+import crdttrace.CrdtOperation;
 import history.Invocation;
-import org.apache.commons.lang3.tuple.Pair;
-import rawtrace.CrdtOperation;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;

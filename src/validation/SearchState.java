@@ -2,8 +2,8 @@ package validation;
 
 import history.HBGNode;
 import history.HappenBeforeGraph;
-import history.Linearization;
-import visibility.LinVisibility;
+import arbitration.Linearization;
+import arbitration.LinVisibility;
 
 import java.util.ArrayList;
 import java.util.HashSet;

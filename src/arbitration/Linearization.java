@@ -1,6 +1,6 @@
-package history;
+package arbitration;
 
-import visibility.LinVisibility;
+import history.HBGNode;
 
 import java.util.*;
 

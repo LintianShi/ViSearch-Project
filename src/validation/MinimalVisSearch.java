@@ -1,12 +1,11 @@
 package validation;
 
 import datatype.AbstractDataType;
-import history.HBGNode;
 import history.HappenBeforeGraph;
-import history.Linearization;
+import arbitration.Linearization;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import visibility.LinVisibility;
+import arbitration.LinVisibility;
 
 import java.util.*;
 

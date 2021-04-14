@@ -1,6 +1,7 @@
 package history;
 
 import org.apache.commons.lang3.tuple.Pair;
+import arbitration.Linearization;
 
 import java.util.*;
 
