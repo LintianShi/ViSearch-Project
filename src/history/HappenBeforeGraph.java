@@ -1,6 +1,7 @@
 package history;
 
 import org.apache.commons.lang3.tuple.Pair;
+import arbitration.Linearization;
 
 import java.util.*;
 
@@ -9,6 +10,7 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
     private HashMap<Integer, HBGNode> nodes = new HashMap<>();
     private int[][] programOrders;
     private int threadNum;
+    private Set<HBGNode> nodesWithoutPrev = null;
 
     public HappenBeforeGraph(List<HBGNode> startNodes, HashMap<Integer, HBGNode> map) {
         this.startNodes = startNodes;
@@ -53,10 +55,6 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         return nodes.size();
     }
 
-    public int getThreadNum() {
-        return threadNum;
-    }
-
     public int transferPairToID(List<SubProgram> subPrograms, Pair<Integer, Integer> pair) {
         int id = 0;
         for (int i = 0; i < pair.getLeft(); i++) {
@@ -66,35 +64,23 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         return id;
     }
 
-    public LinearizationTree generateLinTree() {
-        int[] index = new int[programOrders.length];
-        for (int i = 0; i < index.length; i++) {
-            index[i] = programOrders[i][0];
+    public Set<HBGNode> getNodesWithoutPrev() {
+        if (this.nodesWithoutPrev != null) {
+            return this.nodesWithoutPrev;
+        } else {
+            this.nodesWithoutPrev = findNodesWithoutPrev();
+            return this.nodesWithoutPrev;
         }
-        LinearizationTree linTree = new LinearizationTree();
-        Stack<LinearizationTree.LTNode> stack = new Stack<>();
-        stack.push(linTree.getRoot());
-        generateLinTree(index, stack);
-        return linTree;
     }
 
-    private void generateLinTree(int[] index, Stack<LinearizationTree.LTNode> stack) {
-        if (stack.size() == nodes.size() + 1) {
-            return;
-        }
-        for (int i = 0; i < index.length; i++) {
-            if (index[i] <= programOrders[i][1] && isValid(nodes.get(index[i]))) {
-                LinearizationTree.LTNode ltNode = new LinearizationTree.LTNode(nodes.get(index[i]).getInvocation());
-                stack.peek().addChildNode(ltNode);
-                stack.push(ltNode);
-                nodes.get(index[i]).increaseThreshlod();
-                index[i]++;
-                generateLinTree(index, stack);
-                index[i]--;
-                LinearizationTree.LTNode node = stack.pop();
-                nodes.get(node.getInvocation().getId()).decreaseThreshlod();
+    private Set<HBGNode> findNodesWithoutPrev() {
+        Set<HBGNode> list = new HashSet<>();
+        for (HBGNode node : nodes.values()) {
+            if (node.getPrevs().isEmpty()) {
+                list.add(node);
             }
         }
+        return list;
     }
 
     public List<Linearization> generateLins() {
@@ -179,18 +165,6 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
             }
             //System.out.println(node.getNexts().size());
         }
-    }
-
-    public void printPrevs() {
-        for (Map.Entry<Integer, HBGNode> entry : nodes.entrySet()) {
-            if (entry.getValue().getInvocation().getMethodName().equals("rwfzmax")) {
-                System.out.println(entry.getValue().getAllPrevs());
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        ;
     }
 }
 

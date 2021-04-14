@@ -1,10 +1,9 @@
-package visibility;
+package arbitration;
 
 import history.HBGNode;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 public class LinVisibility implements Iterable<HBGNode> {
@@ -32,6 +31,10 @@ public class LinVisibility implements Iterable<HBGNode> {
 
     public String toString() {
         return visibility.toString();
+    }
+
+    public int size() {
+        return visibility.size();
     }
 
     public Iterator<HBGNode> iterator() {

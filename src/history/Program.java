@@ -3,14 +3,13 @@ package history;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import validation.OperationTypes;
+import arbitration.Linearization;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class Program {
     @JSONField(name = "SUBPROGRAMS", ordinal = 1)
@@ -58,51 +57,6 @@ public class Program {
         }
     }
 
-    public void extendQueryUpdate(OperationTypes operationTypes, QueryUpdateExtension queryUpdateExtension) {
-        for (SubProgram subProgram : subPrograms) {
-            for (Invocation invocation : subProgram.getInvocations()) {
-                String operationType = operationTypes.getOperationType(invocation.getMethodName());
-                if (operationType != null) {
-                    invocation.setOperationType(operationType);
-                } else {
-                    invocation.setOperationType("UPDATE");
-                }
-            }
-        }
-
-        for (SubProgram subProgram : subPrograms) {
-            for (int i = 0; i < subProgram.size(); i++) {
-                Invocation invocation = subProgram.get(i);
-                if (invocation.getOperationType().equals("QUERYUPDATE")) {
-                    Function<Invocation, Pair<Invocation, Invocation>> mapFunction = queryUpdateExtension.getMethodMapFunction(invocation.getMethodName());
-                    if (mapFunction == null) {
-                        continue;
-                    }
-                    Pair<Invocation, Invocation> query_update = mapFunction.apply(invocation);
-                    int index = subProgram.getInvocations().indexOf(invocation);
-                    subProgram.getInvocations().set(index, query_update.getLeft());
-                    subProgram.getInvocations().add(index + 1, query_update.getRight());
-
-                    //update HB relation due to query-update
-                    for (HappenBefore hb : hbs) {
-                        for (HBPair hbPair : hb.getHappenBefore()) {
-                            if (hbPair.getPrev().equals(invocation.getPairID())) {
-                                hbPair.increasePrev();
-                            } else if (hbPair.getPrev().getLeft() == invocation.getPairID().getLeft()
-                                    && hbPair.getPrev().getRight() > invocation.getPairID().getRight()) {
-                                hbPair.increasePrev();
-                            } else if (hbPair.getNext().getLeft() == invocation.getPairID().getLeft()
-                                    && hbPair.getNext().getRight() > invocation.getPairID().getRight()) {
-                                hbPair.increaseNext();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        assignID();
-    }
-
     public String toString() {
         return JSON.toJSONString(this);
     }
@@ -120,7 +74,7 @@ public class Program {
         return list.get(0);
     }
 
-    public static HappenBeforeGraph load(String fileName, OperationTypes operationTypes, QueryUpdateExtension queryUpdateExtension) throws Exception {
+    public static HappenBeforeGraph load(String fileName, OperationTypes operationTypes) throws Exception {
         File filename = new File(fileName);
         Long filelength = filename.length();
         byte[] filecontent = new byte[filelength.intValue()];
@@ -129,7 +83,6 @@ public class Program {
         String jsonfile = new String(filecontent, "UTF-8");
         Program program = JSON.parseObject(jsonfile, Program.class);
         program.assignID();
-        program.extendQueryUpdate(operationTypes, queryUpdateExtension);
 
         List<HappenBeforeGraph> list = program.generateHappenBeforeGraphs();
         return list.get(0);

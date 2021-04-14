@@ -1,7 +1,7 @@
 package datatype;
 
+import crdttrace.CrdtOperation;
 import history.Invocation;
-import rawtrace.CrdtOperation;
 
 import java.util.*;
 
