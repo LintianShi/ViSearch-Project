@@ -1,6 +1,5 @@
 package datatype;
 
-import crdttrace.CrdtOperation;
 import history.Invocation;
 
 import java.util.HashMap;
@@ -36,10 +35,6 @@ public class MyHashMap extends AbstractDataType {
         } else {
             return Integer.toString(ret);
         }
-    }
-
-    public Invocation transformCrdtOperation(CrdtOperation crdtOperation) {
-        return null;
     }
 
     public boolean isRelated(Invocation src, Invocation dest) {

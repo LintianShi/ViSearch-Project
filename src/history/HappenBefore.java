@@ -16,6 +16,9 @@ public class HappenBefore {
     public void addHappenBefore(HBPair hbPair) {
         happenBefore.add(hbPair);
     }
+    public void addHappenBefores(List<HBPair> hbPairs) {
+        happenBefore.addAll(hbPairs);
+    }
 
     public List<HBPair> getHappenBefore() {
         return happenBefore;

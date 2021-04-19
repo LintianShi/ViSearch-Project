@@ -5,12 +5,16 @@ import com.alibaba.fastjson.annotation.JSONField;
 import java.util.ArrayList;
 import java.util.List;
 
-class SubProgram {
+public class SubProgram {
     @JSONField(name = "INVOCATIONS")
     private List<Invocation> invocations = new ArrayList<>();
 
     public SubProgram() {
         ;
+    }
+
+    public SubProgram(List<Invocation> invocations) {
+        this.invocations = invocations;
     }
 
     public void setInvocations(List<Invocation> invocations) {

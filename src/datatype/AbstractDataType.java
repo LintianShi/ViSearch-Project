@@ -1,6 +1,5 @@
 package datatype;
 
-import crdttrace.CrdtOperation;
 import history.Invocation;
 
 import java.lang.reflect.Method;
@@ -11,10 +10,13 @@ public abstract class AbstractDataType {
         Class clazz = this.getClass();
         Method method = clazz.getDeclaredMethod(methodName, Invocation.class);
         method.setAccessible(true);
+//        System.out.println(invocation.getMethodName());
+//        System.out.println(invocation.getRetValue());
+//        for (int i = 0; i < invocation.getArguments().size(); i++) {
+//            System.out.println((String)invocation.getArguments().get(i));
+//        }
         return (String)method.invoke(this, invocation);
     }
-
-    public abstract Invocation transformCrdtOperation(CrdtOperation crdtOperation);
 
     public abstract boolean isRelated(Invocation src, Invocation dest);
 

@@ -1,7 +1,7 @@
 package datatype;
 
-import crdttrace.CrdtOperation;
 import history.Invocation;
+import validation.OperationTypes;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -10,6 +10,16 @@ import java.util.HashMap;
 public class RRpq extends AbstractDataType {
     private ArrayList<Element> data = new ArrayList<>();
     private HashMap<Integer, Element> map = new HashMap<>();
+
+    public static OperationTypes getOperationTypes() {
+        OperationTypes operationTypes = new OperationTypes();
+        operationTypes.setOperationType("rwfzrem", "UPDATE");
+        operationTypes.setOperationType("rwfzadd", "UPDATE");
+        operationTypes.setOperationType("rwfzincrby", "UPDATE");
+        operationTypes.setOperationType("rwfzmax", "QUERY");
+        operationTypes.setOperationType("rwfzscore", "QUERY");
+        return operationTypes;
+    }
 
     private void shiftUp(int s) {
         int j = s, i = (j - 1) / 2;
@@ -96,20 +106,24 @@ public class RRpq extends AbstractDataType {
     private String max()
     {
         if (data.size() == 0) {
-            return "rwfzscore:" + "NONE";
+            //return "rwfzscore:" + "NONE";
+            return "null";
         } else {
             Element max = data.get(0);
             BigDecimal val = max.getVal();
-            return "rwfzmax:" + Integer.toString(max.getEle()) + ":" + val.stripTrailingZeros().toPlainString();
+            //return "rwfzmax:" + Integer.toString(max.getEle()) + ":" + val.stripTrailingZeros().toPlainString();
+            return val.stripTrailingZeros().toPlainString();
         }
     }
 
     private String score(Integer k) {
         if (data.size() == 0 || !map.containsKey(k)) {
-            return "rwfzscore:" + Integer.toString(k) + ":" + "NONE";
+            //return "rwfzscore:" + Integer.toString(k) + ":" + "NONE";
+            return "null";
         } else {
             BigDecimal val = map.get(k).getVal();
-            return "rwfzscore:" + Integer.toString(k) + ":" + val.stripTrailingZeros().toPlainString();
+            //return "rwfzscore:" + Integer.toString(k) + ":" + val.stripTrailingZeros().toPlainString();
+            return val.stripTrailingZeros().toPlainString();
         }
     }
 
@@ -134,82 +148,31 @@ public class RRpq extends AbstractDataType {
         }
     }
 
-
-    public Invocation transformCrdtOperation(CrdtOperation crdtOperation) {
-        if (crdtOperation.isOrigin()) {
-            Invocation invocation = new Invocation();
-            invocation.setMethodName(crdtOperation.getOperationName());
-            invocation.setRetValue(crdtOperation.getOperationName());
-            ArrayList<String> args = crdtOperation.getArguments();
-
-            if (crdtOperation.getOperationName().equals("rwfzadd") || crdtOperation.getOperationName().equals("rwfzincrby")) {
-                Integer ele = Integer.parseInt(args.get(0));
-                //Double value = Double.parseDouble(args.get(1));
-                BigDecimal value = new BigDecimal(args.get(1));
-                invocation.addArguments(ele);
-                invocation.addArguments(value);
-                String ret = crdtOperation.getOperationName();
-                ret += ":" + args.get(0) + ":" + args.get(1);
-                invocation.setRetValue(ret);
-                invocation.setOperationType("UPDATE");
-            } else if (crdtOperation.getOperationName().equals("rwfzrem")) {
-                Integer ele = Integer.parseInt(args.get(0));
-                invocation.addArguments(ele);
-                String ret = crdtOperation.getOperationName();
-                ret += ":" + args.get(0);
-                invocation.setRetValue(ret);
-                invocation.setOperationType("UPDATE");
-            } else if (crdtOperation.getOperationName().equals("rwfzscore")) {
-                String arg1 = args.get(0);
-                Integer ele = Integer.parseInt(arg1.substring(0, arg1.length() - 1));
-                invocation.addArguments(ele);
-                invocation.setOperationType("QUERY");
-                if (args.get(1).equals("NONE")) {
-                    invocation.setRetValue(crdtOperation.getOperationName() + ":" + args.get(0) + args.get(1));
-                } else {
-                    BigDecimal value = new BigDecimal(args.get(1));
-                    invocation.setRetValue(crdtOperation.getOperationName() + ":" + args.get(0) + value.stripTrailingZeros().toPlainString());
-                }
-            } else if (crdtOperation.getOperationName().equals("rwfzmax")) {
-                BigDecimal value = new BigDecimal(args.get(1));
-                invocation.setRetValue(crdtOperation.getOperationName() + ":" + args.get(0) + value.stripTrailingZeros().toPlainString());
-                invocation.setOperationType("QUERY");
-            } else {
-                System.err.println("No such method");
-                invocation = null;
-            }
-            return invocation;
-        } else {
-            System.err.println("Wrong CRDT Operation. Must be origin");
-            return null;
-        }
-    }
-
     public String rwfzadd(Invocation invocation) {
-        Integer k = (Integer) invocation.getArguments().get(0);
-        BigDecimal v = (BigDecimal) invocation.getArguments().get(1);
+        Integer k = Integer.parseInt((String)invocation.getArguments().get(0));
+        BigDecimal v = new BigDecimal((String)invocation.getArguments().get(1));
         add(k, v);
-        //return "NULL";
-        return invocation.getMethodName() + ":" + Integer.toString(k) + ":" + v.toString();
+        return "null";
+        //return invocation.getMethodName() + ":" + Integer.toString(k) + ":" + v.toString();
     }
 
     public String rwfzrem(Invocation invocation) {
-        Integer k = (Integer) invocation.getArguments().get(0);
+        Integer k = Integer.parseInt((String)invocation.getArguments().get(0));
         rem(k);
-        //return "NULL";
-        return invocation.getMethodName() + ":" + Integer.toString(k);
+        return "null";
+        //return invocation.getMethodName() + ":" + Integer.toString(k);
     }
 
     public String rwfzincrby(Invocation invocation) {
-        Integer k = (Integer) invocation.getArguments().get(0);
-        BigDecimal i = (BigDecimal) invocation.getArguments().get(1);
+        Integer k = Integer.parseInt((String)invocation.getArguments().get(0));
+        BigDecimal i = new BigDecimal((String)invocation.getArguments().get(1));
         inc(k, i);
-        //return "NULL";
-        return invocation.getMethodName() + ":" + Integer.toString(k) + ":" + i.toString();
+        return "null";
+        //return invocation.getMethodName() + ":" + Integer.toString(k) + ":" + i.toString();
     }
 
     public String rwfzscore(Invocation invocation) {
-        Integer k = (Integer) invocation.getArguments().get(0);
+        Integer k = Integer.parseInt((String)invocation.getArguments().get(0));
         return score(k);
         //return invocation.getMethodName();
     }

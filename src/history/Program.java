@@ -22,6 +22,11 @@ public class Program {
         ;
     }
 
+    public Program(List<SubProgram> subPrograms, HappenBefore hb) {
+        this.subPrograms = subPrograms;
+        this.hbs.add(hb);
+    }
+
     public List<SubProgram> getSubPrograms() {
         return subPrograms;
     }

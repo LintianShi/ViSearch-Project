@@ -3,9 +3,11 @@ package test;
 import datatype.*;
 import history.*;
 import org.apache.commons.lang3.tuple.Pair;
+import traceprocessing.RedisProcessor;
 import validation.MinimalVisSearch;
 import arbitration.LinVisibility;
 import arbitration.Linearization;
+import validation.OperationTypes;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -38,5 +40,13 @@ public class TestMinimalRALinCheck {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        RedisProcessor rp = new RedisProcessor();
+        rp.load("trace");
+        HappenBeforeGraph happenBeforeGraph = rp.getProgram(RRpq.getOperationTypes()).generateHappenBeforeGraphs().get(0);
+
+        TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RRpq());
     }
 }
