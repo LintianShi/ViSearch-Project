@@ -45,7 +45,7 @@ public class TestMinimalRALinCheck {
     public static void main(String[] args) throws Exception {
         RedisProcessor rp = new RedisProcessor();
         rp.load("trace");
-        HappenBeforeGraph happenBeforeGraph = rp.getProgram(RRpq.getOperationTypes()).generateHappenBeforeGraphs().get(0);
+        HappenBeforeGraph happenBeforeGraph = rp.getProgram(RRpq.getOperationTypes()).generateHappenBeforeGraph();
 
         TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RRpq());
     }

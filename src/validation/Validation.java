@@ -11,7 +11,7 @@ import java.util.*;
 
 public class Validation {
     private Program program;
-    private List<HappenBeforeGraph> happenBeforeGraphs;
+    private HappenBeforeGraph happenBeforeGraph;
 
     public void loadTrace(String filename) {
         File file = new File(filename);
@@ -30,7 +30,7 @@ public class Validation {
     }
 
     private void initializeHappenBeforeGraphs() {
-        happenBeforeGraphs = program.generateHappenBeforeGraphs();
+        happenBeforeGraph = program.generateHappenBeforeGraph();
     }
 
     public static Behaviour crdtExecute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {

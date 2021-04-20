@@ -15,8 +15,8 @@ public class Program {
     @JSONField(name = "SUBPROGRAMS", ordinal = 1)
     private List<SubProgram> subPrograms = new ArrayList<>();
 
-    @JSONField(name = "HBS", ordinal = 2)
-    private List<HappenBefore> hbs = new ArrayList<>();
+    @JSONField(name = "HB", ordinal = 2)
+    private HappenBefore hb = new HappenBefore();
 
     public Program() {
         ;
@@ -24,7 +24,7 @@ public class Program {
 
     public Program(List<SubProgram> subPrograms, HappenBefore hb) {
         this.subPrograms = subPrograms;
-        this.hbs.add(hb);
+        this.hb = hb;
     }
 
     public List<SubProgram> getSubPrograms() {
@@ -35,20 +35,8 @@ public class Program {
         this.subPrograms = subPrograms;
     }
 
-    public List<HappenBefore> getHbs() {
-        return hbs;
-    }
-
-    public void setHbs(List<HappenBefore> hbs) {
-        this.hbs = hbs;
-    }
-
-    public List<HappenBeforeGraph> generateHappenBeforeGraphs() {
-        List<HappenBeforeGraph> graphs = new ArrayList<>();
-        for (HappenBefore hb : hbs) {
-            graphs.add(new HappenBeforeGraph(subPrograms, hb));
-        }
-        return graphs;
+    public HappenBeforeGraph generateHappenBeforeGraph() {
+        return new HappenBeforeGraph(subPrograms, hb);
     }
 
     public void assignID() {
@@ -75,22 +63,7 @@ public class Program {
         String jsonfile = new String(filecontent, "UTF-8");
         Program program = JSON.parseObject(jsonfile, Program.class);
 
-        List<HappenBeforeGraph> list = program.generateHappenBeforeGraphs();
-        return list.get(0);
-    }
-
-    public static HappenBeforeGraph load(String fileName, OperationTypes operationTypes) throws Exception {
-        File filename = new File(fileName);
-        Long filelength = filename.length();
-        byte[] filecontent = new byte[filelength.intValue()];
-        FileInputStream in = new FileInputStream(filename);
-        in.read(filecontent);
-        String jsonfile = new String(filecontent, "UTF-8");
-        Program program = JSON.parseObject(jsonfile, Program.class);
-        program.assignID();
-
-        List<HappenBeforeGraph> list = program.generateHappenBeforeGraphs();
-        return list.get(0);
+        return program.generateHappenBeforeGraph();
     }
 
     public static void main(String[] args) throws Exception {
@@ -103,19 +76,5 @@ public class Program {
         //System.out.println(jsonfile);
         Program program = JSON.parseObject(jsonfile, Program.class);
         System.out.println(JSON.toJSONString(program));
-
-        List<HappenBeforeGraph> list = program.generateHappenBeforeGraphs();
-        for (HappenBeforeGraph g : list) {
-            System.out.println("--------------start---------------");
-            //g.print();
-            Invocation.visibility.put("put", "COMPLETE");
-            Invocation.visibility.put("remove", "COMPLETE");
-            Invocation.visibility.put("contains", "BASIC");
-            List<Linearization> lins = g.generateLins();
-            for (Linearization l : lins) {
-                System.out.println(l);
-            }
-            System.out.println("--------------end---------------");
-        }
     }
 }

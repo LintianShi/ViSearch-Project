@@ -1,4 +1,25 @@
 # Representation of History
+
+## RawTrce的格式
+
+* RawTrace是直接从数据库获得的原始日志文件。各数据库产生的原始日志文件必然会有不同，但我们希望能将其统一成一个一致的形式。
+
+* 一次操作应表示为
+
+  ***startTime, endTime, operationName, argument1, argument2, ... , argumentn, retValue***
+
+  （其中操作的参数可以是零个或多个。操作的返回值必须存在，如果操作无返回值，则应该使用null或者其他占位符代替）
+
+* 综上我们将原始日志中的一次操作调用以Record对象的形式表示
+
+  | Field                 | Description                                      |
+  | --------------------- | ------------------------------------------------ |
+  | startTime: long       | 操作发起调用的时间                               |
+  | endTime: long         | 操作调用结束的时间                               |
+  | operationName: String | 操作名                                           |
+  | argument: String      | 操作的参数，零个或多个                           |
+  | retValue: String      | 操作的返回值，对于没有返回值的操作应用占位符补上 |
+
 ## Trace的格式
 
 * 一个Trace使用JSON表示
@@ -26,35 +47,27 @@
   			]
   		}
   	],
-  	"HBS":
-  	[
-  		{
-  			"HAPPENBEFORE":
-  			[
-  				{"PREV":[0,1],"NEXT":[1,1]}
-  			]
-  		},
-  		{
-  			"HAPPENBEFORE":
-  			[
-  				{"PREV":[0,1],"NEXT":[1,2]}
-  			]
-  		}
-  	]
+  	"HB":
+      {
+  		"HAPPENBEFORE":
+  		[
+  			{"PREV":[0,1],"NEXT":[1,1]}
+  		]
+  	}
   }
   
   
   ```
-
+  
 * SUBPROGRAMS记录了代码的program order
 
-* HBS记录了代码的Happen-Before关系
+* HB记录了代码的Happen-Before关系
 
 * 需要解释的是，"HAPPENBEFORE"中包含了一系列的happen-before关系。"PREV"表示先发生的invocation的编号，"NEXT"表示后发生的invocation的编号。编号的前一项指的是进程编号，后一项指的是操作在进程中编号。
 
 ## 构建基于Happen-Before的DAG
 
-* <po, hbs>包含了若干组的hb，基于一组hb可以生成一个对应的DAG
+* <po, hb>可以生成一个对应的DAG
 
 * DAG中的节点包含以下信息：invocation，nexts，prevs，id, pairID
 
@@ -76,39 +89,7 @@ public class Node {
 
 * pairID也唯一标识了一个invocation，不过是以数对的形式
 
-  编号方法为：假设一共有m个SubProgram，$SubProgram_i$具有$l_i$个invocation，那么$SubProgram_i$的第j个invocation的编号为**<i, j>**.
-
-## 基于DAG生成所有的Linearization
-
-* 使用回溯法生成所有的Linearization，即在一个偏序关系里找到一个与其不矛盾的全序关系
-
-* 具体算法为：
-
-  ```java
-  int index[process_num] = {0, 0, ... ,0}
-  void generateLin(int[] index, Stack<Node> stack) {
-  	if (isEnd(stack)) {
-  		yield lin;
-  	}
-  	for (int i = 0; i < index.length; i++) {
-  		if (isValid(node(index[i])) {
-  			stack.push(node(index[i]));
-  			index[i]++;
-  			generateLin(index, stack);
-  			index[i]--;
-  			stack.pop();
-  		}
-  	}
-  }
-  ```
-
-* 一个Linearization就是一个Node的序列。Node中不仅包含了一个Invocation，还有整个DAG图的信息，Vis关系需要这些信息。
-
-## 基于Linearization生成Vis信息
-
-* 定义了LinVisibility类，用于表示一个Linearization里的所有操作可能对应的一个vis关系
-* 在一个序列lin中，第k个操作的vis集合有$2^{k-1}$个，即前k-1个操作的幂集。
-* 所以一个序列lin，假设包含了n个操作，那么就有$2^{0}*2^{1}*\ldots*2^{k-1}=2^{\sum_{k=0}^{n-1}k}$组vis关系
+  编号方法为：假设一共有m个SubProgram，$SubProgram_i$具有$l_i$个invocation，那么$$SubProgram_i$$的第j个invocation的编号为**<i, j>**.
 
 ## 抽象数据结构AbstractDataType
 
@@ -188,20 +169,6 @@ public class Node {
 # OperationTypes类
 
 * 记录了CRDT中操作的类型：UPDATE、QUERY、QUERY-UPDATE
-
-# QueryUpdateExtension类
-
-* 包含了一个HashMap< String, Function<Invocation, Pair<Invocation, Invocation> > > map
-
-* 规定了一个类型为Query-Update的操作如何映射成一个Query操作和一个Update操作
-
-* Program类利用OperationTypes类和QueryUpdateExtension类对整个History进行拓展
-
-  ```java
-  public void extendQueryUpdate(OperationTypes operationTypes, QueryUpdateExtension queryUpdateExtension)
-  ```
-
-  
 
 # Behaviour类
 

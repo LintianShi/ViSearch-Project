@@ -1,9 +1,6 @@
 /out/
-/.idea/
 /lib/
-*.iml
 /commons-lang3-3.10/
-/src/crdttrace/
 *.trc
 *.json
 *.txt
