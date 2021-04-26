@@ -1,6 +1,7 @@
 package datatype;
 
 import history.Invocation;
+import traceprocessing.Record;
 import validation.OperationTypes;
 
 import java.math.BigDecimal;
@@ -10,16 +11,59 @@ import java.util.HashMap;
 public class RRpq extends AbstractDataType {
     private ArrayList<Element> data = new ArrayList<>();
     private HashMap<Integer, Element> map = new HashMap<>();
+    private static OperationTypes operationTypes = null;
 
-    public static OperationTypes getOperationTypes() {
-        OperationTypes operationTypes = new OperationTypes();
-        operationTypes.setOperationType("rwfzrem", "UPDATE");
-        operationTypes.setOperationType("rwfzadd", "UPDATE");
-        operationTypes.setOperationType("rwfzincrby", "UPDATE");
-        operationTypes.setOperationType("rwfzmax", "QUERY");
-        operationTypes.setOperationType("rwfzscore", "QUERY");
-        return operationTypes;
+    public String getOperationType(String methodName) {
+        if (operationTypes == null) {
+            operationTypes = new OperationTypes();
+            operationTypes.setOperationType("rwfzrem", "UPDATE");
+            operationTypes.setOperationType("rwfzadd", "UPDATE");
+            operationTypes.setOperationType("rwfzincrby", "UPDATE");
+            operationTypes.setOperationType("rwfzmax", "QUERY");
+            operationTypes.setOperationType("rwfzscore", "QUERY");
+            return operationTypes.getOperationType(methodName);
+        } else {
+            return operationTypes.getOperationType(methodName);
+        }
+
     }
+
+    public Invocation generateInvocation(Record record) {
+        Invocation invocation = new Invocation();
+        if (record.getRetValue().equals("null")) {
+            invocation.setRetValue(record.getRetValue());
+        } else {
+            invocation.setRetValue(record.getRetValue() + ".0");
+        }
+        invocation.setMethodName(record.getOperationName());
+        invocation.setOperationType(getOperationType(record.getOperationName()));
+
+        if (record.getOperationName().equals("rwfzadd")) {
+            invocation.addArguments(Integer.parseInt(record.getArgument(0)));
+            invocation.addArguments(Double.parseDouble(record.getArgument(1)));
+        } else if (record.getOperationName().equals("rwfzrem")) {
+            invocation.addArguments(Integer.parseInt(record.getArgument(0)));
+        } else if (record.getOperationName().equals("rwfzincrby")) {
+            invocation.addArguments(Integer.parseInt(record.getArgument(0)));
+            invocation.addArguments(Double.parseDouble(record.getArgument(1)));
+        } else if (record.getOperationName().equals("rwfzmax")) {
+            //
+        } else if (record.getOperationName().equals("rwfzscore")) {
+            invocation.addArguments(Integer.parseInt(record.getArgument(0)));
+        } else {
+            System.out.println("Unknown operation");
+        }
+
+        return invocation;
+    }
+
+
+    @Override
+    public void reset() {
+        map = new HashMap<>();
+        data = new ArrayList<>();
+    }
+    public void print() {;}
 
     private void shiftUp(int s) {
         int j = s, i = (j - 1) / 2;
@@ -67,7 +111,7 @@ public class RRpq extends AbstractDataType {
         data.set(i, temp);
     }
 
-    private void add(int k, BigDecimal v)
+    private void add(int k, Double v)
     {
         if (!map.containsKey(k)) {
             Element element = new Element(k, v);
@@ -89,7 +133,7 @@ public class RRpq extends AbstractDataType {
         }
     }
 
-    private void inc(int k, BigDecimal i)
+    private void inc(int k, Double i)
     {
         if (i.doubleValue() == 0)
             return;
@@ -110,9 +154,9 @@ public class RRpq extends AbstractDataType {
             return "null";
         } else {
             Element max = data.get(0);
-            BigDecimal val = max.getVal();
+            Double val = max.getVal();
             //return "rwfzmax:" + Integer.toString(max.getEle()) + ":" + val.stripTrailingZeros().toPlainString();
-            return val.stripTrailingZeros().toPlainString();
+            return val.toString();
         }
     }
 
@@ -121,9 +165,9 @@ public class RRpq extends AbstractDataType {
             //return "rwfzscore:" + Integer.toString(k) + ":" + "NONE";
             return "null";
         } else {
-            BigDecimal val = map.get(k).getVal();
+            Double val = map.get(k).getVal();
             //return "rwfzscore:" + Integer.toString(k) + ":" + val.stripTrailingZeros().toPlainString();
-            return val.stripTrailingZeros().toPlainString();
+            return val.toString();
         }
     }
 
@@ -149,30 +193,30 @@ public class RRpq extends AbstractDataType {
     }
 
     public String rwfzadd(Invocation invocation) {
-        Integer k = Integer.parseInt((String)invocation.getArguments().get(0));
-        BigDecimal v = new BigDecimal((String)invocation.getArguments().get(1));
-        add(k, v);
+        Integer k = (Integer) invocation.getArguments().get(0);
+        Double i = (Double) invocation.getArguments().get(1);
+        add(k, i);
         return "null";
         //return invocation.getMethodName() + ":" + Integer.toString(k) + ":" + v.toString();
     }
 
     public String rwfzrem(Invocation invocation) {
-        Integer k = Integer.parseInt((String)invocation.getArguments().get(0));
+        Integer k = (Integer) invocation.getArguments().get(0);
         rem(k);
         return "null";
         //return invocation.getMethodName() + ":" + Integer.toString(k);
     }
 
     public String rwfzincrby(Invocation invocation) {
-        Integer k = Integer.parseInt((String)invocation.getArguments().get(0));
-        BigDecimal i = new BigDecimal((String)invocation.getArguments().get(1));
+        Integer k = (Integer) invocation.getArguments().get(0);
+        Double i = (Double) invocation.getArguments().get(1);
         inc(k, i);
         return "null";
         //return invocation.getMethodName() + ":" + Integer.toString(k) + ":" + i.toString();
     }
 
     public String rwfzscore(Invocation invocation) {
-        Integer k = Integer.parseInt((String)invocation.getArguments().get(0));
+        Integer k = (Integer) invocation.getArguments().get(0);
         return score(k);
         //return invocation.getMethodName();
     }
@@ -181,42 +225,24 @@ public class RRpq extends AbstractDataType {
         return max();
         //return invocation.getMethodName();
     }
-
-    @Override
-    public void reset() {
-        map = new HashMap<>();
-        data = new ArrayList<>();
-    }
-    public void print() {;}
-
-    public static void main(String[] args) {
-//        Element element1 = new Element(1, 11.0);
-//        Element element2 = new Element(2, 22.0);
-//        ArrayList<Element> list = new ArrayList<>();
-//        list.add(element1);
-//        list.add(element1);
-//        Element temp = list.get(0);
-//        temp.inc(33.0);
-//        System.out.println(list.get(1).getVal());
-    }
 }
 
 class Element {
     private Integer ele;
-    private BigDecimal val;
+    private Double val;
     private Integer index;
 
     public Element() {
         this.ele = 0;
-        this.val = new BigDecimal(0.0);
+        this.val = 0.0;
     }
 
-    public Element(Integer ele, BigDecimal val) {
+    public Element(Integer ele, Double val) {
         this.ele = ele;
         this.val = val;
     }
 
-    public BigDecimal getVal() {
+    public Double getVal() {
         return val;
     }
 
@@ -228,7 +254,7 @@ class Element {
         this.ele = ele;
     }
 
-    public void setVal(BigDecimal val) {
+    public void setVal(Double val) {
         this.val = val;
     }
 
@@ -240,7 +266,7 @@ class Element {
         this.index = index;
     }
 
-    public void inc(BigDecimal i) {
-        val = val.add(i);
+    public void inc(Double i) {
+        val = val + i;
     }
 }

@@ -11,7 +11,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RedisProcessor implements TraceProcessor {
+public class RedisProcessor {
     private List<List<Record>> rawTrace;
 
     public void load(String filepath) throws Exception {
@@ -42,11 +42,7 @@ public class RedisProcessor implements TraceProcessor {
         }
     }
 
-    public Program getProgram() {
-        return getProgram(null);
-    }
-
-    public Program getProgram(OperationTypes operationTypes) {
+    public Program generateProgram(AbstractDataType adt) {
         //Program program = new Program();
         HappenBefore happenBefore = new HappenBefore();
         for (int i = 0; i < rawTrace.size(); i++) {
@@ -61,7 +57,7 @@ public class RedisProcessor implements TraceProcessor {
         for (int i = 0; i < rawTrace.size(); i++) {
             List<Invocation> invocations = new ArrayList<>();
             for (Record r : rawTrace.get(i)) {
-                invocations.add(r.generateInvocation(operationTypes));
+                invocations.add(r.generateInvocation(adt));
             }
             subPrograms.add(new SubProgram(invocations));
         }
@@ -107,58 +103,3 @@ public class RedisProcessor implements TraceProcessor {
     }
 }
 
-class Record implements Comparable<Record> {
-    private long startTime;
-    private long endTime;
-    private String operationName;
-    private List<Object> arguments = new ArrayList<>();
-    private String retValue;
-
-    public Record(String line) throws Exception {
-        String[] cols = line.split(",");
-        if (cols.length < 4) {
-            throw new Exception();
-        }
-        this.startTime = Long.parseLong(cols[0]);
-        this.endTime = Long.parseLong(cols[1]);
-        this.operationName = "rwfz" + cols[2];
-        this.retValue = cols[cols.length - 1];
-        for (int i = 3; i < cols.length - 1; i++) {
-            arguments.add(cols[i]);
-        }
-    }
-
-    public Invocation generateInvocation() {
-        Invocation invocation = new Invocation();
-        invocation.setMethodName(operationName);
-        invocation.setRetValue(retValue);
-        invocation.setArguments(arguments);
-        return invocation;
-    }
-
-    public Invocation generateInvocation(OperationTypes operationTypes) {
-        if (operationTypes == null) {
-            return generateInvocation();
-        } else {
-            Invocation invocation = generateInvocation();
-            invocation.setOperationType(operationTypes.getOperationType(operationName));
-            return invocation;
-        }
-    }
-
-    @Override
-    public int compareTo(Record o) {
-        if (o.startTime > this.endTime) {
-            return -1;
-        } else if (o.endTime < this.startTime) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return Long.toString(startTime) + "," + Long.toString(endTime) + "," + operationName;
-    }
-}

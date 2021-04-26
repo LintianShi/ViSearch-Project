@@ -20,12 +20,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd6d85b3-edec-463f-9f09-eedd6fdd997e" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/document/crdt_trace.md" beforeDir="false" afterPath="$PROJECT_DIR$/document/crdt_trace.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/document/history.md" beforeDir="false" afterPath="$PROJECT_DIR$/document/history.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/history/Program.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/history/Program.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/traceprocessing/Record.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datatype/AbstractDataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/datatype/AbstractDataType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datatype/MyHashMap.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datatype/RRpq.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/datatype/RRpq.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/datatype/SimpleSet.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/TestMinimalRALinCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/TestMinimalRALinCheck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/traceprocessing/RedisProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/traceprocessing/RedisProcessor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/traceprocessing/TraceProcessor.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/validation/Validation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/validation/Validation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/trace/1618377011275946620.trc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trace/1618377011275982620.trc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trace/1618377011276011953.trc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trace/1618377011276081495.trc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/trace/1618377011277407578.trc" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +65,7 @@
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="traceprocessing" />
       <recent name="visibility" />
     </key>
   </component>
@@ -112,15 +122,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -200,6 +208,7 @@
       <workItem from="1617707878369" duration="360000" />
       <workItem from="1618390224453" duration="3779000" />
       <workItem from="1618907589317" duration="1090000" />
+      <workItem from="1619429523755" duration="5471000" />
     </task>
     <servers />
   </component>
@@ -223,34 +232,34 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1012" y="480" key="#com.intellij.ide.util.PackageChooserDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1618392441938" />
-    <state x="1059" y="594" width="443" height="220" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1618392443706">
+    <state x="1059" y="594" width="443" height="220" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1619431451724">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1059" y="594" width="443" height="220" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.2560.1400@0.0.2560.1400" timestamp="1618392443706" />
-    <state x="1011" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1618392016369">
+    <state x="1059" y="594" width="443" height="220" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.2560.1400@0.0.2560.1400" timestamp="1619431451724" />
+    <state x="1011" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1619429697436">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1011" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1618392016369" />
+    <state x="1011" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2560.1400@0.0.2560.1400" timestamp="1619429697436" />
     <state x="1061" y="441" key="FileChooserDialogImpl" timestamp="1617708235221">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1061" y="441" key="FileChooserDialogImpl/0.0.2560.1400@0.0.2560.1400" timestamp="1617708235221" />
-    <state width="2517" height="554" key="GridCell.Tab.0.bottom" timestamp="1618910004439">
+    <state width="2517" height="274" key="GridCell.Tab.0.bottom" timestamp="1619436479091">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="554" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1618910004439" />
-    <state width="2517" height="554" key="GridCell.Tab.0.center" timestamp="1618910004439">
+    <state width="2517" height="274" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1619436479091" />
+    <state width="2517" height="274" key="GridCell.Tab.0.center" timestamp="1619436479091">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="554" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1618910004439" />
-    <state width="2517" height="554" key="GridCell.Tab.0.left" timestamp="1618910004439">
+    <state width="2517" height="274" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1619436479091" />
+    <state width="2517" height="274" key="GridCell.Tab.0.left" timestamp="1619436479091">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="554" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1618910004439" />
-    <state width="2517" height="554" key="GridCell.Tab.0.right" timestamp="1618910004439">
+    <state width="2517" height="274" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1619436479091" />
+    <state width="2517" height="274" key="GridCell.Tab.0.right" timestamp="1619436479091">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="554" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1618910004439" />
+    <state width="2517" height="274" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1619436479091" />
     <state x="782" y="345" key="SettingsEditor" timestamp="1618390321658">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -259,5 +268,9 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="668" y="310" key="new project wizard/0.0.2560.1400@0.0.2560.1400" timestamp="1617708238878" />
+    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup" timestamp="1619435228003">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400@0.0.2560.1400" timestamp="1619435228003" />
   </component>
 </project>

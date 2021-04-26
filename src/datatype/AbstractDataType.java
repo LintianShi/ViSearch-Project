@@ -1,6 +1,8 @@
 package datatype;
 
 import history.Invocation;
+import traceprocessing.Record;
+import validation.OperationTypes;
 
 import java.lang.reflect.Method;
 
@@ -23,4 +25,6 @@ public abstract class AbstractDataType {
     public abstract void reset();
 
     public abstract void print();
+
+    public abstract Invocation generateInvocation(Record record);
 }

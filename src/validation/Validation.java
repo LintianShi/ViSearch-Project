@@ -59,7 +59,8 @@ public class Validation {
                             if (ret != null) {
                                 rets.add(node.getId(), ret);
                                 if (i == lin.size() - 1) {
-                                    System.out.println(node.getInvocation().getRetValue() + " + " + ret);
+                                    System.out.println(node.getInvocation().getMethodName() + ":"
+                                            + node.getInvocation().getRetValue() + " -- " + ret);
                                 }
                             }
 
