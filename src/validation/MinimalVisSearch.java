@@ -10,22 +10,33 @@ import arbitration.LinVisibility;
 import java.util.*;
 
 public class MinimalVisSearch {
-    private Stack<SearchState> stack = new Stack<>();
+    private SearchStatePriorityQueue priorityQueue;
     private HappenBeforeGraph happenBeforeGraph;
     private Pair<Linearization, LinVisibility> result;
+    private SearchConfiguration configuration;
+    private int s = 0;
+
+    public
+    MinimalVisSearch(SearchConfiguration configuration) {
+        this.configuration = configuration;
+        priorityQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
+    }
 
     public void init(HappenBeforeGraph happenBeforeGraph) {
         SearchState.happenBeforeGraph = happenBeforeGraph;
         this.happenBeforeGraph = happenBeforeGraph;
         SearchState startState = new SearchState();
         for (SearchState newState : startState.linExtent()) {
-            stack.push(newState);
+            priorityQueue.offer(newState);
         }
     }
 
     public boolean checkConsistency(AbstractDataType adt) {
-        while (!stack.isEmpty()) {
-            SearchState state = stack.pop();
+        while (!priorityQueue.isEmpty() && s < 12) {
+            s++;
+            System.out.println(priorityQueue.size());
+            SearchState state = priorityQueue.poll();
+            System.out.println(priorityQueue.toString());
             int times = 0;
             while (state.nextVisibility() != -1 && times < 1) {
                 times++;
@@ -37,7 +48,7 @@ public class MinimalVisSearch {
                     List<SearchState> list =state.linExtent();
                     Collections.reverse(list);
                     for (SearchState newState : list) {
-                        stack.push(newState);
+                        priorityQueue.offer(newState);
                     }
                     break;
                 }
@@ -50,6 +61,9 @@ public class MinimalVisSearch {
         String retTrace = searchState.getLinearization().getRetValueTrace(searchState.getLinearization().size());
         String excuteTrace = Validation.crdtExecute(adt, searchState.getLinearization(), searchState.getVisibility()).toString();
         System.out.println(Integer.toString(searchState.getLinearization().size()) + "/" + Integer.toString(happenBeforeGraph.size()));
+        System.out.println(retTrace);
+        System.out.println(excuteTrace);
+        System.out.println();
         if (excuteTrace.equals(retTrace)) {
 //            System.out.println(retTrace);
 //            System.out.println(excuteTrace);

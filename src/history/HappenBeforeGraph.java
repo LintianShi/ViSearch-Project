@@ -12,12 +12,6 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
     private int threadNum;
     private Set<HBGNode> nodesWithoutPrev = null;
 
-    public HappenBeforeGraph(List<HBGNode> startNodes, HashMap<Integer, HBGNode> map) {
-        this.startNodes = startNodes;
-        this.nodes = map;
-        this.threadNum = startNodes.size();
-    }
-
     public HappenBeforeGraph(List<SubProgram> subPrograms, HappenBefore happenBefore) {
         int index = 0;
         programOrders = new int[subPrograms.size()][2];

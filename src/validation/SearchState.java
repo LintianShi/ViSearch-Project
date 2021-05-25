@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SearchState {
+public class SearchState implements Comparable<SearchState> {
     public static HappenBeforeGraph happenBeforeGraph;
     private Linearization linearization;
     private LinVisibility visibility;
@@ -111,4 +111,19 @@ public class SearchState {
     public LinVisibility getVisibility() {
         return visibility;
     }
+
+    public int compareTo(SearchState o) {
+        if (linearization.size() > o.linearization.size()) {
+            return 1;
+        } else if (linearization.size() == o.linearization.size()) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
+
+    public String toString() {
+        return linearization.toString();
+    }
+
 }

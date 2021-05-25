@@ -20,21 +20,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd6d85b3-edec-463f-9f09-eedd6fdd997e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/traceprocessing/Record.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/validation/SearchConfiguration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/validation/SearchStatePriorityQueue.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/datatype/AbstractDataType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/datatype/AbstractDataType.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/datatype/MyHashMap.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/datatype/RRpq.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/datatype/RRpq.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/datatype/SimpleSet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/history/HappenBeforeGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/history/HappenBeforeGraph.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/TestMinimalRALinCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/TestMinimalRALinCheck.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/traceprocessing/RedisProcessor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/traceprocessing/RedisProcessor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/traceprocessing/TraceProcessor.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/validation/Validation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/validation/Validation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trace/1618377011275946620.trc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trace/1618377011275982620.trc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trace/1618377011276011953.trc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trace/1618377011276081495.trc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/trace/1618377011277407578.trc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/validation/MinimalVisSearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/validation/MinimalVisSearch.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/validation/SearchState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/validation/SearchState.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -122,13 +114,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
           <option name="containerStateName" value="" />
         </value>
       </option>
-      <option name="TEST_OBJECT" value="class" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <properties />
+      <listeners />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -208,7 +202,8 @@
       <workItem from="1617707878369" duration="360000" />
       <workItem from="1618390224453" duration="3779000" />
       <workItem from="1618907589317" duration="1090000" />
-      <workItem from="1619429523755" duration="5471000" />
+      <workItem from="1619429523755" duration="6000000" />
+      <workItem from="1621929598540" duration="8353000" />
     </task>
     <servers />
   </component>
@@ -244,22 +239,22 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1061" y="441" key="FileChooserDialogImpl/0.0.2560.1400@0.0.2560.1400" timestamp="1617708235221" />
-    <state width="2517" height="274" key="GridCell.Tab.0.bottom" timestamp="1619436479091">
+    <state width="2517" height="391" key="GridCell.Tab.0.bottom" timestamp="1621942909586">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="274" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1619436479091" />
-    <state width="2517" height="274" key="GridCell.Tab.0.center" timestamp="1619436479091">
+    <state width="2517" height="391" key="GridCell.Tab.0.bottom/0.0.2560.1400@0.0.2560.1400" timestamp="1621942909586" />
+    <state width="2517" height="391" key="GridCell.Tab.0.center" timestamp="1621942909586">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="274" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1619436479091" />
-    <state width="2517" height="274" key="GridCell.Tab.0.left" timestamp="1619436479091">
+    <state width="2517" height="391" key="GridCell.Tab.0.center/0.0.2560.1400@0.0.2560.1400" timestamp="1621942909586" />
+    <state width="2517" height="391" key="GridCell.Tab.0.left" timestamp="1621942909586">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="274" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1619436479091" />
-    <state width="2517" height="274" key="GridCell.Tab.0.right" timestamp="1619436479091">
+    <state width="2517" height="391" key="GridCell.Tab.0.left/0.0.2560.1400@0.0.2560.1400" timestamp="1621942909586" />
+    <state width="2517" height="391" key="GridCell.Tab.0.right" timestamp="1621942909586">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2517" height="274" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1619436479091" />
+    <state width="2517" height="391" key="GridCell.Tab.0.right/0.0.2560.1400@0.0.2560.1400" timestamp="1621942909586" />
     <state x="782" y="345" key="SettingsEditor" timestamp="1618390321658">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>

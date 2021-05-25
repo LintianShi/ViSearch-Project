@@ -8,13 +8,15 @@ import validation.MinimalVisSearch;
 import arbitration.LinVisibility;
 import arbitration.Linearization;
 import validation.OperationTypes;
+import validation.SearchConfiguration;
 
 import java.io.File;
 import java.io.FileWriter;
 
 public class TestMinimalRALinCheck {
     public static void minimalExtensionRaLinCheck(String output, HappenBeforeGraph happenBeforeGraph, AbstractDataType adt) {
-        MinimalVisSearch vfs = new MinimalVisSearch();
+        SearchConfiguration configuration = new SearchConfiguration(1);
+        MinimalVisSearch vfs = new MinimalVisSearch(configuration);
         vfs.init(happenBeforeGraph);
         vfs.checkConsistency(adt);
         Pair<Linearization, LinVisibility> result = vfs.getResult();
