@@ -20,18 +20,85 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dd6d85b3-edec-463f-9f09-eedd6fdd997e" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/validation/SearchConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/validation/SearchStatePriorityQueue.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/history/HappenBeforeGraph.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/history/HappenBeforeGraph.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/TestMinimalRALinCheck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/TestMinimalRALinCheck.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/validation/MinimalVisSearch.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/validation/MinimalVisSearch.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/validation/SearchState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/validation/SearchState.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/validation/SearchConfiguration.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/validation/SearchConfiguration.java" afterDir="false" />
     </list>
+    <ignored path="$PROJECT_DIR$/out/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-1780992825">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.57" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="java" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JAVA" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.edit">
+        <counts>
+          <entry key="java" value="389" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.edit">
+        <counts>
+          <entry key="JAVA" value="389" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/validation/SearchConfiguration.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="76">
+              <caret line="19" column="39" lean-forward="true" selection-start-line="19" selection-start-column="39" selection-end-line="19" selection-end-column="39" />
+              <folding>
+                <element signature="e#542#543#0" expanded="true" />
+                <element signature="e#574#575#0" expanded="true" />
+                <element signature="e#785#786#0" expanded="true" />
+                <element signature="e#818#819#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/validation/MinimalVisSearch.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="266">
+              <caret line="65" column="22" selection-start-line="65" selection-start-column="22" selection-end-line="65" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/test/TestMinimalRALinCheck.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="25" column="43" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="43" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -43,7 +110,71 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/validation/SearchConfiguration.java" />
+        <option value="$PROJECT_DIR$/src/validation/MinimalVisSearch.java" />
+        <option value="$PROJECT_DIR$/src/test/TestMinimalRALinCheck.java" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="152" />
+    <option name="y" value="-2" />
+    <option name="width" value="1382" />
+    <option name="height" value="698" />
+  </component>
   <component name="ProjectId" id="1hJ5WMf0YcsSYOZnKwXJ5w18ixR" />
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Visibility-Checking" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Visibility-Checking" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Visibility-Checking" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Visibility-Checking" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Visibility-Checking" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Visibility-Checking" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="datatype" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Visibility-Checking" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Visibility-Checking" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="test" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Visibility-Checking" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Visibility-Checking" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="validation" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -52,6 +183,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1621958314815" />
     <property name="full.screen.before.presentation.mode" value="false" />
     <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors.General" />
   </component>
@@ -60,6 +192,18 @@
       <recent name="traceprocessing" />
       <recent name="visibility" />
     </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
   </component>
   <component name="RunManager" selected="Application.TestMinimalRALinCheck">
     <configuration name="CrdtTrace (1)" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
@@ -114,20 +258,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="JetRunConfigurationType">
+    <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
       <module name="Visibility-Checking" />
       <option name="VM_PARAMETERS" />
       <option name="PROGRAM_PARAMETERS" />
@@ -140,7 +271,7 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType" factoryName="Kotlin script">
       <module name="Visibility-Checking" />
       <option name="filePath" />
       <option name="vmParameters" />
@@ -174,6 +305,12 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="Application.CrdtTrace" />
+      <item itemvalue="Application.CrdtTrace (1)" />
+      <item itemvalue="Application.SetTest" />
+      <item itemvalue="Application.TestMinimalRALinCheck" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="Application.TestMinimalRALinCheck" />
@@ -183,7 +320,10 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="dd6d85b3-edec-463f-9f09-eedd6fdd997e" name="Default Changelist" comment="" />
@@ -204,23 +344,69 @@
       <workItem from="1618907589317" duration="1090000" />
       <workItem from="1619429523755" duration="6000000" />
       <workItem from="1621929598540" duration="8353000" />
+      <workItem from="1621954547450" duration="3168000" />
     </task>
     <servers />
   </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="3168000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
+    <layout>
+      <window_info id="Image Layers" />
+      <window_info id="Designer" />
+      <window_info id="UI Designer" />
+      <window_info id="Capture Tool" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24963397" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Messages" />
+      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.31012657" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="Palette" />
+      <window_info anchor="right" id="Theme Preview" />
+      <window_info anchor="right" id="Capture Analysis" />
+      <window_info anchor="right" id="Palette&#9;" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Maven Projects" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
+    <option name="version" value="1" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="RECENTLY_FILTERED_USER_GROUPS">
+                <collection />
+              </option>
+              <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+                <collection />
+              </option>
+            </State>
           </value>
         </entry>
       </map>
     </option>
-    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
   </component>
   <component name="WindowStateProjectService">
     <state x="1012" y="480" key="#com.intellij.ide.util.PackageChooserDialog" timestamp="1618392441938">
@@ -267,5 +453,34 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="943" y="315" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400@0.0.2560.1400" timestamp="1619435228003" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/src/validation/SearchConfiguration.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="19" column="39" lean-forward="true" selection-start-line="19" selection-start-column="39" selection-end-line="19" selection-end-column="39" />
+          <folding>
+            <element signature="e#542#543#0" expanded="true" />
+            <element signature="e#574#575#0" expanded="true" />
+            <element signature="e#785#786#0" expanded="true" />
+            <element signature="e#818#819#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/validation/MinimalVisSearch.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="266">
+          <caret line="65" column="22" selection-start-line="65" selection-start-column="22" selection-end-line="65" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/test/TestMinimalRALinCheck.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="25" column="43" selection-start-line="25" selection-start-column="43" selection-end-line="25" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
   </component>
 </project>
