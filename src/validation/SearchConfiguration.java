@@ -1,9 +1,12 @@
 package validation;
 
-public class SearchConfiguration {
+import datatype.AbstractDataType;
+
+public class SearchConfiguration implements Cloneable {
     private int searchMode; // 0: dfs, 1: bfs, 2: h*
     private int searchLimit;
     private int stateLimit;
+    private AbstractDataType adt;
 
     public SearchConfiguration() {
         this.searchMode = 0;
@@ -31,5 +34,20 @@ public class SearchConfiguration {
 
     public int getStateLimit() {
         return stateLimit;
+    }
+
+    public void setAdt(AbstractDataType adt) {
+        this.adt = adt;
+    }
+
+    public AbstractDataType getAdt() {
+        return adt;
+    }
+
+    @Override
+    protected Object clone() {
+        SearchConfiguration configuration = new SearchConfiguration(this.searchMode, this.searchLimit, this.stateLimit);
+        configuration.setAdt(adt.createInstance());
+        return configuration;
     }
 }

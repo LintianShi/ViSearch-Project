@@ -4,12 +4,9 @@ import datatype.*;
 import history.*;
 import org.apache.commons.lang3.tuple.Pair;
 import traceprocessing.RedisProcessor;
-import validation.MinimalVisSearch;
+import validation.*;
 import arbitration.LinVisibility;
 import arbitration.Linearization;
-import validation.OperationTypes;
-import validation.SearchConfiguration;
-import validation.SearchState;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -17,15 +14,22 @@ import java.util.List;
 
 public class TestMinimalRALinCheck {
     public static void minimalExtensionRaLinCheck(String output, HappenBeforeGraph happenBeforeGraph, AbstractDataType adt) {
-        SearchConfiguration configuration = new SearchConfiguration(1, -1, 10);
-        MinimalVisSearch vfs = new MinimalVisSearch(configuration);
+        SearchConfiguration configuration1 = new SearchConfiguration(1, -1, 10);
+        configuration1.setAdt(adt);
+        MinimalVisSearch vfs = new MinimalVisSearch(configuration1);
         vfs.init(happenBeforeGraph);
-        vfs.checkConsistency(adt);
+        vfs.checkConsistency();
         List<SearchState> states = vfs.getAllSearchState();
-        for (SearchState s : states) {
-            System.out.println(s.toString());
-        }
-        Pair<Linearization, LinVisibility> result = vfs.getResult();
+
+        SearchConfiguration configuration2 = new SearchConfiguration(0, -1, -1);
+        configuration2.setAdt(adt);
+        MultiThreadSearch multiThreadSearch = new MultiThreadSearch(happenBeforeGraph, configuration2);
+        multiThreadSearch.startSearch(states);
+
+//        for (SearchState s : states) {
+//            System.out.println(s.toString());
+//        }
+//        Pair<Linearization, LinVisibility> result = vfs.getResult();
 //        try {
 //            FileWriter fileWriter = new FileWriter(new File(output));
 //            fileWriter.write("====================Linearization====================\n");

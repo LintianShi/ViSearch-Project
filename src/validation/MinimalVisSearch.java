@@ -30,12 +30,19 @@ public class MinimalVisSearch {
         }
     }
 
-    public boolean checkConsistency(AbstractDataType adt) {
+    public void init(HappenBeforeGraph happenBeforeGraph, SearchState initState) {
+        SearchState.happenBeforeGraph = happenBeforeGraph;
+        this.happenBeforeGraph = happenBeforeGraph;
+        priorityQueue.offer(initState);
+    }
+
+    public boolean checkConsistency() {
+        AbstractDataType adt = configuration.getAdt();
         while (!priorityQueue.isEmpty()
                 && (configuration.getSearchLimit() == -1 || stateExplored < configuration.getSearchLimit())
                 && (configuration.getStateLimit() == -1 || priorityQueue.size() < configuration.getStateLimit())) {
             stateExplored++;
-            System.out.println(priorityQueue.size());
+           // System.out.println(priorityQueue.size());
             SearchState state = priorityQueue.poll();
             //System.out.println(priorityQueue.toString());
             int times = 0;
@@ -69,7 +76,7 @@ public class MinimalVisSearch {
     private boolean executeCheck(AbstractDataType adt, SearchState searchState) {
         String retTrace = searchState.getLinearization().getRetValueTrace(searchState.getLinearization().size());
         String excuteTrace = Validation.crdtExecute(adt, searchState.getLinearization(), searchState.getVisibility()).toString();
-        System.out.println(Integer.toString(searchState.getLinearization().size()) + "/" + Integer.toString(happenBeforeGraph.size()));
+        System.out.println(Thread.currentThread().getId() + ":" + Integer.toString(searchState.getLinearization().size()) + "/" + Integer.toString(happenBeforeGraph.size()));
 //        System.out.println(retTrace);
 //        System.out.println(excuteTrace);
 //        System.out.println();

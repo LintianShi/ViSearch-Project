@@ -13,6 +13,10 @@ public class RRpq extends AbstractDataType {
     private HashMap<Integer, Element> map = new HashMap<>();
     private static OperationTypes operationTypes = null;
 
+    public AbstractDataType createInstance() {
+        return new RRpq();
+    }
+
     public String getOperationType(String methodName) {
         if (operationTypes == null) {
             operationTypes = new OperationTypes();
