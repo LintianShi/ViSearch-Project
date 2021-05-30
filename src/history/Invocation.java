@@ -88,7 +88,7 @@ public class Invocation {
 
     @Override
     public String toString() {
-        return methodName + ":" + arguments.toString();
+        return methodName + ":" + arguments.toString() + ":" + retValue;
     }
 
     public static void main(String[] args) {

@@ -14,18 +14,35 @@ import java.util.List;
 
 public class TestMinimalRALinCheck {
     public static void minimalExtensionRaLinCheck(String output, HappenBeforeGraph happenBeforeGraph, AbstractDataType adt) {
-        SearchConfiguration configuration1 = new SearchConfiguration(1, -1, 10);
+        SearchConfiguration configuration1 = new SearchConfiguration(1, -1, 30);
         configuration1.setAdt(adt);
         MinimalVisSearch vfs = new MinimalVisSearch(configuration1);
         vfs.init(happenBeforeGraph);
         vfs.checkConsistency();
         List<SearchState> states = vfs.getAllSearchState();
 
-        SearchConfiguration configuration2 = new SearchConfiguration(0, -1, -1);
-        configuration2.setAdt(adt);
-        MultiThreadSearch multiThreadSearch = new MultiThreadSearch(happenBeforeGraph, configuration2);
-        multiThreadSearch.startSearch(states);
+        vfs.init(happenBeforeGraph, states.get(29));
+        vfs.checkConsistency();
+        states = vfs.getAllSearchState();
 
+        int i = 0;
+        for (SearchState state : states) {
+            System.out.println(Integer.toString(i) + ":" + state.toString());
+            i++;
+        }
+
+
+//        SearchConfiguration configuration2 = new SearchConfiguration(0, -1, -1);
+//        configuration2.setAdt(adt);
+//        MultiThreadSearch multiThreadSearch = new MultiThreadSearch(happenBeforeGraph, configuration2);
+//        multiThreadSearch.startSearch(states);
+
+
+//        SearchConfiguration configuration1 = new SearchConfiguration(0, -1, -1);
+//        configuration1.setAdt(adt);
+//        MinimalVisSearch vfs = new MinimalVisSearch(configuration1);
+//        vfs.init(happenBeforeGraph);
+//        vfs.checkConsistency();
 //        for (SearchState s : states) {
 //            System.out.println(s.toString());
 //        }
@@ -56,7 +73,7 @@ public class TestMinimalRALinCheck {
 
     public static void main(String[] args) throws Exception {
         RedisProcessor rp = new RedisProcessor();
-        rp.load("test_trace");
+        rp.load("trace");
         HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RRpq()).generateHappenBeforeGraph();
 
         TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RRpq());

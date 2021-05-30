@@ -18,13 +18,13 @@ public class MinimalVisSearch {
 
     public MinimalVisSearch(SearchConfiguration configuration) {
         this.configuration = configuration;
-        priorityQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
     }
 
     public void init(HappenBeforeGraph happenBeforeGraph) {
         SearchState.happenBeforeGraph = happenBeforeGraph;
         this.happenBeforeGraph = happenBeforeGraph;
         SearchState startState = new SearchState();
+        priorityQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
         for (SearchState newState : startState.linExtent()) {
             priorityQueue.offer(newState);
         }
@@ -33,6 +33,7 @@ public class MinimalVisSearch {
     public void init(HappenBeforeGraph happenBeforeGraph, SearchState initState) {
         SearchState.happenBeforeGraph = happenBeforeGraph;
         this.happenBeforeGraph = happenBeforeGraph;
+        priorityQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
         priorityQueue.offer(initState);
     }
 
@@ -46,7 +47,7 @@ public class MinimalVisSearch {
             SearchState state = priorityQueue.poll();
             //System.out.println(priorityQueue.toString());
             int times = 0;
-            while (state.nextVisibility() != -1 && times < 1) {
+            while (state.nextVisibility() != -1 && times < 10) {
                 times++;
                 if (executeCheck(adt, state)) {
                     if (state.isComplete()) {
@@ -76,7 +77,7 @@ public class MinimalVisSearch {
     private boolean executeCheck(AbstractDataType adt, SearchState searchState) {
         String retTrace = searchState.getLinearization().getRetValueTrace(searchState.getLinearization().size());
         String excuteTrace = Validation.crdtExecute(adt, searchState.getLinearization(), searchState.getVisibility()).toString();
-        System.out.println(Thread.currentThread().getId() + ":" + Integer.toString(searchState.getLinearization().size()) + "/" + Integer.toString(happenBeforeGraph.size()));
+        //System.out.println(Thread.currentThread().getId() + ":" + Integer.toString(searchState.getLinearization().size()) + "/" + Integer.toString(happenBeforeGraph.size()));
 //        System.out.println(retTrace);
 //        System.out.println(excuteTrace);
 //        System.out.println();

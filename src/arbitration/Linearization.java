@@ -185,7 +185,7 @@ public class Linearization implements Iterable<HBGNode> {
     public String toString() {
         ArrayList<String> list = new ArrayList<>();
         for (HBGNode node : lin) {
-            list.add(node.getId() + "=" + node.getInvocation().getMethodName());
+            list.add(node.toString());
         }
         return list.toString();
     }

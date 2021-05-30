@@ -4,3 +4,4 @@
 *.trc
 *.json
 *.txt
+/.idea/workspace.xml
