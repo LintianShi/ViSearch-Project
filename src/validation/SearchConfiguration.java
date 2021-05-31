@@ -5,23 +5,25 @@ import datatype.AbstractDataType;
 public class SearchConfiguration implements Cloneable {
     private int searchMode; // 0: dfs, 1: bfs, 2: h*
     private int searchLimit;
-    private int stateLimit;
+    private int queueLimit;
+    private int visibilityLimit;
     private AbstractDataType adt;
 
     public SearchConfiguration() {
         this.searchMode = 0;
         this.searchLimit = -1;
-        this.stateLimit = -1;
+        this.queueLimit = -1;
     }
 
-    public SearchConfiguration(int searchMode, int searchLimit, int stateLimit) {
+    public SearchConfiguration(int searchMode, int searchLimit, int queueLimit, int visibilityLimit) {
         if (searchMode >= 0 && searchMode <= 2) {
             this.searchMode = searchMode;
         } else {
             this.searchMode = 0;
         }
         this.searchLimit = searchLimit;
-        this.stateLimit = stateLimit;
+        this.queueLimit = queueLimit;
+        this.visibilityLimit = visibilityLimit;
     }
 
     public int getSearchMode() {
@@ -32,8 +34,12 @@ public class SearchConfiguration implements Cloneable {
         return searchLimit;
     }
 
-    public int getStateLimit() {
-        return stateLimit;
+    public int getQueueLimit() {
+        return queueLimit;
+    }
+
+    public int getVisibilityLimit() {
+        return visibilityLimit;
     }
 
     public void setAdt(AbstractDataType adt) {
@@ -46,7 +52,8 @@ public class SearchConfiguration implements Cloneable {
 
     @Override
     protected Object clone() {
-        SearchConfiguration configuration = new SearchConfiguration(this.searchMode, this.searchLimit, this.stateLimit);
+        SearchConfiguration configuration =
+                new SearchConfiguration(this.searchMode, this.searchLimit, this.queueLimit, this.visibilityLimit);
         configuration.setAdt(adt.createInstance());
         return configuration;
     }

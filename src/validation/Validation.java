@@ -33,8 +33,10 @@ public class Validation {
         happenBeforeGraph = program.generateHappenBeforeGraph();
     }
 
-    public static Behaviour crdtExecute(AbstractDataType adt, Linearization lin, LinVisibility visibility) {
+    public static Behaviour crdtExecute(AbstractDataType adt, SearchState searchState) {
         Behaviour rets = new Behaviour();
+        Linearization lin = searchState.getLinearization();
+        LinVisibility visibility = searchState.getVisibility();
         try {
             for (int i = 0; i < lin.size(); i++) {
                 Invocation targetInvocation = lin.get(i).getInvocation();
@@ -68,8 +70,17 @@ public class Validation {
                         }
                     }
                 }
+
                 adt.reset();
             }
+
+            for (int k = 0; k < lin.size(); k++) {
+                if (lin.get(k).getInvocation().getOperationType().equals("UPDATE")) {
+                    adt.invoke(lin.get(k).getInvocation());
+                }
+            }
+            searchState.setAdtState(adt.hashCode());
+            adt.reset();
         } catch (Exception e) {
             e.printStackTrace();
         }

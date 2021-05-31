@@ -10,20 +10,17 @@ import arbitration.Linearization;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestMinimalRALinCheck {
     public static void minimalExtensionRaLinCheck(String output, HappenBeforeGraph happenBeforeGraph, AbstractDataType adt) {
-        SearchConfiguration configuration1 = new SearchConfiguration(1, -1, 30);
+        SearchConfiguration configuration1 = new SearchConfiguration(1, -1, 50, 10);
         configuration1.setAdt(adt);
         MinimalVisSearch vfs = new MinimalVisSearch(configuration1);
         vfs.init(happenBeforeGraph);
         vfs.checkConsistency();
         List<SearchState> states = vfs.getAllSearchState();
-
-        vfs.init(happenBeforeGraph, states.get(29));
-        vfs.checkConsistency();
-        states = vfs.getAllSearchState();
 
         int i = 0;
         for (SearchState state : states) {
@@ -32,10 +29,30 @@ public class TestMinimalRALinCheck {
         }
 
 
-//        SearchConfiguration configuration2 = new SearchConfiguration(0, -1, -1);
+        vfs.init(happenBeforeGraph, states.get(38));
+        vfs.checkConsistency();
+        states = vfs.getAllSearchState();
+
+        vfs.init(happenBeforeGraph, states.get(35));
+        vfs.checkConsistency();
+        states = vfs.getAllSearchState();
+
+//        vfs.init(happenBeforeGraph, states.get(41));
+//        vfs.checkConsistency();
+//        states = vfs.getAllSearchState();
+
+
+
+//        List<SearchState> slist = new ArrayList<>();
+//        slist.add(states.get(41));
+//        slist.add(states.get(51));
+
+
+
+//        SearchConfiguration configuration2 = new SearchConfiguration(0, -1, -1, -10);
 //        configuration2.setAdt(adt);
 //        MultiThreadSearch multiThreadSearch = new MultiThreadSearch(happenBeforeGraph, configuration2);
-//        multiThreadSearch.startSearch(states);
+//        multiThreadSearch.startSearch(slist);
 
 
 //        SearchConfiguration configuration1 = new SearchConfiguration(0, -1, -1);

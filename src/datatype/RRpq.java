@@ -7,6 +7,7 @@ import validation.OperationTypes;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class RRpq extends AbstractDataType {
     private ArrayList<Element> data = new ArrayList<>();
@@ -61,6 +62,9 @@ public class RRpq extends AbstractDataType {
         return invocation;
     }
 
+    public int hashCode() {
+        return data.hashCode();
+    }
 
     @Override
     public void reset() {
@@ -272,5 +276,10 @@ class Element {
 
     public void inc(Double i) {
         val = val + i;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ele, val, index);
     }
 }

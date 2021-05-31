@@ -45,14 +45,14 @@ public class RedisProcessor {
     public Program generateProgram(AbstractDataType adt) {
         //Program program = new Program();
         HappenBefore happenBefore = new HappenBefore();
-        for (int i = 0; i < rawTrace.size(); i++) {
-            for (int j = 0; j < rawTrace.size(); j++) {
-                if (i == j) {
-                    continue;
-                }
-                happenBefore.addHappenBefores(constructHb(rawTrace.get(i), i, rawTrace.get(j), j));
-            }
-        }
+//        for (int i = 0; i < rawTrace.size(); i++) {
+//            for (int j = 0; j < rawTrace.size(); j++) {
+//                if (i == j) {
+//                    continue;
+//                }
+//                happenBefore.addHappenBefores(constructHb(rawTrace.get(i), i, rawTrace.get(j), j));
+//            }
+//        }
         List<SubProgram> subPrograms = new ArrayList<>();
         for (int i = 0; i < rawTrace.size(); i++) {
             List<Invocation> invocations = new ArrayList<>();

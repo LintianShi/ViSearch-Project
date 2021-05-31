@@ -17,6 +17,7 @@ public class SearchState implements Comparable<SearchState> {
     private ManualRecurse manualRecurse = null;
     private Set<HBGNode> visibleNodes = null;
     private List<HBGNode> candidateNodes = null;
+    private int adtState = 0;
 
     public SearchState() {
         this.linearization = new Linearization();
@@ -112,6 +113,14 @@ public class SearchState implements Comparable<SearchState> {
         return visibility;
     }
 
+    public int getAdtState() {
+        return adtState;
+    }
+
+    public void setAdtState(int adtState) {
+        this.adtState = adtState;
+    }
+
     public int compareTo(SearchState o) {
         if (linearization.size() > o.linearization.size()) {
             return 1;
@@ -122,8 +131,12 @@ public class SearchState implements Comparable<SearchState> {
         }
     }
 
+    public int size() {
+        return linearization.size();
+    }
+
     public String toString() {
-        return linearization.toString();
+        return Integer.toString(adtState) + ":" + linearization.toString() + " | " + visibility.toString();
     }
 
 }

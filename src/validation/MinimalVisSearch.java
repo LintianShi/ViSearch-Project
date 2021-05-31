@@ -41,13 +41,16 @@ public class MinimalVisSearch {
         AbstractDataType adt = configuration.getAdt();
         while (!priorityQueue.isEmpty()
                 && (configuration.getSearchLimit() == -1 || stateExplored < configuration.getSearchLimit())
-                && (configuration.getStateLimit() == -1 || priorityQueue.size() < configuration.getStateLimit())) {
+                && (configuration.getQueueLimit() == -1 || priorityQueue.size() < configuration.getQueueLimit())) {
             stateExplored++;
            // System.out.println(priorityQueue.size());
             SearchState state = priorityQueue.poll();
             //System.out.println(priorityQueue.toString());
             int times = 0;
-            while (state.nextVisibility() != -1 && times < 10) {
+            while (state.nextVisibility() != -1
+                    && (times < configuration.getVisibilityLimit()
+                        || configuration.getVisibilityLimit() == -1
+                        || (configuration.getVisibilityLimit() == 0 && times < state.size()))) {
                 times++;
                 if (executeCheck(adt, state)) {
                     if (state.isComplete()) {
@@ -69,15 +72,23 @@ public class MinimalVisSearch {
     public List<SearchState> getAllSearchState() {
         List<SearchState> states = new ArrayList<>();
         while (!priorityQueue.isEmpty()) {
-            states.add(priorityQueue.poll());
+            int times = 0;
+            while (priorityQueue.peek().nextVisibility() != -1 && times < 10) {
+                times++;
+                if (executeCheck(configuration.getAdt(), priorityQueue.peek())) {
+                    states.add(priorityQueue.poll());
+                    break;
+                }
+            }
+
         }
         return states;
     }
 
     private boolean executeCheck(AbstractDataType adt, SearchState searchState) {
         String retTrace = searchState.getLinearization().getRetValueTrace(searchState.getLinearization().size());
-        String excuteTrace = Validation.crdtExecute(adt, searchState.getLinearization(), searchState.getVisibility()).toString();
-        //System.out.println(Thread.currentThread().getId() + ":" + Integer.toString(searchState.getLinearization().size()) + "/" + Integer.toString(happenBeforeGraph.size()));
+        String excuteTrace = Validation.crdtExecute(adt, searchState).toString();
+        System.out.println(Thread.currentThread().getId() + ":" + Integer.toString(searchState.getLinearization().size()) + "/" + Integer.toString(happenBeforeGraph.size()));
 //        System.out.println(retTrace);
 //        System.out.println(excuteTrace);
 //        System.out.println();

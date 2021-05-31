@@ -4,6 +4,7 @@ import history.HBGNode;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 public class LinVisibility implements Iterable<HBGNode> {
@@ -30,7 +31,13 @@ public class LinVisibility implements Iterable<HBGNode> {
     }
 
     public String toString() {
-        return visibility.toString();
+        String result = "";
+        for (Map.Entry<HBGNode, Set<HBGNode>> entry : visibility.entrySet()) {
+            if (entry.getValue().size() > 1) {
+                result += entry.toString() + ", ";
+            }
+        }
+        return result;
     }
 
     public int size() {
