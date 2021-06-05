@@ -15,27 +15,27 @@ import java.util.List;
 
 public class TestMinimalRALinCheck {
     public static void minimalExtensionRaLinCheck(String output, HappenBeforeGraph happenBeforeGraph, AbstractDataType adt) {
-        SearchConfiguration configuration1 = new SearchConfiguration(1, -1, 50, 10);
-        configuration1.setAdt(adt);
-        MinimalVisSearch vfs = new MinimalVisSearch(configuration1);
-        vfs.init(happenBeforeGraph);
-        vfs.checkConsistency();
-        List<SearchState> states = vfs.getAllSearchState();
-
-        int i = 0;
-        for (SearchState state : states) {
-            System.out.println(Integer.toString(i) + ":" + state.toString());
-            i++;
-        }
-
-
-        vfs.init(happenBeforeGraph, states.get(38));
-        vfs.checkConsistency();
-        states = vfs.getAllSearchState();
-
-        vfs.init(happenBeforeGraph, states.get(35));
-        vfs.checkConsistency();
-        states = vfs.getAllSearchState();
+//        SearchConfiguration configuration1 = new SearchConfiguration(1, -1, 50, 10);
+//        configuration1.setAdt(adt);
+//        MinimalVisSearch vfs = new MinimalVisSearch(configuration1);
+//        vfs.init(happenBeforeGraph);
+//        vfs.checkConsistency();
+//        List<SearchState> states = vfs.getAllSearchState();
+//
+//        int i = 0;
+//        for (SearchState state : states) {
+//            System.out.println(Integer.toString(i) + ":" + state.toString());
+//            i++;
+//        }
+//
+//
+//        vfs.init(happenBeforeGraph, states.get(38));
+//        vfs.checkConsistency();
+//        states = vfs.getAllSearchState();
+//
+//        vfs.init(happenBeforeGraph, states.get(35));
+//        vfs.checkConsistency();
+//        states = vfs.getAllSearchState();
 
 //        vfs.init(happenBeforeGraph, states.get(41));
 //        vfs.checkConsistency();
@@ -55,11 +55,11 @@ public class TestMinimalRALinCheck {
 //        multiThreadSearch.startSearch(slist);
 
 
-//        SearchConfiguration configuration1 = new SearchConfiguration(0, -1, -1);
-//        configuration1.setAdt(adt);
-//        MinimalVisSearch vfs = new MinimalVisSearch(configuration1);
-//        vfs.init(happenBeforeGraph);
-//        vfs.checkConsistency();
+        SearchConfiguration configuration1 = new SearchConfiguration(0, -1, -1, 0);
+        configuration1.setAdt(adt);
+        MinimalVisSearch vfs = new MinimalVisSearch(configuration1);
+        vfs.init(happenBeforeGraph);
+        vfs.checkConsistency();
 //        for (SearchState s : states) {
 //            System.out.println(s.toString());
 //        }
@@ -90,9 +90,13 @@ public class TestMinimalRALinCheck {
 
     public static void main(String[] args) throws Exception {
         RedisProcessor rp = new RedisProcessor();
-        rp.load("trace");
+        rp.load("multi_client_trace/45-3");
         HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RRpq()).generateHappenBeforeGraph();
 
         TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RRpq());
+        // two clients 240/520/60/500/60
+        // 25 clients 160/150/160
+        // 35 clients 140/120/150
+        // 45 clients 140/140/160
     }
 }

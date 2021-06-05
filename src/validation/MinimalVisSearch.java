@@ -88,7 +88,7 @@ public class MinimalVisSearch {
     private boolean executeCheck(AbstractDataType adt, SearchState searchState) {
         String retTrace = searchState.getLinearization().getRetValueTrace(searchState.getLinearization().size());
         String excuteTrace = Validation.crdtExecute(adt, searchState).toString();
-        System.out.println(Thread.currentThread().getId() + ":" + Integer.toString(searchState.getLinearization().size()) + "/" + Integer.toString(happenBeforeGraph.size()));
+        System.out.println(/*Thread.currentThread().getId() + ":" + */ Integer.toString(searchState.getLinearization().size()) + "/" + Integer.toString(happenBeforeGraph.size()));
 //        System.out.println(retTrace);
 //        System.out.println(excuteTrace);
 //        System.out.println();
