@@ -164,7 +164,7 @@ public class RRpq extends AbstractDataType {
             Element max = data.get(0);
             Double val = max.getVal();
             //return "rwfzmax:" + Integer.toString(max.getEle()) + ":" + val.stripTrailingZeros().toPlainString();
-            return val.toString();
+            return Integer.toString(max.getEle()) + " " + val.toString();
         }
     }
 
@@ -185,13 +185,21 @@ public class RRpq extends AbstractDataType {
         } else if (src.getOperationType().equals("QUERY")) {
             if (src.getMethodName().equals("rwfzscore")) {
                 Integer ele = (Integer) src.getArguments().get(0);
-                if (dest.getOperationType().equals("UPDATE") && (Integer) dest.getArguments().get(0) == ele) {
+                if (dest.getOperationType().equals("UPDATE") && dest.getArguments().get(0) == ele) {
                     return true;
                 } else {
                     return false;
                 }
             } else if (src.getMethodName().equals("rwfzmax")) {
-                return true;
+                if (src.getRetValue().equals("null")) {
+                    return false;
+                }
+                Integer ele = Integer.parseInt(src.getRetValue().split(" ")[0]);
+                if (dest.getOperationType().equals("UPDATE") && dest.getArguments().get(0) == ele) {
+                    return true;
+                } else {
+                    return false;
+                }
             } else {
                 return true;
             }

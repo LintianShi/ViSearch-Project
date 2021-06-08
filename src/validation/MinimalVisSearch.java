@@ -1,6 +1,7 @@
 package validation;
 
 import datatype.AbstractDataType;
+import history.HBGNode;
 import history.HappenBeforeGraph;
 import arbitration.Linearization;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -15,6 +16,8 @@ public class MinimalVisSearch {
     private Pair<Linearization, LinVisibility> result;
     private SearchConfiguration configuration;
     private int stateExplored = 0;
+    private HashMap<HBGNode, Integer> prickOperationCounter = new HashMap<>();
+    private int readOperationFailLimit = 20;
 
     public MinimalVisSearch(SearchConfiguration configuration) {
         this.configuration = configuration;
@@ -63,6 +66,20 @@ public class MinimalVisSearch {
                         priorityQueue.offer(newState);
                     }
                     break;
+                } else {
+                    HBGNode prickOperation = state.getLinearization().getLast();
+                    if (!prickOperationCounter.containsKey(prickOperation)) {
+                        prickOperationCounter.put(prickOperation, 1);
+                    } else {
+                        Integer failTimes = prickOperationCounter.get(prickOperation);
+                        prickOperationCounter.put(prickOperation, failTimes + 1);
+                        if (failTimes > readOperationFailLimit) {
+                            System.out.println("FAIL" + ":" + Integer.toString(failTimes) + " " + prickOperation);
+                            //return false;
+                        }
+                    }
+
+                    System.out.println(prickOperation.toString());
                 }
             }
         }

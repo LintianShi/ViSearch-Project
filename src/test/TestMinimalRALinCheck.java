@@ -90,7 +90,7 @@ public class TestMinimalRALinCheck {
 
     public static void main(String[] args) throws Exception {
         RedisProcessor rp = new RedisProcessor();
-        rp.load("no_collision_trace/2");
+        rp.load("trace");
         HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RRpq()).generateHappenBeforeGraph();
 
         TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RRpq());
