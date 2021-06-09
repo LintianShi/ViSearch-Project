@@ -22,8 +22,6 @@ public class Invocation {
     private Pair<Integer, Integer> pairID;
     @JSONField(serialize=false)
     private String operationType = "UPDATE";
-    @JSONField(serialize=false)
-    public transient static HashMap<String, String> visibility = new HashMap<>();
 
     public Invocation() {
         ;
@@ -90,6 +88,14 @@ public class Invocation {
     public String toString() {
         return methodName + ":" + arguments.toString() + ":" + retValue;
     }
+
+//    public Invocation clone() {
+//        Invocation invocation = new Invocation();
+//        invocation.setMethodName(this.getMethodName());
+//        invocation.setRetValue(this.getRetValue());
+//        invocation.setOperationType(this.getOperationType());
+//        invocation.id = id;
+//    }
 
     public static void main(String[] args) {
         Invocation invocation = new Invocation();

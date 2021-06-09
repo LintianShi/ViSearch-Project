@@ -93,6 +93,8 @@ public class TestMinimalRALinCheck {
         rp.load("trace");
         HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RRpq()).generateHappenBeforeGraph();
 
+        //happenBeforeGraph.printStartNodes();
+
         TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RRpq());
         // two clients 240/520/60/500/60
         // 25 clients 160/150/160

@@ -1,5 +1,6 @@
 package history;
 
+import datatype.AbstractDataType;
 import org.apache.commons.lang3.tuple.Pair;
 import arbitration.Linearization;
 
@@ -26,6 +27,7 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
                 } else {
                     nodes.get(index-1).addNextNode(node);
                     node.addPrevNode(nodes.get(index-1));
+                    nodes.get(index-1).setPo(node);
                 }
                 programOrders[k][1] = index;
                 index++;
@@ -77,35 +79,6 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         return list;
     }
 
-    public List<Linearization> generateLins() {
-        int[] index = new int[programOrders.length];
-        for (int i = 0; i < index.length; i++) {
-            index[i] = programOrders[i][0];
-        }
-        List<Linearization> lins = new ArrayList<>();
-
-        Stack<HBGNode> stack = new Stack<>();
-        generateLin(index, stack, lins);
-        return lins;
-    }
-
-    private void generateLin(int[] index, Stack<HBGNode> stack, List<Linearization> lins) {
-        if (isEnd(stack)) {
-            lins.add(new Linearization(stack));
-        }
-        for (int i = 0; i < index.length; i++) {
-            if (index[i] <= programOrders[i][1] && isValid(nodes.get(index[i]))) {
-                stack.push(nodes.get(index[i]));
-                nodes.get(index[i]).increaseThreshlod();
-                index[i]++;
-                generateLin(index, stack, lins);
-                index[i]--;
-                HBGNode node = stack.pop();
-                node.decreaseThreshlod();
-            }
-        }
-    }
-
     private boolean checkBreakPoint(HBGNode breakPoint) {
         List<HBGNode> prevs = breakPoint.getPrevs();
         List<HBGNode> nexts = breakPoint.getNexts();
@@ -134,12 +107,21 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         return true;
     }
 
-    private boolean isValid(HBGNode node) {
-        return node.checkThreshold();
-    }
-
-    private boolean isEnd(Stack<HBGNode> stack) {
-        return stack.size() == nodes.size();
+    public List<HBGNode> getRelatedOperation(HBGNode node, AbstractDataType adt) {
+        List<HBGNode> list = new ArrayList<>();
+        for (HBGNode startNode : startNodes) {
+            HBGNode temp = startNode;
+            //System.out.println(temp.getPo());
+            while (temp.getPo() != null) {
+                //System.out.println("!");
+                if (adt.isRelated(node.getInvocation(), temp.getInvocation())) {
+                    //System.out.println("related");
+                    list.add(temp.clone());
+                }
+                temp = temp.getPo();
+            }
+        }
+        return list;
     }
 
     public void print() {
@@ -158,6 +140,12 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
                 System.out.println();
             }
             //System.out.println(node.getNexts().size());
+        }
+    }
+
+    public void printStartNodes() {
+        for (HBGNode node : startNodes) {
+            System.out.println(node.toString());
         }
     }
 }

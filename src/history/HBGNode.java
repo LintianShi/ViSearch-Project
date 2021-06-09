@@ -90,4 +90,8 @@ public class HBGNode {
     public int hashCode() {
         return getId();
     }
+
+    public HBGNode clone() {
+        return new HBGNode(this.invocation, this.getId());
+    }
 }

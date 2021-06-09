@@ -185,7 +185,7 @@ public class RRpq extends AbstractDataType {
         } else if (src.getOperationType().equals("QUERY")) {
             if (src.getMethodName().equals("rwfzscore")) {
                 Integer ele = (Integer) src.getArguments().get(0);
-                if (dest.getOperationType().equals("UPDATE") && dest.getArguments().get(0) == ele) {
+                if (dest.getOperationType().equals("UPDATE") && dest.getArguments().get(0).equals(ele)) {
                     return true;
                 } else {
                     return false;
@@ -195,7 +195,10 @@ public class RRpq extends AbstractDataType {
                     return false;
                 }
                 Integer ele = Integer.parseInt(src.getRetValue().split(" ")[0]);
-                if (dest.getOperationType().equals("UPDATE") && dest.getArguments().get(0) == ele) {
+                //System.out.println(ele);
+//                if (dest.getOperationType().equals("UPDATE"))
+//                    System.out.println("dest:" + dest.getArguments().get(0));
+                if (dest.getOperationType().equals("UPDATE") && dest.getArguments().get(0).equals(ele)) {
                     return true;
                 } else {
                     return false;

@@ -17,7 +17,7 @@ public class MinimalVisSearch {
     private SearchConfiguration configuration;
     private int stateExplored = 0;
     private HashMap<HBGNode, Integer> prickOperationCounter = new HashMap<>();
-    private int readOperationFailLimit = 20;
+    private int readOperationFailLimit = 30;
 
     public MinimalVisSearch(SearchConfiguration configuration) {
         this.configuration = configuration;
@@ -72,14 +72,20 @@ public class MinimalVisSearch {
                         prickOperationCounter.put(prickOperation, 1);
                     } else {
                         Integer failTimes = prickOperationCounter.get(prickOperation);
+                        if (failTimes == -1) {
+                            continue;
+                        }
                         prickOperationCounter.put(prickOperation, failTimes + 1);
                         if (failTimes > readOperationFailLimit) {
                             System.out.println("FAIL" + ":" + Integer.toString(failTimes) + " " + prickOperation);
                             //return false;
+                            prickOperationCounter.put(prickOperation, -1);
+                            List<HBGNode> relatedNodes = happenBeforeGraph.getRelatedOperation(prickOperation, configuration.getAdt());
+                            System.out.println(relatedNodes);
                         }
                     }
 
-                    System.out.println(prickOperation.toString());
+                    //System.out.println(prickOperation.toString());
                 }
             }
         }
