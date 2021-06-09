@@ -1,6 +1,7 @@
 package validation;
 
 import datatype.AbstractDataType;
+import datatype.RRpq;
 import history.HBGNode;
 import history.HappenBeforeGraph;
 import arbitration.Linearization;
@@ -18,6 +19,7 @@ public class MinimalVisSearch {
     private int stateExplored = 0;
     private HashMap<HBGNode, Integer> prickOperationCounter = new HashMap<>();
     private int readOperationFailLimit = 30;
+    private List<SearchState> results = new ArrayList<>();
 
     public MinimalVisSearch(SearchConfiguration configuration) {
         this.configuration = configuration;
@@ -57,8 +59,11 @@ public class MinimalVisSearch {
                 times++;
                 if (executeCheck(adt, state)) {
                     if (state.isComplete()) {
-                        result = new ImmutablePair<>((Linearization) state.getLinearization().clone(), (LinVisibility) state.getVisibility().clone());
-                        return true;
+                        //result = new ImmutablePair<>((Linearization) state.getLinearization().clone(), (LinVisibility) state.getVisibility().clone());
+                        results.add(state);
+                        if (!configuration.isFindAllAbstractExecution()) {
+                            return true;
+                        }
                     }
                     List<SearchState> list =state.linExtent();
                     Collections.reverse(list);
@@ -80,8 +85,19 @@ public class MinimalVisSearch {
                             System.out.println("FAIL" + ":" + Integer.toString(failTimes) + " " + prickOperation);
                             //return false;
                             prickOperationCounter.put(prickOperation, -1);
-                            List<HBGNode> relatedNodes = happenBeforeGraph.getRelatedOperation(prickOperation, configuration.getAdt());
-                            System.out.println(relatedNodes);
+                            List<List<HBGNode>> relatedNodes = happenBeforeGraph.getRelatedOperation(prickOperation, configuration.getAdt());
+                            for (List<HBGNode> list : relatedNodes) {
+                                System.out.println(list);
+                            }
+                            HappenBeforeGraph subHBGraph = new HappenBeforeGraph(relatedNodes);
+                            //subHBGraph.print();
+                            SearchConfiguration configuration1 = new SearchConfiguration(0, -1, -1, 0, true);
+                            configuration1.setAdt(new RRpq());
+                            MinimalVisSearch subSearch = new MinimalVisSearch(configuration1);
+                            subSearch.init(subHBGraph);
+                            subSearch.checkConsistency();
+                            for (SearchState state1 : subSearch.getResults())
+                                System.out.println(state1);
                         }
                     }
 
@@ -130,5 +146,9 @@ public class MinimalVisSearch {
 
     public Pair<Linearization, LinVisibility> getResult() {
         return result;
+    }
+
+    public List<SearchState> getResults() {
+        return results;
     }
 }

@@ -22,7 +22,7 @@ public class MultiThreadSearch {
         threadNum = startStates.size();
         System.out.println(threadNum);
         for (SearchState state : startStates) {
-            SearchConfiguration conf = new SearchConfiguration(0, -1, -1, 10);
+            SearchConfiguration conf = new SearchConfiguration(0, -1, -1, 10, false);
             conf.setAdt(configuration.getAdt().createInstance());
             MinimalVisSearch visSearch = new MinimalVisSearch(conf);
             visSearch.init(happenBeforeGraph, state);

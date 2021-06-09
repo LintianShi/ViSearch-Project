@@ -183,6 +183,9 @@ public class RRpq extends AbstractDataType {
         if (src.getOperationType().equals("UPDATE")) {
             return false;
         } else if (src.getOperationType().equals("QUERY")) {
+            if (src.getId() == dest.getId()) {
+                return true;
+            }
             if (src.getMethodName().equals("rwfzscore")) {
                 Integer ele = (Integer) src.getArguments().get(0);
                 if (dest.getOperationType().equals("UPDATE") && dest.getArguments().get(0).equals(ele)) {

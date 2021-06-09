@@ -7,6 +7,7 @@ public class SearchConfiguration implements Cloneable {
     private int searchLimit;
     private int queueLimit;
     private int visibilityLimit;
+    private boolean findAllAbstractExecution;
     private AbstractDataType adt;
 
     public SearchConfiguration() {
@@ -15,7 +16,7 @@ public class SearchConfiguration implements Cloneable {
         this.queueLimit = -1;
     }
 
-    public SearchConfiguration(int searchMode, int searchLimit, int queueLimit, int visibilityLimit) {
+    public SearchConfiguration(int searchMode, int searchLimit, int queueLimit, int visibilityLimit, boolean findAllAbstractExecution) {
         if (searchMode >= 0 && searchMode <= 2) {
             this.searchMode = searchMode;
         } else {
@@ -24,6 +25,7 @@ public class SearchConfiguration implements Cloneable {
         this.searchLimit = searchLimit;
         this.queueLimit = queueLimit;
         this.visibilityLimit = visibilityLimit;
+        this.findAllAbstractExecution = findAllAbstractExecution;
     }
 
     public int getSearchMode() {
@@ -50,10 +52,14 @@ public class SearchConfiguration implements Cloneable {
         return adt;
     }
 
+    public boolean isFindAllAbstractExecution() {
+        return findAllAbstractExecution;
+    }
+
     @Override
     protected Object clone() {
         SearchConfiguration configuration =
-                new SearchConfiguration(this.searchMode, this.searchLimit, this.queueLimit, this.visibilityLimit);
+                new SearchConfiguration(this.searchMode, this.searchLimit, this.queueLimit, this.visibilityLimit, this.findAllAbstractExecution);
         configuration.setAdt(adt.createInstance());
         return configuration;
     }

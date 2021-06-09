@@ -43,6 +43,20 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         threadNum = subPrograms.size();
     }
 
+    public HappenBeforeGraph(List<List<HBGNode>> nodes) {
+        for (List<HBGNode> list : nodes) {
+            for (int i = 0; i < list.size(); i++) {
+                this.nodes.put(list.get(i).getId(), list.get(i));
+                if (i == 0) {
+                    startNodes.add(list.get(0));
+                    continue;
+                } else {
+                    list.get(i - 1).setPo(list.get(i));
+                }
+            }
+        }
+    }
+
     public Iterator<HBGNode> iterator() {
         return nodes.values().iterator();
     }
@@ -107,40 +121,29 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         return true;
     }
 
-    public List<HBGNode> getRelatedOperation(HBGNode node, AbstractDataType adt) {
-        List<HBGNode> list = new ArrayList<>();
+    public List<List<HBGNode>> getRelatedOperation(HBGNode node, AbstractDataType adt) {
+        List<List<HBGNode>> lists = new ArrayList<>();
         for (HBGNode startNode : startNodes) {
+            List<HBGNode> tempList = new ArrayList<>();
             HBGNode temp = startNode;
             //System.out.println(temp.getPo());
             while (temp.getPo() != null) {
                 //System.out.println("!");
                 if (adt.isRelated(node.getInvocation(), temp.getInvocation())) {
                     //System.out.println("related");
-                    list.add(temp.clone());
+                    tempList.add(temp.clone());
                 }
                 temp = temp.getPo();
             }
+            if (tempList.size() > 0) {
+                lists.add(tempList);
+            }
         }
-        return list;
+        return lists;
     }
 
     public void print() {
-        for (HBGNode node : this) {
-            if (checkBreakPoint(node)) {
-                System.out.println("break point: " + node.getInvocation().getRetValue());
-                System.out.println("Prevs: ");
-                for (HBGNode prev : node.getPrevs()) {
-                    System.out.print(prev.getInvocation().getRetValue() + ", ");
-                }
-                System.out.println();
-                System.out.println("Nexts: ");
-                for (HBGNode next : node.getNexts()) {
-                    System.out.print(next.getInvocation().getRetValue() + ", ");
-                }
-                System.out.println();
-            }
-            //System.out.println(node.getNexts().size());
-        }
+        ;
     }
 
     public void printStartNodes() {

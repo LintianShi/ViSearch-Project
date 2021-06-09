@@ -55,7 +55,7 @@ public class TestMinimalRALinCheck {
 //        multiThreadSearch.startSearch(slist);
 
 
-        SearchConfiguration configuration1 = new SearchConfiguration(0, -1, -1, 0);
+        SearchConfiguration configuration1 = new SearchConfiguration(0, -1, -1, 0, false);
         configuration1.setAdt(adt);
         MinimalVisSearch vfs = new MinimalVisSearch(configuration1);
         vfs.init(happenBeforeGraph);
