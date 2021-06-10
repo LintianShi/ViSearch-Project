@@ -52,6 +52,8 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
                     continue;
                 } else {
                     list.get(i - 1).setPo(list.get(i));
+                    list.get(i - 1).addNextNode(list.get(i));
+                    list.get(i).addPrevNode(list.get(i - 1));
                 }
             }
         }

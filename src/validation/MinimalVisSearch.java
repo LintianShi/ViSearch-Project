@@ -72,8 +72,15 @@ public class MinimalVisSearch {
                     }
                     break;
                 } else {
+                    if (!configuration.isEnablePrickOperation()) {
+                        //System.out.println("unable");
+                        continue;
+                    }
                     HBGNode prickOperation = state.getLinearization().getLast();
                     if (!prickOperationCounter.containsKey(prickOperation)) {
+//                        System.out.println("map test");
+//                        System.out.println(prickOperationCounter);
+//                        System.out.println(prickOperationCounter.get(prickOperation));
                         prickOperationCounter.put(prickOperation, 1);
                     } else {
                         Integer failTimes = prickOperationCounter.get(prickOperation);
@@ -91,8 +98,10 @@ public class MinimalVisSearch {
                             }
                             HappenBeforeGraph subHBGraph = new HappenBeforeGraph(relatedNodes);
                             //subHBGraph.print();
-                            SearchConfiguration configuration1 = new SearchConfiguration(0, -1, -1, 0, true);
+                            SearchConfiguration configuration1 = new SearchConfiguration(0, -1, -1, 0);
                             configuration1.setAdt(new RRpq());
+                            configuration1.setFindAllAbstractExecution(true);
+                            configuration1.setEnablePrickOperation(false);
                             MinimalVisSearch subSearch = new MinimalVisSearch(configuration1);
                             subSearch.init(subHBGraph);
                             subSearch.checkConsistency();
@@ -127,7 +136,7 @@ public class MinimalVisSearch {
     private boolean executeCheck(AbstractDataType adt, SearchState searchState) {
         String retTrace = searchState.getLinearization().getRetValueTrace(searchState.getLinearization().size());
         String excuteTrace = Validation.crdtExecute(adt, searchState).toString();
-        System.out.println(/*Thread.currentThread().getId() + ":" + */ Integer.toString(searchState.getLinearization().size()) + "/" + Integer.toString(happenBeforeGraph.size()));
+        //System.out.println(/*Thread.currentThread().getId() + ":" + */ Integer.toString(searchState.getLinearization().size()) + "/" + Integer.toString(happenBeforeGraph.size()));
 //        System.out.println(retTrace);
 //        System.out.println(excuteTrace);
 //        System.out.println();

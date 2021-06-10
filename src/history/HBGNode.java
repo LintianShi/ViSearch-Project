@@ -83,7 +83,7 @@ public class HBGNode {
 
     @Override
     public String toString() { ;
-        return invocation.toString();
+        return Integer.toString(getId()) + " " + invocation.toString();
     }
 
     @Override
@@ -93,5 +93,9 @@ public class HBGNode {
 
     public HBGNode clone() {
         return new HBGNode(this.invocation, this.getId());
+    }
+
+    public boolean equals(Object node) {
+        return this.hashCode() == node.hashCode();
     }
 }

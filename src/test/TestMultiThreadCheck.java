@@ -14,7 +14,7 @@ import java.util.List;
 
 public class TestMultiThreadCheck {
         public static void minimalExtensionRaLinCheck(String output, HappenBeforeGraph happenBeforeGraph, AbstractDataType adt) {
-        SearchConfiguration configuration1 = new SearchConfiguration(1, -1, 50, 10, false);
+        SearchConfiguration configuration1 = new SearchConfiguration(1, -1, 50, 10);
         configuration1.setAdt(adt);
         MinimalVisSearch vfs = new MinimalVisSearch(configuration1);
         vfs.init(happenBeforeGraph);
@@ -48,7 +48,7 @@ public class TestMultiThreadCheck {
 
 
 
-        SearchConfiguration configuration2 = new SearchConfiguration(0, -1, -1, -10, false);
+        SearchConfiguration configuration2 = new SearchConfiguration(0, -1, -1, -10);
         configuration2.setAdt(adt);
         MultiThreadSearch multiThreadSearch = new MultiThreadSearch(happenBeforeGraph, configuration2);
         multiThreadSearch.startSearch(slist);

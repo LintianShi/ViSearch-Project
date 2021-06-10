@@ -7,7 +7,8 @@ public class SearchConfiguration implements Cloneable {
     private int searchLimit;
     private int queueLimit;
     private int visibilityLimit;
-    private boolean findAllAbstractExecution;
+    private boolean findAllAbstractExecution = false;
+    private boolean enablePrickOperation = true;
     private AbstractDataType adt;
 
     public SearchConfiguration() {
@@ -16,7 +17,7 @@ public class SearchConfiguration implements Cloneable {
         this.queueLimit = -1;
     }
 
-    public SearchConfiguration(int searchMode, int searchLimit, int queueLimit, int visibilityLimit, boolean findAllAbstractExecution) {
+    public SearchConfiguration(int searchMode, int searchLimit, int queueLimit, int visibilityLimit) {
         if (searchMode >= 0 && searchMode <= 2) {
             this.searchMode = searchMode;
         } else {
@@ -25,7 +26,6 @@ public class SearchConfiguration implements Cloneable {
         this.searchLimit = searchLimit;
         this.queueLimit = queueLimit;
         this.visibilityLimit = visibilityLimit;
-        this.findAllAbstractExecution = findAllAbstractExecution;
     }
 
     public int getSearchMode() {
@@ -56,11 +56,25 @@ public class SearchConfiguration implements Cloneable {
         return findAllAbstractExecution;
     }
 
+    public void setFindAllAbstractExecution(boolean findAllAbstractExecution) {
+        this.findAllAbstractExecution = findAllAbstractExecution;
+    }
+
+    public boolean isEnablePrickOperation() {
+        return enablePrickOperation;
+    }
+
+    public void setEnablePrickOperation(boolean enablePrickOperation) {
+        this.enablePrickOperation = enablePrickOperation;
+    }
+
     @Override
     protected Object clone() {
         SearchConfiguration configuration =
-                new SearchConfiguration(this.searchMode, this.searchLimit, this.queueLimit, this.visibilityLimit, this.findAllAbstractExecution);
+                new SearchConfiguration(this.searchMode, this.searchLimit, this.queueLimit, this.visibilityLimit);
         configuration.setAdt(adt.createInstance());
+        configuration.setEnablePrickOperation(this.enablePrickOperation);
+        configuration.setFindAllAbstractExecution(this.findAllAbstractExecution);
         return configuration;
     }
 }
