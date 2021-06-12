@@ -92,6 +92,11 @@ public class MinimalVisSearch {
                             System.out.println("FAIL" + ":" + Integer.toString(failTimes) + " " + prickOperation);
                             //return false;
                             prickOperationCounter.put(prickOperation, -1);
+                            if (prickOperation.getInvocation().getMethodName().equals("rwfzmax")
+                                    && prickOperation.getInvocation().getRetValue().equals("null")) {
+                                continue;
+                            }
+
                             List<List<HBGNode>> relatedNodes = happenBeforeGraph.getRelatedOperation(prickOperation, configuration.getAdt());
                             for (List<HBGNode> list : relatedNodes) {
                                 System.out.println(list);
@@ -105,8 +110,17 @@ public class MinimalVisSearch {
                             MinimalVisSearch subSearch = new MinimalVisSearch(configuration1);
                             subSearch.init(subHBGraph);
                             subSearch.checkConsistency();
-                            for (SearchState state1 : subSearch.getResults())
+
+                            List<List<ImmutablePair<Integer, Integer>>> hbs = new ArrayList<>();
+                            for (SearchState state1 : subSearch.getResults()) {
                                 System.out.println(state1);
+                                hbs.add(state1.extractHBRelation());
+                            }
+                            List<ImmutablePair<Integer, Integer>> commonHBs = extractCommonHBRelation(hbs);
+                            for (ImmutablePair<Integer, Integer> hb : commonHBs) {
+                                System.out.println(happenBeforeGraph.get(hb.left).toString()
+                                        + "=>" + happenBeforeGraph.get(hb.right).toString());
+                            }
                         }
                     }
 
@@ -151,6 +165,29 @@ public class MinimalVisSearch {
 //            System.out.println();
             return false;
         }
+    }
+
+    private List<ImmutablePair<Integer, Integer>> extractCommonHBRelation(List<List<ImmutablePair<Integer, Integer>>> hbs) {
+        List<ImmutablePair<Integer, Integer>> results = new ArrayList<>();
+        HashMap<ImmutablePair<Integer, Integer>, Integer> map = new HashMap<>();
+        for (List<ImmutablePair<Integer, Integer>> list : hbs) {
+            for (ImmutablePair<Integer, Integer> hb : list) {
+                if (!map.containsKey(hb)) {
+                    map.put(hb, 1);
+                } else {
+                    int count = map.get(hb);
+                    map.put(hb, count + 1);
+                }
+
+            }
+        }
+
+        for (ImmutablePair<Integer, Integer> hb : map.keySet()) {
+            if (map.get(hb) == hbs.size()) {
+                results.add(hb);
+            }
+        }
+        return results;
     }
 
     public Pair<Linearization, LinVisibility> getResult() {

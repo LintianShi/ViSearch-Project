@@ -4,6 +4,7 @@ import history.HBGNode;
 import history.HappenBeforeGraph;
 import arbitration.Linearization;
 import arbitration.LinVisibility;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -119,6 +120,16 @@ public class SearchState implements Comparable<SearchState> {
 
     public void setAdtState(int adtState) {
         this.adtState = adtState;
+    }
+
+    public List<ImmutablePair<Integer, Integer>> extractHBRelation() {
+        List<ImmutablePair<Integer, Integer>> hbs = new ArrayList<>();
+        for (int i = 1; i < linearization.size(); i++) {
+            for (int j = 0; j < i; j++) {
+                hbs.add(new ImmutablePair<>(linearization.get(j).getId(), linearization.get(i).getId()));
+            }
+        }
+        return hbs;
     }
 
     public int compareTo(SearchState o) {

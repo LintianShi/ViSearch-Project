@@ -67,6 +67,10 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         return nodes.size();
     }
 
+    public HBGNode get(int id) {
+        return nodes.get(id);
+    }
+
     public int transferPairToID(List<SubProgram> subPrograms, Pair<Integer, Integer> pair) {
         int id = 0;
         for (int i = 0; i < pair.getLeft(); i++) {
