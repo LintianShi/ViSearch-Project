@@ -1,5 +1,6 @@
 package validation;
 
+import arbitration.VisibilityType;
 import datatype.AbstractDataType;
 import datatype.RRpq;
 import history.HBGNode;
@@ -52,7 +53,7 @@ public class MinimalVisSearch {
             SearchState state = priorityQueue.poll();
             //System.out.println(priorityQueue.toString());
             int times = 0;
-            while (state.nextVisibility() != -1
+            while (state.nextVisibility(configuration.getVisibilityType()) != -1
                     && (times < configuration.getVisibilityLimit()
                         || configuration.getVisibilityLimit() == -1
                         || (configuration.getVisibilityLimit() == 0 && times < state.size()))) {
@@ -107,6 +108,7 @@ public class MinimalVisSearch {
                             configuration1.setAdt(new RRpq());
                             configuration1.setFindAllAbstractExecution(true);
                             configuration1.setEnablePrickOperation(false);
+                            configuration1.setVisibilityType(VisibilityType.COMPLETE);
                             MinimalVisSearch subSearch = new MinimalVisSearch(configuration1);
                             subSearch.init(subHBGraph);
                             subSearch.checkConsistency();
@@ -135,7 +137,7 @@ public class MinimalVisSearch {
         List<SearchState> states = new ArrayList<>();
         while (!priorityQueue.isEmpty()) {
             int times = 0;
-            while (priorityQueue.peek().nextVisibility() != -1 && times < 10) {
+            while (priorityQueue.peek().nextVisibility(configuration.getVisibilityType()) != -1 && times < 10) {
                 times++;
                 if (executeCheck(configuration.getAdt(), priorityQueue.peek())) {
                     states.add(priorityQueue.poll());

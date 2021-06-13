@@ -1,5 +1,6 @@
 package validation;
 
+import arbitration.VisibilityType;
 import history.HBGNode;
 import history.HappenBeforeGraph;
 import arbitration.Linearization;
@@ -19,6 +20,7 @@ public class SearchState implements Comparable<SearchState> {
     private Set<HBGNode> visibleNodes = null;
     private List<HBGNode> candidateNodes = null;
     private int adtState = 0;
+    private VisibilityType visibilityType;
 
     public SearchState() {
         this.linearization = new Linearization();
@@ -60,10 +62,11 @@ public class SearchState implements Comparable<SearchState> {
         return newStates;
     }
 
-    public int nextVisibility() {
+    public int nextVisibility(VisibilityType visibilityType) {
+        this.visibilityType = visibilityType;
         if (manualRecurse == null) {
             visibleNodes = getVisibleNodes();
-            candidateNodes = getCandinateNodes(visibleNodes);
+            candidateNodes = getCandinateNodes();
             this.manualRecurse = new ManualRecurse(candidateNodes);
         }
         List<HBGNode> subset = null;
@@ -78,20 +81,36 @@ public class SearchState implements Comparable<SearchState> {
 
     private Set<HBGNode> getVisibleNodes() {
         Set<HBGNode> visibleNodes = new HashSet<>();
-        HBGNode node = linearization.get(linearization.size() - 1);
-        Set<HBGNode> prevs = node.getAllPrevs();
-        for (HBGNode prev : prevs) {
-            visibleNodes.addAll(visibility.getNodeVisibility(prev));
+        if (visibilityType == VisibilityType.CAUSAL) {
+            HBGNode node = linearization.get(linearization.size() - 1);
+            Set<HBGNode> prevs = node.getAllPrevs();
+            for (HBGNode prev : prevs) {
+                visibleNodes.addAll(visibility.getNodeVisibility(prev));
+            }
+            visibleNodes.addAll(prevs);
+            visibleNodes.add(node);
+        } else if (visibilityType == VisibilityType.COMPLETE) {
+            for (int i = 0; i < linearization.size(); i++) {
+                visibleNodes.add(linearization.get(i));
+            }
+            //System.out.println("complete");
+        } else if (visibilityType == VisibilityType.BASIC) {
+            HBGNode node = linearization.get(linearization.size() - 1);
+            Set<HBGNode> prevs = node.getAllPrevs();
+            visibleNodes.addAll(prevs);
+            visibleNodes.add(node);
+        } else if (visibilityType == VisibilityType.WEAK) {
+            HBGNode node = linearization.get(linearization.size() - 1);
+            visibleNodes.add(node);
         }
-        visibleNodes.addAll(prevs);
-        visibleNodes.add(node);
+
         return visibleNodes;
     }
 
-    private List<HBGNode> getCandinateNodes(Set<HBGNode> visible) {
+    private List<HBGNode> getCandinateNodes() {
         List<HBGNode> candidate = new ArrayList<>();
         for (HBGNode node1 : linearization) {
-            if (!visible.contains(node1)) {
+            if (!visibleNodes.contains(node1)) {
                 candidate.add(node1);
             }
         }

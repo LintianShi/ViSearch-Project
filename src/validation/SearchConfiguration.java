@@ -1,5 +1,6 @@
 package validation;
 
+import arbitration.VisibilityType;
 import datatype.AbstractDataType;
 
 public class SearchConfiguration implements Cloneable {
@@ -9,6 +10,7 @@ public class SearchConfiguration implements Cloneable {
     private int visibilityLimit;
     private boolean findAllAbstractExecution = false;
     private boolean enablePrickOperation = true;
+    private VisibilityType visibilityType = VisibilityType.CAUSAL;
     private AbstractDataType adt;
 
     public SearchConfiguration() {
@@ -68,6 +70,14 @@ public class SearchConfiguration implements Cloneable {
         this.enablePrickOperation = enablePrickOperation;
     }
 
+    public void setVisibilityType(VisibilityType visibilityType) {
+        this.visibilityType = visibilityType;
+    }
+
+    public VisibilityType getVisibilityType() {
+        return visibilityType;
+    }
+
     @Override
     protected Object clone() {
         SearchConfiguration configuration =
@@ -75,6 +85,7 @@ public class SearchConfiguration implements Cloneable {
         configuration.setAdt(adt.createInstance());
         configuration.setEnablePrickOperation(this.enablePrickOperation);
         configuration.setFindAllAbstractExecution(this.findAllAbstractExecution);
+        configuration.setVisibilityType(this.visibilityType);
         return configuration;
     }
 }

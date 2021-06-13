@@ -2,8 +2,7 @@ package validation;
 
 import history.HBGNode;
 import history.Invocation;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import arbitration.VisibilityType;
 
 import java.util.ArrayList;
 import java.util.List;
