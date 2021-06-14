@@ -4,8 +4,8 @@ import java.util.*;
 
 public class HBGNode {
     private Invocation invocation;
-    private List<HBGNode> nexts = new ArrayList<>();
-    private List<HBGNode> prevs = new ArrayList<>();
+    private Set<HBGNode> nexts = new HashSet<>();
+    private Set<HBGNode> prevs = new HashSet<>();
     private HBGNode po;
     private int threshold = 0;
     private Set<HBGNode> allPrevs = null;
@@ -58,11 +58,11 @@ public class HBGNode {
         return invocation.getId();
     }
 
-    public List<HBGNode> getNexts() {
+    public Set<HBGNode> getNexts() {
         return nexts;
     }
 
-    public List<HBGNode> getPrevs() {
+    public Set<HBGNode> getPrevs() {
         return prevs;
     }
 

@@ -99,34 +99,6 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         return list;
     }
 
-    private boolean checkBreakPoint(HBGNode breakPoint) {
-        List<HBGNode> prevs = breakPoint.getPrevs();
-        List<HBGNode> nexts = breakPoint.getNexts();
-        if (prevs.size() != threadNum || nexts.size() != threadNum) {
-            return false;
-        }
-
-        for (HBGNode prev : prevs) {
-            boolean flag = false;
-            if (prev.getPo() == breakPoint) {
-                continue;
-            }
-            for (HBGNode next : nexts) {
-                if (breakPoint.getPo() == breakPoint) {
-                    continue;
-                }
-                if (prev.getPo() == next) {
-                    flag = true;
-                    break;
-                }
-            }
-            if (!flag) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public List<List<HBGNode>> getRelatedOperation(HBGNode node, AbstractDataType adt) {
         List<List<HBGNode>> lists = new ArrayList<>();
         for (HBGNode startNode : startNodes) {

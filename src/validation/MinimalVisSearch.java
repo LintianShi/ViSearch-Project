@@ -12,6 +12,8 @@ import arbitration.LinVisibility;
 
 import java.util.*;
 
+import static validation.HBGPreprocessor.extractCommonHBRelation;
+
 public class MinimalVisSearch {
     private SearchStatePriorityQueue priorityQueue;
     private HappenBeforeGraph happenBeforeGraph;
@@ -72,16 +74,12 @@ public class MinimalVisSearch {
                         priorityQueue.offer(newState);
                     }
                     break;
-                } else {
+               } else {
                     if (!configuration.isEnablePrickOperation()) {
-                        //System.out.println("unable");
                         continue;
                     }
                     HBGNode prickOperation = state.getLinearization().getLast();
                     if (!prickOperationCounter.containsKey(prickOperation)) {
-//                        System.out.println("map test");
-//                        System.out.println(prickOperationCounter);
-//                        System.out.println(prickOperationCounter.get(prickOperation));
                         prickOperationCounter.put(prickOperation, 1);
                     } else {
                         Integer failTimes = prickOperationCounter.get(prickOperation);
@@ -91,38 +89,38 @@ public class MinimalVisSearch {
                         prickOperationCounter.put(prickOperation, failTimes + 1);
                         if (failTimes > readOperationFailLimit) {
                             System.out.println("FAIL" + ":" + Integer.toString(failTimes) + " " + prickOperation);
-                            //return false;
                             prickOperationCounter.put(prickOperation, -1);
-                            if (prickOperation.getInvocation().getMethodName().equals("rwfzmax")
-                                    && prickOperation.getInvocation().getRetValue().equals("null")) {
-                                continue;
-                            }
-
-                            List<List<HBGNode>> relatedNodes = happenBeforeGraph.getRelatedOperation(prickOperation, configuration.getAdt());
-                            for (List<HBGNode> list : relatedNodes) {
-                                System.out.println(list);
-                            }
-                            HappenBeforeGraph subHBGraph = new HappenBeforeGraph(relatedNodes);
-                            //subHBGraph.print();
-                            SearchConfiguration configuration1 = new SearchConfiguration(0, -1, -1, 0);
-                            configuration1.setAdt(new RRpq());
-                            configuration1.setFindAllAbstractExecution(true);
-                            configuration1.setEnablePrickOperation(false);
-                            configuration1.setVisibilityType(VisibilityType.COMPLETE);
-                            MinimalVisSearch subSearch = new MinimalVisSearch(configuration1);
-                            subSearch.init(subHBGraph);
-                            subSearch.checkConsistency();
-
-                            List<List<ImmutablePair<Integer, Integer>>> hbs = new ArrayList<>();
-                            for (SearchState state1 : subSearch.getResults()) {
-                                System.out.println(state1);
-                                hbs.add(state1.extractHBRelation());
-                            }
-                            List<ImmutablePair<Integer, Integer>> commonHBs = extractCommonHBRelation(hbs);
-                            for (ImmutablePair<Integer, Integer> hb : commonHBs) {
-                                System.out.println(happenBeforeGraph.get(hb.left).toString()
-                                        + "=>" + happenBeforeGraph.get(hb.right).toString());
-                            }
+                            //return false;
+//                            if (prickOperation.getInvocation().getMethodName().equals("rwfzmax")
+//                                    && prickOperation.getInvocation().getRetValue().equals("null")) {
+//                                continue;
+//                            }
+//
+//                            List<List<HBGNode>> relatedNodes = happenBeforeGraph.getRelatedOperation(prickOperation, configuration.getAdt());
+//                            for (List<HBGNode> list : relatedNodes) {
+//                                System.out.println(list);
+//                            }
+//                            HappenBeforeGraph subHBGraph = new HappenBeforeGraph(relatedNodes);
+//                            //subHBGraph.print();
+//                            SearchConfiguration configuration1 = new SearchConfiguration(0, -1, -1, 0);
+//                            configuration1.setAdt(new RRpq());
+//                            configuration1.setFindAllAbstractExecution(true);
+//                            configuration1.setEnablePrickOperation(false);
+//                            configuration1.setVisibilityType(VisibilityType.COMPLETE);
+//                            MinimalVisSearch subSearch = new MinimalVisSearch(configuration1);
+//                            subSearch.init(subHBGraph);
+//                            subSearch.checkConsistency();
+//
+//                            List<List<ImmutablePair<Integer, Integer>>> hbs = new ArrayList<>();
+//                            for (SearchState state1 : subSearch.getResults()) {
+//                                System.out.println(state1);
+//                                hbs.add(state1.extractHBRelation());
+//                            }
+//                            List<ImmutablePair<Integer, Integer>> commonHBs = extractCommonHBRelation(hbs);
+//                            for (ImmutablePair<Integer, Integer> hb : commonHBs) {
+//                                System.out.println(happenBeforeGraph.get(hb.left).toString()
+//                                        + "=>" + happenBeforeGraph.get(hb.right).toString());
+//                            }
                         }
                     }
 
@@ -152,7 +150,11 @@ public class MinimalVisSearch {
     private boolean executeCheck(AbstractDataType adt, SearchState searchState) {
         String retTrace = searchState.getLinearization().getRetValueTrace(searchState.getLinearization().size());
         String excuteTrace = Validation.crdtExecute(adt, searchState).toString();
-        //System.out.println(/*Thread.currentThread().getId() + ":" + */ Integer.toString(searchState.getLinearization().size()) + "/" + Integer.toString(happenBeforeGraph.size()));
+        if (configuration.isEnableOutputSchedule()) {
+            HBGNode lastOperation = searchState.getLinearization().getLast();
+            System.out.println(lastOperation.toString() + " + " + searchState.getLinearization().size() + "/" + happenBeforeGraph.size());
+        }
+
 //        System.out.println(retTrace);
 //        System.out.println(excuteTrace);
 //        System.out.println();
@@ -167,29 +169,6 @@ public class MinimalVisSearch {
 //            System.out.println();
             return false;
         }
-    }
-
-    private List<ImmutablePair<Integer, Integer>> extractCommonHBRelation(List<List<ImmutablePair<Integer, Integer>>> hbs) {
-        List<ImmutablePair<Integer, Integer>> results = new ArrayList<>();
-        HashMap<ImmutablePair<Integer, Integer>, Integer> map = new HashMap<>();
-        for (List<ImmutablePair<Integer, Integer>> list : hbs) {
-            for (ImmutablePair<Integer, Integer> hb : list) {
-                if (!map.containsKey(hb)) {
-                    map.put(hb, 1);
-                } else {
-                    int count = map.get(hb);
-                    map.put(hb, count + 1);
-                }
-
-            }
-        }
-
-        for (ImmutablePair<Integer, Integer> hb : map.keySet()) {
-            if (map.get(hb) == hbs.size()) {
-                results.add(hb);
-            }
-        }
-        return results;
     }
 
     public Pair<Linearization, LinVisibility> getResult() {

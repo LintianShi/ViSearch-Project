@@ -57,6 +57,8 @@ public class TestMinimalRALinCheck {
 
         SearchConfiguration configuration1 = new SearchConfiguration(0, -1, -1, 0);
         configuration1.setAdt(adt);
+        //configuration1.setEnablePrickOperation(false);
+        configuration1.setEnableOutputSchedule(false);
         MinimalVisSearch vfs = new MinimalVisSearch(configuration1);
         vfs.init(happenBeforeGraph);
         vfs.checkConsistency();
@@ -92,6 +94,7 @@ public class TestMinimalRALinCheck {
         RedisProcessor rp = new RedisProcessor();
         rp.load("trace");
         HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RRpq()).generateHappenBeforeGraph();
+        new HBGPreprocessor().preprocess(happenBeforeGraph, new RRpq());
 
         //happenBeforeGraph.printStartNodes();
 

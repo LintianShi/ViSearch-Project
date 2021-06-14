@@ -7,9 +7,10 @@ public class SearchConfiguration implements Cloneable {
     private int searchMode; // 0: dfs, 1: bfs, 2: h*
     private int searchLimit;
     private int queueLimit;
-    private int visibilityLimit;
+    private int visibilityLimit; // -1: unlimited, 0:size of lin
     private boolean findAllAbstractExecution = false;
     private boolean enablePrickOperation = true;
+    private boolean enableOutputSchedule = true;
     private VisibilityType visibilityType = VisibilityType.CAUSAL;
     private AbstractDataType adt;
 
@@ -78,6 +79,14 @@ public class SearchConfiguration implements Cloneable {
         return visibilityType;
     }
 
+    public void setEnableOutputSchedule(boolean enableOutputSchedule) {
+        this.enableOutputSchedule = enableOutputSchedule;
+    }
+
+    public boolean isEnableOutputSchedule() {
+        return enableOutputSchedule;
+    }
+
     @Override
     protected Object clone() {
         SearchConfiguration configuration =
@@ -86,6 +95,7 @@ public class SearchConfiguration implements Cloneable {
         configuration.setEnablePrickOperation(this.enablePrickOperation);
         configuration.setFindAllAbstractExecution(this.findAllAbstractExecution);
         configuration.setVisibilityType(this.visibilityType);
+        configuration.setEnableOutputSchedule(this.enableOutputSchedule);
         return configuration;
     }
 }
