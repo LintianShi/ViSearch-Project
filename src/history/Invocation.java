@@ -18,6 +18,7 @@ public class Invocation {
     private String retValue;
 
     private int id;
+    private int threadId;
     @JSONField(serialize=false)
     private Pair<Integer, Integer> pairID;
     @JSONField(serialize=false)
@@ -61,6 +62,14 @@ public class Invocation {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getThreadId() {
+        return threadId;
+    }
+
+    public void setThreadId(int threadId) {
+        this.threadId = threadId;
     }
 
     public Pair<Integer, Integer> getPairID() {

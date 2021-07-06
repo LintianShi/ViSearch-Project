@@ -21,6 +21,7 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
             programOrders[k][0] = index;
             for (int i = 0; i < sp.size(); i++) {
                 HBGNode node = new HBGNode(sp.get(i), index);
+                node.setThreadId(k);
                 nodes.put(index, node);
                 if (i == 0) {
                     startNodes.add(node);

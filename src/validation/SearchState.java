@@ -145,7 +145,9 @@ public class SearchState implements Comparable<SearchState> {
         List<ImmutablePair<Integer, Integer>> hbs = new ArrayList<>();
         for (int i = 1; i < linearization.size(); i++) {
             for (int j = 0; j < i; j++) {
-                hbs.add(new ImmutablePair<>(linearization.get(j).getId(), linearization.get(i).getId()));
+                if (linearization.get(j).getThreadId() != linearization.get(i).getThreadId()) {
+                    hbs.add(new ImmutablePair<>(linearization.get(j).getId(), linearization.get(i).getId()));
+                }
             }
         }
         return hbs;
@@ -166,7 +168,7 @@ public class SearchState implements Comparable<SearchState> {
     }
 
     public String toString() {
-        return Integer.toString(adtState) + ":" + linearization.toString() + " | " + visibility.toString();
+        return Integer.toString(adtState) + ":" + linearization.toString();// + " | " + visibility.toString();
     }
 
 }

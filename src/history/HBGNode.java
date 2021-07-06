@@ -58,6 +58,14 @@ public class HBGNode {
         return invocation.getId();
     }
 
+    public int getThreadId() {
+        return invocation.getThreadId();
+    }
+
+    public void setThreadId(int threadId) {
+        invocation.setThreadId(threadId);
+    }
+
     public Set<HBGNode> getNexts() {
         return nexts;
     }

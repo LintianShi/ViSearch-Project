@@ -47,7 +47,7 @@ public class HBGPreprocessor {
     public void preprocess(HappenBeforeGraph happenBeforeGraph, AbstractDataType adt) {
         for (HBGNode node : happenBeforeGraph) {
             if (node.getInvocation().getMethodName().equals("rwfzscore")
-            || (node.getInvocation().getMethodName().equals("rwfzmax") && node.getInvocation().getRetValue().equals("null") )) {
+            || (node.getInvocation().getMethodName().equals("rwfzmax") && !node.getInvocation().getRetValue().equals("null") )) {
                 List<List<HBGNode>> relatedNodes = happenBeforeGraph.getRelatedOperation(node, adt);
 //                for (List<HBGNode> list : relatedNodes) {
 //                    System.out.println(list);
@@ -65,14 +65,28 @@ public class HBGPreprocessor {
                 subSearch.init(subHBGraph);
                 subSearch.checkConsistency();
 
+
+
+
                 List<List<ImmutablePair<Integer, Integer>>> hbs = new ArrayList<>();
+                for (SearchState state1 : subSearch.getResults()) {
+                    hbs.add(state1.extractHBRelation());
+                }
 
                 List<ImmutablePair<Integer, Integer>> commonHBs = extractCommonHBRelation(hbs);
                 addHBRelations(happenBeforeGraph, commonHBs);
-//                for (ImmutablePair<Integer, Integer> hb : commonHBs) {
-//                    System.out.println(happenBeforeGraph.get(hb.left).toString()
-//                            + "=>" + happenBeforeGraph.get(hb.right).toString());
+//                if (node.getId() == 1002) {
+//                    for (SearchState ss : subSearch.getResults()) {
+//                        System.out.println(ss);
+//                    }
+//                    System.out.println();
+//                    for (ImmutablePair<Integer, Integer> hb : commonHBs) {
+//                        System.out.println(happenBeforeGraph.get(hb.left).toString()
+//                                + "=>" + happenBeforeGraph.get(hb.right).toString());
+//                    }
 //                }
+
+                System.out.println(commonHBs.size());
             }
         }
     }

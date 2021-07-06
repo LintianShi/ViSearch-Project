@@ -17,7 +17,6 @@ import static validation.HBGPreprocessor.extractCommonHBRelation;
 public class MinimalVisSearch {
     private SearchStatePriorityQueue priorityQueue;
     private HappenBeforeGraph happenBeforeGraph;
-    private Pair<Linearization, LinVisibility> result;
     private SearchConfiguration configuration;
     private int stateExplored = 0;
     private HashMap<HBGNode, Integer> prickOperationCounter = new HashMap<>();
@@ -169,10 +168,6 @@ public class MinimalVisSearch {
 //            System.out.println();
             return false;
         }
-    }
-
-    public Pair<Linearization, LinVisibility> getResult() {
-        return result;
     }
 
     public List<SearchState> getResults() {
