@@ -12,8 +12,6 @@ import arbitration.LinVisibility;
 
 import java.util.*;
 
-import static validation.HBGPreprocessor.extractCommonHBRelation;
-
 public class MinimalVisSearch {
     private SearchStatePriorityQueue priorityQueue;
     private HappenBeforeGraph happenBeforeGraph;
