@@ -124,7 +124,10 @@ public class HBGPreprocessor {
                 MinimalVisSearch subSearch = new MinimalVisSearch(configuration);
                 subSearch.init(subHBGraph);
                 subSearch.checkConsistency();
-
+                if (subSearch.getResults().size() == 0) {
+                    System.out.println("no abstract execution");
+                    continue;
+                }
 
 
 
@@ -136,8 +139,18 @@ public class HBGPreprocessor {
                 List<ImmutablePair<Integer, Integer>> commonHBs = extractCommonHBRelation(hbs);
                 List<PairOfPair> incompatibleRelations = removeCommonRelations(extractIncompatibleHBRelation(hbs, relatedNodes), commonHBs);
                 addHBRelations(happenBeforeGraph, commonHBs);
-                if (node.getId() == 1002) {
-                    System.out.println(subSearch.getResults().get(0));
+                if (node.getId() == 436) {
+                    for (List<HBGNode> list : relatedNodes) {
+                        for (HBGNode op : list) {
+                            System.out.print(op.toString() + " => ");
+                        }
+                        System.out.println();
+                    }
+//                    System.out.println();
+//                    for (SearchState searchState : subSearch.getResults()) {
+//                        System.out.println(searchState);
+//                    }
+
 //                    for (SearchState ss : subSearch.getResults()) {
 //                        System.out.println(ss);
 //                    }
