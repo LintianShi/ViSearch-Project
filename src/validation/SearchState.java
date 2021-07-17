@@ -5,7 +5,7 @@ import history.HBGNode;
 import history.HappenBeforeGraph;
 import arbitration.Linearization;
 import arbitration.LinVisibility;
-import org.apache.commons.lang3.tuple.ImmutablePair;
+import util.Pair;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -21,6 +21,7 @@ public class SearchState implements Comparable<SearchState> {
     private List<HBGNode> candidateNodes = null;
     private int adtState = 0;
     private VisibilityType visibilityType;
+    private List<Pair> tempHBRelations = new ArrayList<>();
 
     public SearchState() {
         this.linearization = new Linearization();
@@ -55,10 +56,28 @@ public class SearchState implements Comparable<SearchState> {
         }
 
         List<Linearization> newLins = linearization.extendLin(adjacencyNodes);
-        List<SearchState> newStates = new ArrayList<>();
-        for (Linearization lin : newLins) {
-            newStates.add(new SearchState(lin, (LinVisibility) visibility.clone()));
+        List<List<Pair>> tempHBRelations = new ArrayList<>();
+        for (Linearization lin :newLins) {
+            HBGNode lastNode = lin.getLast();
+            for (HBGNode node : lin) {
+                if (node != lastNode) {
+                    Pair pair = new Pair(node.getId(), lastNode.getId());
+                    if (happenBeforeGraph.getIncompatibleRelations(pair) != null) {
+                        tempHBRelations.add(new ArrayList<>(happenBeforeGraph.getIncompatibleRelations(pair)));
+                    }
+                }
+            }
         }
+
+        List<SearchState> newStates = new ArrayList<>();
+        for (int i = 0; i < newLins.size(); i++) {
+            SearchState newState = new SearchState(newLins.get(0), (LinVisibility) visibility.clone());
+            for (Pair pair : tempHBRelations.get(i)) {
+                newState.addTempHBRelation(pair);
+            }
+            newStates.add(newState);
+        }
+
         return newStates;
     }
 
@@ -141,16 +160,24 @@ public class SearchState implements Comparable<SearchState> {
         this.adtState = adtState;
     }
 
-    public List<ImmutablePair<Integer, Integer>> extractHBRelation() {
-        List<ImmutablePair<Integer, Integer>> hbs = new ArrayList<>();
+    public List<Pair> extractHBRelation() {
+        List<Pair> hbs = new ArrayList<>();
         for (int i = 1; i < linearization.size(); i++) {
             for (int j = 0; j < i; j++) {
                 if (linearization.get(j).getThreadId() != linearization.get(i).getThreadId()) {
-                    hbs.add(new ImmutablePair<>(linearization.get(j).getId(), linearization.get(i).getId()));
+                    hbs.add(new Pair(linearization.get(j).getId(), linearization.get(i).getId()));
                 }
             }
         }
         return hbs;
+    }
+
+    public void addTempHBRelation(Pair pair) {
+        tempHBRelations.add(pair);
+    }
+
+    public List<Pair> getTempHBRelations() {
+        return tempHBRelations;
     }
 
     public int compareTo(SearchState o) {

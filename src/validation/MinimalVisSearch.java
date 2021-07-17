@@ -7,8 +7,8 @@ import history.HBGNode;
 import history.HappenBeforeGraph;
 import arbitration.Linearization;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 import arbitration.LinVisibility;
+import util.Pair;
 
 import java.util.*;
 
@@ -35,6 +35,18 @@ public class MinimalVisSearch {
         }
     }
 
+    private void addTempHBRelations(Collection<Pair> tempRelations) {
+        for (Pair pair : tempRelations) {
+            happenBeforeGraph.addHBRelation(pair);
+        }
+    }
+
+    private void removeTempHBRelations(Collection<Pair> tempRelations) {
+        for (Pair pair : tempRelations) {
+            happenBeforeGraph.removeHBRelation(pair);
+        }
+    }
+
     public void init(HappenBeforeGraph happenBeforeGraph, SearchState initState) {
         SearchState.happenBeforeGraph = happenBeforeGraph;
         this.happenBeforeGraph = happenBeforeGraph;
@@ -48,9 +60,10 @@ public class MinimalVisSearch {
                 && (configuration.getSearchLimit() == -1 || stateExplored < configuration.getSearchLimit())
                 && (configuration.getQueueLimit() == -1 || priorityQueue.size() < configuration.getQueueLimit())) {
             stateExplored++;
-           // System.out.println(priorityQueue.size());
+
             SearchState state = priorityQueue.poll();
-            //System.out.println(priorityQueue.toString());
+            addTempHBRelations(state.getTempHBRelations());
+
             int times = 0;
             while (state.nextVisibility(configuration.getVisibilityType()) != -1
                     && (times < configuration.getVisibilityLimit()
@@ -59,7 +72,6 @@ public class MinimalVisSearch {
                 times++;
                 if (executeCheck(adt, state)) {
                     if (state.isComplete()) {
-                        //result = new ImmutablePair<>((Linearization) state.getLinearization().clone(), (LinVisibility) state.getVisibility().clone());
                         results.add(state);
                         if (!configuration.isFindAllAbstractExecution()) {
                             return true;
@@ -91,6 +103,7 @@ public class MinimalVisSearch {
                     }
                 }
             }
+            removeTempHBRelations(state.getTempHBRelations());
         }
         return false;
     }

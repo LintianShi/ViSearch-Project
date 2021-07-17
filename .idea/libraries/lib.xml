@@ -3,6 +3,7 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/commons-lang3-3.10.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/fastjson-1.2.68.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/guava-23.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

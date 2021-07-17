@@ -54,6 +54,15 @@ public class HBGNode {
             prevs.add(prev);
     }
 
+    public void removeNextNode(HBGNode next) {
+        if (next != null)
+            nexts.remove(next);
+    }
+    public void removePrevNode(HBGNode prev) {
+        if (prev != null)
+            prevs.remove(prev);
+    }
+
     public int getId() {
         return invocation.getId();
     }
