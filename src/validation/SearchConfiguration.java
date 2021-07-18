@@ -11,6 +11,7 @@ public class SearchConfiguration implements Cloneable {
     private boolean findAllAbstractExecution = false;
     private boolean enablePrickOperation = true;
     private boolean enableOutputSchedule = true;
+    private boolean enableIncompatibleRelation = true;
     private VisibilityType visibilityType = VisibilityType.CAUSAL;
     private AbstractDataType adt;
 
@@ -85,6 +86,14 @@ public class SearchConfiguration implements Cloneable {
 
     public boolean isEnableOutputSchedule() {
         return enableOutputSchedule;
+    }
+
+    public void setEnableIncompatibleRelation(boolean enableIncompatibleRelation) {
+        this.enableIncompatibleRelation = enableIncompatibleRelation;
+    }
+
+    public boolean isEnableIncompatibleRelation() {
+        return enableIncompatibleRelation;
     }
 
     @Override

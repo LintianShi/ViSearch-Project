@@ -116,22 +116,24 @@ public class HBGPreprocessor {
     }
 
     public void preprocess(HappenBeforeGraph happenBeforeGraph, AbstractDataType adt) {
+        List<PairOfPair> incompatibleRelations = new ArrayList<>();
+
         for (HBGNode node : happenBeforeGraph) {
             if (node.getInvocation().getMethodName().equals("rwfzscore")
             || (node.getInvocation().getMethodName().equals("rwfzmax") && !node.getInvocation().getRetValue().equals("null") )) {
                 List<List<HBGNode>> relatedNodes = happenBeforeGraph.getRelatedOperation(node, adt);
-//                for (List<HBGNode> list : relatedNodes) {
-//                    System.out.println(list);
-//                }
                 System.out.println(node.toString());
 
                 HappenBeforeGraph subHBGraph = new HappenBeforeGraph(relatedNodes);
+                System.out.println("Sub graph size: " + subHBGraph.size());
+
                 SearchConfiguration configuration = new SearchConfiguration(0, -1, -1, 0);
                 configuration.setAdt(new RRpq());
                 configuration.setFindAllAbstractExecution(true);
                 configuration.setEnablePrickOperation(false);
                 configuration.setVisibilityType(VisibilityType.COMPLETE);
                 configuration.setEnableOutputSchedule(false);
+                configuration.setEnableIncompatibleRelation(false);
                 MinimalVisSearch subSearch = new MinimalVisSearch(configuration);
                 subSearch.init(subHBGraph);
                 subSearch.checkConsistency();
@@ -148,41 +150,30 @@ public class HBGPreprocessor {
                 }
 
                 List<Pair> commonHBs = extractCommonHBRelation(hbs);
-                List<PairOfPair> incompatibleRelations = removeCommonRelations(extractIncompatibleHBRelation(hbs, relatedNodes), commonHBs);
+                //List<PairOfPair> subIncompatibleRelations = removeCommonRelations(extractIncompatibleHBRelation(hbs, relatedNodes), commonHBs);
+                //List<PairOfPair> subIncompatibleRelations = extractIncompatibleHBRelation(hbs, relatedNodes);
                 addHBRelations(happenBeforeGraph, commonHBs);
-                Multimap<Pair, Pair> ruleTable = generateRuleTable(incompatibleRelations);
-                happenBeforeGraph.setRuleTable(ruleTable);
+                //incompatibleRelations.addAll(subIncompatibleRelations);
 
-                if (node.getId() == 436) {
-                    for (List<HBGNode> list : relatedNodes) {
-                        for (HBGNode op : list) {
-                            System.out.print(op.toString() + " => ");
-                        }
-                        System.out.println();
-                    }
-//                    System.out.println();
-//                    for (SearchState searchState : subSearch.getResults()) {
-//                        System.out.println(searchState);
+//                if (node.getId() == 436) {
+//                    for (List<HBGNode> list : relatedNodes) {
+//                        for (HBGNode op : list) {
+//                            System.out.print(op.toString() + " => ");
+//                        }
+//                        System.out.println();
 //                    }
+//                    System.out.println(commonHBs);
+//                    System.out.println(incompatibleRelations);
+//
+//                }
 
-//                    for (SearchState ss : subSearch.getResults()) {
-//                        System.out.println(ss);
-//                    }
-//                    System.out.println();
-//                    for (ImmutablePair<Integer, Integer> hb : commonHBs) {
-//                        System.out.println(happenBeforeGraph.get(hb.left).toString()
-//                                + "=>" + happenBeforeGraph.get(hb.right).toString());
-//                    }
-                    //System.out.println(hbs);
-                    System.out.println(commonHBs);
-                    System.out.println(incompatibleRelations);
-
-                }
-
-                System.out.println(commonHBs.size());
-                System.out.println(incompatibleRelations.size());
+                System.out.println("Common relation size: " + commonHBs.size());
+                //System.out.println(subIncompatibleRelations.size());
             }
         }
+
+//        Multimap<Pair, Pair> ruleTable = generateRuleTable(incompatibleRelations);
+//        happenBeforeGraph.setRuleTable(ruleTable);
     }
 }
 

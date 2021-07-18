@@ -56,25 +56,31 @@ public class SearchState implements Comparable<SearchState> {
         }
 
         List<Linearization> newLins = linearization.extendLin(adjacencyNodes);
-        List<List<Pair>> tempHBRelations = new ArrayList<>();
-        for (Linearization lin :newLins) {
-            HBGNode lastNode = lin.getLast();
-            for (HBGNode node : lin) {
-                if (node != lastNode) {
-                    Pair pair = new Pair(node.getId(), lastNode.getId());
-                    if (happenBeforeGraph.getIncompatibleRelations(pair) != null) {
-                        tempHBRelations.add(new ArrayList<>(happenBeforeGraph.getIncompatibleRelations(pair)));
-                    }
-                }
-            }
-        }
+
+//        List<List<Pair>> tempHBRelations = new ArrayList<>();
+//        if (happenBeforeGraph.isRuleTableExist()) {
+//            for (Linearization lin :newLins) {
+//                HBGNode lastNode = lin.getLast();
+//                for (HBGNode node : lin) {
+//                    Pair pair = new Pair(node.getId(), lastNode.getId());
+//                    if (happenBeforeGraph.getIncompatibleRelations(pair) != null) {
+//                        tempHBRelations.add(new ArrayList<>(happenBeforeGraph.getIncompatibleRelations(pair)));
+//                    } else {
+//                        tempHBRelations.add(new ArrayList<>());
+//                    }
+//                }
+//            }
+//        }
+
 
         List<SearchState> newStates = new ArrayList<>();
         for (int i = 0; i < newLins.size(); i++) {
-            SearchState newState = new SearchState(newLins.get(0), (LinVisibility) visibility.clone());
-            for (Pair pair : tempHBRelations.get(i)) {
-                newState.addTempHBRelation(pair);
-            }
+            SearchState newState = new SearchState(newLins.get(i), (LinVisibility) visibility.clone());
+//            if (happenBeforeGraph.isRuleTableExist()) {
+//                for (Pair pair : tempHBRelations.get(i)) {
+//                    newState.addTempHBRelation(pair);
+//                }
+//            }
             newStates.add(newState);
         }
 

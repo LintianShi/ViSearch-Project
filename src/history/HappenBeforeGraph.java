@@ -13,7 +13,7 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
     private int[][] programOrders;
     private int threadNum;
     private Set<HBGNode> nodesWithoutPrev = null;
-    private Multimap<util.Pair, util.Pair> ruleTable;
+    private Multimap<util.Pair, util.Pair> ruleTable = null;
 
     public HappenBeforeGraph(List<SubProgram> subPrograms, HappenBefore happenBefore) {
         int index = 0;
@@ -127,7 +127,14 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         this.ruleTable = ruleTable;
     }
 
+    public boolean isRuleTableExist() {
+        return ruleTable != null;
+    }
+
     public Collection<util.Pair> getIncompatibleRelations(util.Pair pair) {
+        if (ruleTable == null) {
+            return null;
+        }
         if (ruleTable.containsKey(pair)) {
             return ruleTable.get(pair);
         } else {

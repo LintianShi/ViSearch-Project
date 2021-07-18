@@ -37,13 +37,13 @@ public class MinimalVisSearch {
 
     private void addTempHBRelations(Collection<Pair> tempRelations) {
         for (Pair pair : tempRelations) {
-            happenBeforeGraph.addHBRelation(pair);
+            happenBeforeGraph.addHBRelation(new Pair(pair.getRight(), pair.getLeft()));
         }
     }
 
     private void removeTempHBRelations(Collection<Pair> tempRelations) {
         for (Pair pair : tempRelations) {
-            happenBeforeGraph.removeHBRelation(pair);
+            happenBeforeGraph.removeHBRelation(new Pair(pair.getRight(), pair.getLeft()));
         }
     }
 
@@ -62,7 +62,9 @@ public class MinimalVisSearch {
             stateExplored++;
 
             SearchState state = priorityQueue.poll();
-            addTempHBRelations(state.getTempHBRelations());
+//            if (configuration.isEnableIncompatibleRelation()) {
+//                addTempHBRelations(state.getTempHBRelations());
+//            }
 
             int times = 0;
             while (state.nextVisibility(configuration.getVisibilityType()) != -1
@@ -103,7 +105,9 @@ public class MinimalVisSearch {
                     }
                 }
             }
-            removeTempHBRelations(state.getTempHBRelations());
+//            if (configuration.isEnableIncompatibleRelation()) {
+//                removeTempHBRelations(state.getTempHBRelations());
+//            }
         }
         return false;
     }
