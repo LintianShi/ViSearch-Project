@@ -8,7 +8,6 @@ import history.HBGNode;
 import history.HappenBeforeGraph;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import com.google.common.collect.HashMultimap;
-import util.Pair;
 import util.PairOfPair;
 
 import java.util.ArrayList;
@@ -17,11 +16,11 @@ import java.util.HashSet;
 import java.util.List;
 
 public class HBGPreprocessor {
-    private List<Pair> extractCommonHBRelation(List<List<Pair>> hbs) {
-        List<Pair> results = new ArrayList<>();
-        HashMap<Pair, Integer> map = new HashMap<>();
-        for (List<Pair> list : hbs) {
-            for (Pair hb : list) {
+    private List<ImmutablePair<Integer, Integer>> extractCommonHBRelation(List<List<ImmutablePair<Integer, Integer>>> hbs) {
+        List<ImmutablePair<Integer, Integer>> results = new ArrayList<>();
+        HashMap<ImmutablePair<Integer, Integer>, Integer> map = new HashMap<>();
+        for (List<ImmutablePair<Integer, Integer>> list : hbs) {
+            for (ImmutablePair<Integer, Integer> hb : list) {
                 if (!map.containsKey(hb)) {
                     map.put(hb, 1);
                 } else {
@@ -32,7 +31,7 @@ public class HBGPreprocessor {
             }
         }
 
-        for (Pair hb : map.keySet()) {
+        for (ImmutablePair<Integer, Integer> hb : map.keySet()) {
             if (map.get(hb) == hbs.size()) {
                 results.add(hb);
             }
@@ -40,11 +39,11 @@ public class HBGPreprocessor {
         return results;
     }
 
-    private List<PairOfPair> removeCommonRelations(List<PairOfPair> incompatibleRelations, List<Pair> commonRelations) {
+    private List<PairOfPair> removeCommonRelations(List<PairOfPair> incompatibleRelations, List<ImmutablePair<Integer, Integer>> commonRelations) {
         List<PairOfPair> cleanIncompatibleRelations = new ArrayList<>();
         for (PairOfPair pairOfPair : incompatibleRelations) {
             boolean flag = true;
-            for (Pair common : commonRelations) {
+            for (ImmutablePair<Integer, Integer> common : commonRelations) {
                 ImmutablePair<Integer, Integer> reversePair = new ImmutablePair<>(common.getRight(), common.getLeft());
                 if (pairOfPair.getLeft().equals(reversePair) || pairOfPair.getRight().equals(reversePair)) {
                     flag = false;
@@ -58,9 +57,9 @@ public class HBGPreprocessor {
         return cleanIncompatibleRelations;
     }
 
-    private List<PairOfPair> extractIncompatibleHBRelation(List<List<Pair>> hbs, List<List<HBGNode>> relatedNodes) {
+    private List<PairOfPair> extractIncompatibleHBRelation(List<List<ImmutablePair<Integer, Integer>>> hbs, List<List<HBGNode>> relatedNodes) {
         HashSet<PairOfPair> pairSet = new HashSet<>();
-        for (List<Pair> list : hbs) {
+        for (List<ImmutablePair<Integer, Integer>> list : hbs) {
             for (int i = 0; i < list.size(); i++) {
                 for (int j = i + 1; j < list.size(); j++) {
                         PairOfPair pairOfPair = new PairOfPair(list.get(i), list.get(j));
@@ -69,13 +68,13 @@ public class HBGPreprocessor {
             }
         }
 
-        List<Pair> allPairs = new ArrayList<>();
+        List<ImmutablePair<Integer, Integer>> allPairs = new ArrayList<>();
         for (int i = 0; i < relatedNodes.size(); i++) {
             for (int j = i + 1; j < relatedNodes.size(); j++) {
                 for (int k = 0; k < relatedNodes.get(i).size(); k++) {
                     for (int h = 0; h < relatedNodes.get(j).size(); h++) {
-                        allPairs.add(new Pair(relatedNodes.get(j).get(h).getId(), relatedNodes.get(i).get(k).getId()));
-                        allPairs.add(new Pair(relatedNodes.get(i).get(k).getId(), relatedNodes.get(j).get(h).getId()));
+                        allPairs.add(new ImmutablePair<>(relatedNodes.get(j).get(h).getId(), relatedNodes.get(i).get(k).getId()));
+                        allPairs.add(new ImmutablePair<>(relatedNodes.get(i).get(k).getId(), relatedNodes.get(j).get(h).getId()));
                     }
                 }
             }
@@ -97,8 +96,8 @@ public class HBGPreprocessor {
         return incompatiblePair;
     }
 
-    private void addHBRelations(HappenBeforeGraph happenBeforeGraph, List<Pair> hbs) {
-        for (Pair hb : hbs) {
+    private void addHBRelations(HappenBeforeGraph happenBeforeGraph, List<ImmutablePair<Integer, Integer>> hbs) {
+        for (ImmutablePair<Integer, Integer> hb : hbs) {
             HBGNode prev = happenBeforeGraph.get(hb.getLeft());
             HBGNode next = happenBeforeGraph.get(hb.getRight());
             prev.addNextNode(next);
@@ -106,8 +105,8 @@ public class HBGPreprocessor {
         }
     }
 
-    private Multimap<Pair, Pair> generateRuleTable(List<PairOfPair> incompatibleRelations) {
-        Multimap<Pair, Pair> ruleTable = HashMultimap.create();
+    private Multimap<ImmutablePair<Integer, Integer>, ImmutablePair<Integer, Integer>> generateRuleTable(List<PairOfPair> incompatibleRelations) {
+        Multimap<ImmutablePair<Integer, Integer>, ImmutablePair<Integer, Integer>> ruleTable = HashMultimap.create();
         for (PairOfPair pairOfPair : incompatibleRelations) {
             ruleTable.put(pairOfPair.getLeft(), pairOfPair.getRight());
             ruleTable.put(pairOfPair.getRight(), pairOfPair.getLeft());
@@ -142,38 +141,23 @@ public class HBGPreprocessor {
                     continue;
                 }
 
-
-
-                List<List<Pair>> hbs = new ArrayList<>();
+                List<List<ImmutablePair<Integer, Integer>>> hbs = new ArrayList<>();
                 for (SearchState state1 : subSearch.getResults()) {
                     hbs.add(state1.extractHBRelation());
                 }
 
-                List<Pair> commonHBs = extractCommonHBRelation(hbs);
-                //List<PairOfPair> subIncompatibleRelations = removeCommonRelations(extractIncompatibleHBRelation(hbs, relatedNodes), commonHBs);
-                //List<PairOfPair> subIncompatibleRelations = extractIncompatibleHBRelation(hbs, relatedNodes);
+                List<ImmutablePair<Integer, Integer>> commonHBs = extractCommonHBRelation(hbs);
+                List<PairOfPair> subIncompatibleRelations = removeCommonRelations(extractIncompatibleHBRelation(hbs, relatedNodes), commonHBs);
                 addHBRelations(happenBeforeGraph, commonHBs);
-                //incompatibleRelations.addAll(subIncompatibleRelations);
-
-//                if (node.getId() == 436) {
-//                    for (List<HBGNode> list : relatedNodes) {
-//                        for (HBGNode op : list) {
-//                            System.out.print(op.toString() + " => ");
-//                        }
-//                        System.out.println();
-//                    }
-//                    System.out.println(commonHBs);
-//                    System.out.println(incompatibleRelations);
-//
-//                }
+                incompatibleRelations.addAll(subIncompatibleRelations);
 
                 System.out.println("Common relation size: " + commonHBs.size());
-                //System.out.println(subIncompatibleRelations.size());
+                System.out.println("Incompatible relation size: " + subIncompatibleRelations.size());
             }
         }
 
-//        Multimap<Pair, Pair> ruleTable = generateRuleTable(incompatibleRelations);
-//        happenBeforeGraph.setRuleTable(ruleTable);
+        Multimap<ImmutablePair<Integer, Integer>, ImmutablePair<Integer, Integer>> ruleTable = generateRuleTable(incompatibleRelations);
+        happenBeforeGraph.setRuleTable(ruleTable);
     }
 }
 

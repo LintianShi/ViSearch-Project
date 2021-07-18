@@ -2,6 +2,7 @@ package history;
 
 import com.google.common.collect.Multimap;
 import datatype.AbstractDataType;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import arbitration.Linearization;
 
@@ -13,7 +14,7 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
     private int[][] programOrders;
     private int threadNum;
     private Set<HBGNode> nodesWithoutPrev = null;
-    private Multimap<util.Pair, util.Pair> ruleTable = null;
+    private Multimap<ImmutablePair<Integer, Integer>, ImmutablePair<Integer, Integer>> ruleTable = null;
 
     public HappenBeforeGraph(List<SubProgram> subPrograms, HappenBefore happenBefore) {
         int index = 0;
@@ -123,7 +124,7 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         return lists;
     }
 
-    public void setRuleTable(Multimap<util.Pair, util.Pair> ruleTable) {
+    public void setRuleTable(Multimap<ImmutablePair<Integer, Integer>, ImmutablePair<Integer, Integer>> ruleTable) {
         this.ruleTable = ruleTable;
     }
 
@@ -131,7 +132,7 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         return ruleTable != null;
     }
 
-    public Collection<util.Pair> getIncompatibleRelations(util.Pair pair) {
+    public Collection<ImmutablePair<Integer, Integer>> getIncompatibleRelations(ImmutablePair<Integer, Integer> pair) {
         if (ruleTable == null) {
             return null;
         }
@@ -142,16 +143,16 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         }
     }
 
-    public void addHBRelation(util.Pair pair) {
-        HBGNode prevNode = get(pair.getLeft());
-        HBGNode nextNode = get(pair.getRight());
+    public void addHBRelation(int left, int right) {
+        HBGNode prevNode = get(left);
+        HBGNode nextNode = get(right);
         prevNode.addNextNode(nextNode);
         nextNode.addPrevNode(prevNode);
     }
 
-    public void removeHBRelation(util.Pair pair) {
-        HBGNode prevNode = get(pair.getLeft());
-        HBGNode nextNode = get(pair.getRight());
+    public void removeHBRelation(int left, int right) {
+        HBGNode prevNode = get(left);
+        HBGNode nextNode = get(right);
         prevNode.removeNextNode(nextNode);
         nextNode.removePrevNode(prevNode);
     }

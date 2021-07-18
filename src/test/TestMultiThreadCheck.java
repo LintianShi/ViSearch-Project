@@ -21,37 +21,37 @@ public class TestMultiThreadCheck {
         vfs.checkConsistency();
         List<SearchState> states = vfs.getAllSearchState();
 
-        int i = 0;
-        for (SearchState state : states) {
-            System.out.println(Integer.toString(i) + ":" + state.toString());
-            i++;
-        }
-
-
-        vfs.init(happenBeforeGraph, states.get(38));
-        vfs.checkConsistency();
-        states = vfs.getAllSearchState();
-
-        vfs.init(happenBeforeGraph, states.get(35));
-        vfs.checkConsistency();
-        states = vfs.getAllSearchState();
-
-        vfs.init(happenBeforeGraph, states.get(41));
-        vfs.checkConsistency();
-        states = vfs.getAllSearchState();
-
-
-
-        List<SearchState> slist = new ArrayList<>();
-        slist.add(states.get(41));
-        slist.add(states.get(51));
+//        int i = 0;
+//        for (SearchState state : states) {
+//            System.out.println(Integer.toString(i) + ":" + state.toString());
+//            i++;
+//        }
+//
+//
+//        vfs.init(happenBeforeGraph, states.get(38));
+//        vfs.checkConsistency();
+//        states = vfs.getAllSearchState();
+//
+//        vfs.init(happenBeforeGraph, states.get(35));
+//        vfs.checkConsistency();
+//        states = vfs.getAllSearchState();
+//
+//        vfs.init(happenBeforeGraph, states.get(41));
+//        vfs.checkConsistency();
+//        states = vfs.getAllSearchState();
+//
+//
+//
+//        List<SearchState> slist = new ArrayList<>();
+//        slist.add(states.get(41));
+//        slist.add(states.get(51));
 
 
 
         SearchConfiguration configuration2 = new SearchConfiguration(0, -1, -1, -10);
         configuration2.setAdt(adt);
         MultiThreadSearch multiThreadSearch = new MultiThreadSearch(happenBeforeGraph, configuration2);
-        multiThreadSearch.startSearch(slist);
+        multiThreadSearch.startSearch(states);
 
 //        for (SearchState s : states) {
 //            System.out.println(s.toString());

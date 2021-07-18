@@ -5,6 +5,7 @@ import history.HBGNode;
 import history.HappenBeforeGraph;
 import arbitration.Linearization;
 import arbitration.LinVisibility;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import util.Pair;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class SearchState implements Comparable<SearchState> {
     private List<HBGNode> candidateNodes = null;
     private int adtState = 0;
     private VisibilityType visibilityType;
-    private List<Pair> tempHBRelations = new ArrayList<>();
+    private List<ImmutablePair<Integer, Integer>> tempHBRelations = new ArrayList<>();
 
     public SearchState() {
         this.linearization = new Linearization();
@@ -57,30 +58,30 @@ public class SearchState implements Comparable<SearchState> {
 
         List<Linearization> newLins = linearization.extendLin(adjacencyNodes);
 
-//        List<List<Pair>> tempHBRelations = new ArrayList<>();
-//        if (happenBeforeGraph.isRuleTableExist()) {
-//            for (Linearization lin :newLins) {
-//                HBGNode lastNode = lin.getLast();
-//                for (HBGNode node : lin) {
-//                    Pair pair = new Pair(node.getId(), lastNode.getId());
-//                    if (happenBeforeGraph.getIncompatibleRelations(pair) != null) {
-//                        tempHBRelations.add(new ArrayList<>(happenBeforeGraph.getIncompatibleRelations(pair)));
-//                    } else {
-//                        tempHBRelations.add(new ArrayList<>());
-//                    }
-//                }
-//            }
-//        }
+        List<List<ImmutablePair<Integer, Integer>>> tempHBRelations = new ArrayList<>();
+        if (happenBeforeGraph.isRuleTableExist()) {
+            for (Linearization lin :newLins) {
+                HBGNode lastNode = lin.getLast();
+                List<ImmutablePair<Integer, Integer>> tempList = new ArrayList<>(this.tempHBRelations);
+                for (HBGNode node : lin) {
+                    ImmutablePair<Integer, Integer> pair = new ImmutablePair<>(node.getId(), lastNode.getId());
+                    if (happenBeforeGraph.getIncompatibleRelations(pair) != null) {
+                        tempList.addAll(happenBeforeGraph.getIncompatibleRelations(pair));
+                    }
+                    tempHBRelations.add(new ArrayList<>());
+                }
+            }
+        }
 
 
         List<SearchState> newStates = new ArrayList<>();
         for (int i = 0; i < newLins.size(); i++) {
             SearchState newState = new SearchState(newLins.get(i), (LinVisibility) visibility.clone());
-//            if (happenBeforeGraph.isRuleTableExist()) {
-//                for (Pair pair : tempHBRelations.get(i)) {
-//                    newState.addTempHBRelation(pair);
-//                }
-//            }
+            if (happenBeforeGraph.isRuleTableExist()) {
+                for (ImmutablePair<Integer, Integer> pair : tempHBRelations.get(i)) {
+                    newState.addTempHBRelation(pair);
+                }
+            }
             newStates.add(newState);
         }
 
@@ -166,23 +167,23 @@ public class SearchState implements Comparable<SearchState> {
         this.adtState = adtState;
     }
 
-    public List<Pair> extractHBRelation() {
-        List<Pair> hbs = new ArrayList<>();
+    public List<ImmutablePair<Integer, Integer>> extractHBRelation() {
+        List<ImmutablePair<Integer, Integer>> hbs = new ArrayList<>();
         for (int i = 1; i < linearization.size(); i++) {
             for (int j = 0; j < i; j++) {
                 if (linearization.get(j).getThreadId() != linearization.get(i).getThreadId()) {
-                    hbs.add(new Pair(linearization.get(j).getId(), linearization.get(i).getId()));
+                    hbs.add(new ImmutablePair<Integer, Integer>(linearization.get(j).getId(), linearization.get(i).getId()));
                 }
             }
         }
         return hbs;
     }
 
-    public void addTempHBRelation(Pair pair) {
+    public void addTempHBRelation(ImmutablePair<Integer, Integer> pair) {
         tempHBRelations.add(pair);
     }
 
-    public List<Pair> getTempHBRelations() {
+    public List<ImmutablePair<Integer, Integer>> getTempHBRelations() {
         return tempHBRelations;
     }
 

@@ -2,12 +2,13 @@ package util;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 public class PairOfPair {
-    private Pair pair1;
-    private Pair pair2;
+    private ImmutablePair<Integer, Integer> pair1;
+    private ImmutablePair<Integer, Integer> pair2;
 
-    public PairOfPair(Pair pair1, Pair pair2) {
+    public PairOfPair(ImmutablePair<Integer, Integer> pair1, ImmutablePair<Integer, Integer> pair2) {
         int hash1 = pair1.hashCode();
         int hash2 = pair2.hashCode();
         if (hash1 < hash2) {
@@ -17,14 +18,13 @@ public class PairOfPair {
             this.pair1 = pair2;
             this.pair2 = pair1;
         }
-
     }
 
-    public Pair getLeft() {
+    public ImmutablePair<Integer, Integer> getLeft() {
         return pair1;
     }
 
-    public Pair getRight() {
+    public ImmutablePair<Integer, Integer> getRight() {
         return pair2;
     }
 

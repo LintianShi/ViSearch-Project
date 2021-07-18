@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiThreadSearch {
-    private int threadNum;
+    private int threadNum = 6;
     private SearchConfiguration configuration;
     private HappenBeforeGraph happenBeforeGraph;
     private List<SearchThread> searchs = new ArrayList<>();
@@ -19,7 +19,7 @@ public class MultiThreadSearch {
     }
 
     public void startSearch(List<SearchState> startStates) {
-        threadNum = startStates.size();
+        //threadNum = startStates.size();
         System.out.println(threadNum);
         for (SearchState state : startStates) {
             SearchConfiguration conf = new SearchConfiguration(0, -1, -1, 10);
