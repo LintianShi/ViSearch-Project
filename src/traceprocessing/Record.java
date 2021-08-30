@@ -20,7 +20,7 @@ public class Record implements Comparable<Record> {
         }
         this.startTime = Long.parseLong(cols[0]);
         this.endTime = Long.parseLong(cols[1]);
-        this.operationName = "rwfz" + cols[2];
+        this.operationName = cols[2];
         this.retValue = cols[cols.length - 1];
         for (int i = 3; i < cols.length - 1; i++) {
             arguments.add(cols[i]);
@@ -56,10 +56,5 @@ public class Record implements Comparable<Record> {
         } else {
             return 0;
         }
-    }
-
-    @Override
-    public String toString() {
-        return Long.toString(startTime) + "," + Long.toString(endTime) + "," + operationName;
     }
 }

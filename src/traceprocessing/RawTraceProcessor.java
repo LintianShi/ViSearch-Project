@@ -2,7 +2,6 @@ package traceprocessing;
 
 import datatype.AbstractDataType;
 import history.*;
-import validation.OperationTypes;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -11,7 +10,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RedisProcessor {
+public class RawTraceProcessor {
     private List<List<Record>> rawTrace;
 
     public void load(String filepath) throws Exception {
@@ -97,7 +96,7 @@ public class RedisProcessor {
     }
 
     public static void main(String[] args) throws Exception {
-        RedisProcessor rp = new RedisProcessor();
+        RawTraceProcessor rp = new RawTraceProcessor();
         rp.load("trace");
 
     }

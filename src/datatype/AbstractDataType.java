@@ -7,6 +7,8 @@ import validation.OperationTypes;
 import java.lang.reflect.Method;
 
 public abstract class AbstractDataType {
+    protected OperationTypes operationTypes = null;
+
     public final String invoke(Invocation invocation) throws Exception {
         String methodName = invocation.getMethodName();
         Class clazz = this.getClass();
@@ -22,6 +24,8 @@ public abstract class AbstractDataType {
 
     public abstract boolean isRelated(Invocation src, Invocation dest);
 
+    public abstract boolean isReadCluster(Invocation invocation);
+
     public abstract void reset();
 
     public abstract void print();
@@ -31,4 +35,6 @@ public abstract class AbstractDataType {
     public abstract Invocation generateInvocation(Record record);
 
     public abstract AbstractDataType createInstance();
+
+    public abstract String getOperationType(String methodName);
 }

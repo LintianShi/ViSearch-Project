@@ -3,13 +3,12 @@ package test;
 import datatype.AbstractDataType;
 import datatype.RRpq;
 import history.HappenBeforeGraph;
-import traceprocessing.RedisProcessor;
+import traceprocessing.RawTraceProcessor;
 import validation.MinimalVisSearch;
 import validation.MultiThreadSearch;
 import validation.SearchConfiguration;
 import validation.SearchState;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TestMultiThreadCheck {
@@ -82,7 +81,7 @@ public class TestMultiThreadCheck {
         }
 
         public static void main(String[] args) throws Exception {
-            RedisProcessor rp = new RedisProcessor();
+            RawTraceProcessor rp = new RawTraceProcessor();
             rp.load("trace");
             HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RRpq()).generateHappenBeforeGraph();
 

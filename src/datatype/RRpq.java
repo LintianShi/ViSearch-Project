@@ -12,7 +12,6 @@ import java.util.Objects;
 public class RRpq extends AbstractDataType {
     private ArrayList<Element> data = new ArrayList<>();
     private HashMap<Integer, Element> map = new HashMap<>();
-    private static OperationTypes operationTypes = null;
 
     public AbstractDataType createInstance() {
         return new RRpq();
@@ -21,16 +20,55 @@ public class RRpq extends AbstractDataType {
     public String getOperationType(String methodName) {
         if (operationTypes == null) {
             operationTypes = new OperationTypes();
-            operationTypes.setOperationType("rwfzrem", "UPDATE");
-            operationTypes.setOperationType("rwfzadd", "UPDATE");
-            operationTypes.setOperationType("rwfzincrby", "UPDATE");
-            operationTypes.setOperationType("rwfzmax", "QUERY");
-            operationTypes.setOperationType("rwfzscore", "QUERY");
+            operationTypes.setOperationType("rem", "UPDATE");
+            operationTypes.setOperationType("add", "UPDATE");
+            operationTypes.setOperationType("incrby", "UPDATE");
+            operationTypes.setOperationType("max", "QUERY");
+            operationTypes.setOperationType("score", "QUERY");
             return operationTypes.getOperationType(methodName);
         } else {
             return operationTypes.getOperationType(methodName);
         }
+    }
 
+    public boolean isRelated(Invocation src, Invocation dest) {
+        if (src.getOperationType().equals("UPDATE")) {
+            return false;
+        } else if (src.getOperationType().equals("QUERY")) {
+            if (src.getId() == dest.getId()) {
+                return true;
+            }
+            if (src.getMethodName().equals("score")) {
+                Integer ele = (Integer) src.getArguments().get(0);
+                if (dest.getOperationType().equals("UPDATE") && dest.getArguments().get(0).equals(ele)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else if (src.getMethodName().equals("zmax")) {
+                if (src.getRetValue().equals("null")) {
+                    return false;
+                }
+                Integer ele = Integer.parseInt(src.getRetValue().split(" ")[0]);
+                if (dest.getOperationType().equals("UPDATE") && dest.getArguments().get(0).equals(ele)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    public boolean isReadCluster(Invocation invocation) {
+        if (invocation.getMethodName().equals("rwfzscore") || (invocation.getMethodName().equals("rwfzmax") && invocation.getRetValue().equals("null") )) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public Invocation generateInvocation(Record record) {
@@ -43,17 +81,17 @@ public class RRpq extends AbstractDataType {
         invocation.setMethodName(record.getOperationName());
         invocation.setOperationType(getOperationType(record.getOperationName()));
 
-        if (record.getOperationName().equals("rwfzadd")) {
+        if (record.getOperationName().equals("add")) {
             invocation.addArguments(Integer.parseInt(record.getArgument(0)));
             invocation.addArguments(Double.parseDouble(record.getArgument(1)));
-        } else if (record.getOperationName().equals("rwfzrem")) {
+        } else if (record.getOperationName().equals("rem")) {
             invocation.addArguments(Integer.parseInt(record.getArgument(0)));
-        } else if (record.getOperationName().equals("rwfzincrby")) {
+        } else if (record.getOperationName().equals("incrby")) {
             invocation.addArguments(Integer.parseInt(record.getArgument(0)));
             invocation.addArguments(Double.parseDouble(record.getArgument(1)));
-        } else if (record.getOperationName().equals("rwfzmax")) {
+        } else if (record.getOperationName().equals("max")) {
             //
-        } else if (record.getOperationName().equals("rwfzscore")) {
+        } else if (record.getOperationName().equals("score")) {
             invocation.addArguments(Integer.parseInt(record.getArgument(0)));
         } else {
             System.out.println("Unknown operation");
@@ -179,42 +217,7 @@ public class RRpq extends AbstractDataType {
         }
     }
 
-    public boolean isRelated(Invocation src, Invocation dest) {
-        if (src.getOperationType().equals("UPDATE")) {
-            return false;
-        } else if (src.getOperationType().equals("QUERY")) {
-            if (src.getId() == dest.getId()) {
-                return true;
-            }
-            if (src.getMethodName().equals("rwfzscore")) {
-                Integer ele = (Integer) src.getArguments().get(0);
-                if (dest.getOperationType().equals("UPDATE") && dest.getArguments().get(0).equals(ele)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else if (src.getMethodName().equals("rwfzmax")) {
-                if (src.getRetValue().equals("null")) {
-                    return false;
-                }
-                Integer ele = Integer.parseInt(src.getRetValue().split(" ")[0]);
-                //System.out.println(ele);
-//                if (dest.getOperationType().equals("UPDATE"))
-//                    System.out.println("dest:" + dest.getArguments().get(0));
-                if (dest.getOperationType().equals("UPDATE") && dest.getArguments().get(0).equals(ele)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } else {
-                return true;
-            }
-        } else {
-            return true;
-        }
-    }
-
-    public String rwfzadd(Invocation invocation) {
+    public String add(Invocation invocation) {
         Integer k = (Integer) invocation.getArguments().get(0);
         Double i = (Double) invocation.getArguments().get(1);
         add(k, i);
@@ -222,14 +225,14 @@ public class RRpq extends AbstractDataType {
         //return invocation.getMethodName() + ":" + Integer.toString(k) + ":" + v.toString();
     }
 
-    public String rwfzrem(Invocation invocation) {
+    public String rem(Invocation invocation) {
         Integer k = (Integer) invocation.getArguments().get(0);
         rem(k);
         return "null";
         //return invocation.getMethodName() + ":" + Integer.toString(k);
     }
 
-    public String rwfzincrby(Invocation invocation) {
+    public String incrby(Invocation invocation) {
         Integer k = (Integer) invocation.getArguments().get(0);
         Double i = (Double) invocation.getArguments().get(1);
         inc(k, i);
@@ -237,13 +240,13 @@ public class RRpq extends AbstractDataType {
         //return invocation.getMethodName() + ":" + Integer.toString(k) + ":" + i.toString();
     }
 
-    public String rwfzscore(Invocation invocation) {
+    public String score(Invocation invocation) {
         Integer k = (Integer) invocation.getArguments().get(0);
         return score(k);
         //return invocation.getMethodName();
     }
 
-    public String rwfzmax(Invocation invocation) {
+    public String max(Invocation invocation) {
         return max();
         //return invocation.getMethodName();
     }

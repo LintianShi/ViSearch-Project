@@ -2,16 +2,8 @@ package test;
 
 import datatype.*;
 import history.*;
-import org.apache.commons.lang3.tuple.Pair;
-import traceprocessing.RedisProcessor;
+import traceprocessing.RawTraceProcessor;
 import validation.*;
-import arbitration.LinVisibility;
-import arbitration.Linearization;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 public class TestMinimalRALinCheck {
     public static void minimalExtensionRaLinCheck(String output, HappenBeforeGraph happenBeforeGraph, AbstractDataType adt) {
@@ -91,7 +83,7 @@ public class TestMinimalRALinCheck {
     }
 
     public static void main(String[] args) throws Exception {
-        RedisProcessor rp = new RedisProcessor();
+        RawTraceProcessor rp = new RawTraceProcessor();
         rp.load("trace");
         HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RRpq()).generateHappenBeforeGraph();
         new HBGPreprocessor().preprocess(happenBeforeGraph, new RRpq());

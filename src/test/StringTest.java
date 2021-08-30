@@ -1,9 +1,0 @@
-package test;
-
-public class StringTest {
-    public static void main(String[] args) {
-        String s1 = "[rwfzadd:81940:47.3805, rwfzadd:64515:41.7541, rwfzadd:31841:98.6606, rwfzadd:156490:77.0507, rwfzadd:114762:53.8539, rwfzadd:128387:14.2077, rwfzadd:20012:80.9487, rwfzadd:194697:81.9384, rwfzadd:46891:66.0649, rwfzadd:192898:38.9412, rwfzadd:21697:91.3101, rwfzadd:138820:36.3189, rwfzadd:114762:53.2553, rwfzadd:30578:34.347, rwfzadd:9997:73.5322, rwfzadd:197683:49.4164, rwfzadd:88764:94.7042, rwfzadd:83953:54.8056, rwfzadd:167917:50.0995, rwfzadd:133889:94.2203, rwfzadd:51467:72.4193, rwfzadd:93437:47.1703, rwfzadd:114487:24.0377, rwfzadd:52928:31.7376, rwfzadd:112611:91.7491, rwfzadd:13288:40.3336, rwfzrem:114762, rwfzmax:31841:98.6606, rwfzmax:31841:98.6606, rwfzadd:199468:78.0704, rwfzincrby:64515:35.5221, rwfzrem:128387, rwfzadd:138647:39.1649, rwfzincrby:197683:-33.3413, rwfzadd:150534:53.6018, rwfzadd:150534:62.5056]";
-        String s2 = "[rwfzadd:81940:47.3805, rwfzadd:64515:41.7541, rwfzadd:31841:98.6606, rwfzadd:156490:77.0507, rwfzadd:114762:53.8539, rwfzadd:128387:14.2077, rwfzadd:20012:80.9487, rwfzadd:194697:81.9384, rwfzadd:46891:66.0649, rwfzadd:192898:38.9412, rwfzadd:21697:91.3101, rwfzadd:138820:36.3189, rwfzadd:114762:53.2553, rwfzadd:30578:34.347, rwfzadd:9997:73.5322, rwfzadd:197683:49.4164, rwfzadd:88764:94.7042, rwfzadd:83953:54.8056, rwfzadd:167917:50.0995, rwfzadd:133889:94.2203, rwfzadd:51467:72.4193, rwfzadd:93437:47.1703, rwfzadd:114487:24.0377, rwfzadd:52928:31.7376, rwfzadd:112611:91.7491, rwfzadd:13288:40.3336, rwfzrem:114762, rwfzmax:31841:98.6606, rwfzmax:31841:98.6606, rwfzadd:199468:78.0704, rwfzincrby:64515:35.5221, rwfzrem:128387, rwfzadd:138647:39.1649, rwfzincrby:197683:-33.3413, rwfzadd:150534:53.6018, rwfzadd:150534:62.5056]";
-        System.out.println(s1.equals(s2));
-    }
-}

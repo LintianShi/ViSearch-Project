@@ -118,8 +118,7 @@ public class HBGPreprocessor {
         List<PairOfPair> incompatibleRelations = new ArrayList<>();
 
         for (HBGNode node : happenBeforeGraph) {
-            if (node.getInvocation().getMethodName().equals("rwfzscore")
-            || (node.getInvocation().getMethodName().equals("rwfzmax") && !node.getInvocation().getRetValue().equals("null") )) {
+            if (adt.isReadCluster(node.getInvocation())) {
                 List<List<HBGNode>> relatedNodes = happenBeforeGraph.getRelatedOperation(node, adt);
                 System.out.println(node.toString());
 
@@ -127,7 +126,7 @@ public class HBGPreprocessor {
                 System.out.println("Sub graph size: " + subHBGraph.size());
 
                 SearchConfiguration configuration = new SearchConfiguration(0, -1, -1, 0);
-                configuration.setAdt(new RRpq());
+                configuration.setAdt(adt);
                 configuration.setFindAllAbstractExecution(true);
                 configuration.setEnablePrickOperation(false);
                 configuration.setVisibilityType(VisibilityType.COMPLETE);
