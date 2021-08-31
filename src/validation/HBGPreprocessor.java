@@ -118,8 +118,8 @@ public class HBGPreprocessor {
 
         for (HBGNode node : happenBeforeGraph) {
             if (adt.isReadCluster(node.getInvocation())) {
-                List<List<HBGNode>> relatedNodes = happenBeforeGraph.getRelatedOperation(node, adt);
                 System.out.println(node.toString());
+                List<List<HBGNode>> relatedNodes = adt.getRelatedOperations(node, happenBeforeGraph);
 
                 HappenBeforeGraph subHBGraph = new HappenBeforeGraph(relatedNodes);
                 System.out.println("Sub graph size: " + subHBGraph.size());

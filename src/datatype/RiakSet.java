@@ -21,7 +21,7 @@ public class RiakSet extends AbstractDataType {
         }
     }
 
-    public boolean isRelated(Invocation src, Invocation dest) {
+    protected boolean isRelated(Invocation src, Invocation dest) {
         if (src.getOperationType().equals("UPDATE")) {
             return false;
         } else if (src.getOperationType().equals("QUERY")) {
@@ -36,14 +36,6 @@ public class RiakSet extends AbstractDataType {
             }
         } else {
             return true;
-        }
-    }
-
-    public boolean isReadCluster(Invocation invocation) {
-        if (invocation.getMethodName().equals("contains")) {
-            return true;
-        } else {
-            return false;
         }
     }
 

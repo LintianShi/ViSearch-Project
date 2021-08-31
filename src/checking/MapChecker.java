@@ -1,19 +1,19 @@
 package checking;
 
+import datatype.RedisRpq;
 import datatype.RiakMap;
 import history.HappenBeforeGraph;
 import traceprocessing.RawTraceProcessor;
 import validation.HBGPreprocessor;
+import validation.SearchConfiguration;
 
 public class MapChecker {
     public static void main(String[] args) throws Exception {
-        RawTraceProcessor rp = new RawTraceProcessor();
-        rp.load("map_trace");
-        HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RiakMap()).generateHappenBeforeGraph();
-        new HBGPreprocessor().preprocess(happenBeforeGraph, new RiakMap());
-
-        //happenBeforeGraph.printStartNodes();
-
-        //TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RiakMap());
+        AdtChecker checker = new AdtChecker(new RiakMap());
+        SearchConfiguration configuration = new SearchConfiguration.Builder().
+                setAdt(new RiakMap()).
+                setEnablePrickOperation(true).
+                setEnableOutputSchedule(false).build();
+        checker.check("map_trace", configuration);
     }
 }

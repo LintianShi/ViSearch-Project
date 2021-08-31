@@ -1,10 +1,14 @@
 package datatype;
 
+import history.HBGNode;
+import history.HappenBeforeGraph;
 import history.Invocation;
 import traceprocessing.Record;
 import validation.OperationTypes;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractDataType {
     protected OperationTypes operationTypes = null;
@@ -14,17 +18,39 @@ public abstract class AbstractDataType {
         Class clazz = this.getClass();
         Method method = clazz.getDeclaredMethod(methodName, Invocation.class);
         method.setAccessible(true);
-//        System.out.println(invocation.getMethodName());
-//        System.out.println(invocation.getRetValue());
-//        for (int i = 0; i < invocation.getArguments().size(); i++) {
-//            System.out.println((String)invocation.getArguments().get(i));
-//        }
         return (String)method.invoke(this, invocation);
     }
 
-    public abstract boolean isRelated(Invocation src, Invocation dest);
+    public List<List<HBGNode>> getRelatedOperations(HBGNode node, HappenBeforeGraph happenBeforeGraph) {
+        List<List<HBGNode>> lists = new ArrayList<>();
+        for (HBGNode startNode : happenBeforeGraph.getStartNodes()) {
+            List<HBGNode> tempList = new ArrayList<>();
+            HBGNode temp = startNode;
+            while (temp.getPo() != null) {
+                if (this.isRelated(node.getInvocation(), temp.getInvocation())) {
+                    tempList.add(temp.clone());
+                }
+                if (temp.equals(node)) {
+                    break;
+                }
+                temp = temp.getPo();
+            }
+            if (tempList.size() > 0) {
+                lists.add(tempList);
+            }
+        }
+        return lists;
+    }
 
-    public abstract boolean isReadCluster(Invocation invocation);
+    protected abstract boolean isRelated(Invocation src, Invocation dest);
+
+    public boolean isReadCluster(Invocation invocation) {
+        if (invocation.getOperationType().equals("QUERY")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public abstract void reset();
 

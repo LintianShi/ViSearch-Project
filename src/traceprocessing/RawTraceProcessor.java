@@ -27,17 +27,19 @@ public class RawTraceProcessor {
         }
 
         rawTrace = new ArrayList<>();
-        for (int i = 0; i < fileList.size(); i++) {
-            ArrayList<Record> thread = new ArrayList<>();
-            BufferedReader br = new BufferedReader(new FileReader(fileList.get(i)));
-            String temp;
-            while ((temp = br.readLine()) != null) {
-                if (temp.length() > 10) {
-                    Record record = new Record(temp);
-                    thread.add(record);
+        for (String filename : fileList) {
+            if (filename.endsWith(".trc")) {
+                ArrayList<Record> thread = new ArrayList<>();
+                BufferedReader br = new BufferedReader(new FileReader(filename));
+                String temp;
+                while ((temp = br.readLine()) != null) {
+                    if (temp.length() > 10) {
+                        Record record = new Record(temp);
+                        thread.add(record);
+                    }
                 }
+                rawTrace.add(thread);
             }
-            rawTrace.add(thread);
         }
     }
 

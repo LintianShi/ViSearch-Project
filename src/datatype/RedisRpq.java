@@ -30,7 +30,7 @@ public class RedisRpq extends AbstractDataType {
         }
     }
 
-    public boolean isRelated(Invocation src, Invocation dest) {
+    protected boolean isRelated(Invocation src, Invocation dest) {
         if (src.getOperationType().equals("UPDATE")) {
             return false;
         } else if (src.getOperationType().equals("QUERY")) {
@@ -44,7 +44,7 @@ public class RedisRpq extends AbstractDataType {
                 } else {
                     return false;
                 }
-            } else if (src.getMethodName().equals("zmax")) {
+            } else if (src.getMethodName().equals("max")) {
                 if (src.getRetValue().equals("null")) {
                     return false;
                 }
@@ -59,14 +59,6 @@ public class RedisRpq extends AbstractDataType {
             }
         } else {
             return true;
-        }
-    }
-
-    public boolean isReadCluster(Invocation invocation) {
-        if (invocation.getMethodName().equals("rwfzscore") || (invocation.getMethodName().equals("rwfzmax") && invocation.getRetValue().equals("null") )) {
-            return true;
-        } else {
-            return false;
         }
     }
 

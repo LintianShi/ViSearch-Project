@@ -75,6 +75,10 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
         return nodes.get(id);
     }
 
+    public List<HBGNode> getStartNodes() {
+        return startNodes;
+    }
+
     public int transferPairToID(List<SubProgram> subPrograms, Pair<Integer, Integer> pair) {
         int id = 0;
         for (int i = 0; i < pair.getLeft(); i++) {
@@ -101,27 +105,6 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
             }
         }
         return list;
-    }
-
-    public List<List<HBGNode>> getRelatedOperation(HBGNode node, AbstractDataType adt) {
-        List<List<HBGNode>> lists = new ArrayList<>();
-        for (HBGNode startNode : startNodes) {
-            List<HBGNode> tempList = new ArrayList<>();
-            HBGNode temp = startNode;
-            //System.out.println(temp.getPo());
-            while (temp.getPo() != null) {
-                //System.out.println("!");
-                if (adt.isRelated(node.getInvocation(), temp.getInvocation())) {
-                    //System.out.println("related");
-                    tempList.add(temp.clone());
-                }
-                temp = temp.getPo();
-            }
-            if (tempList.size() > 0) {
-                lists.add(tempList);
-            }
-        }
-        return lists;
     }
 
     public void setRuleTable(Multimap<ImmutablePair<Integer, Integer>, ImmutablePair<Integer, Integer>> ruleTable) {

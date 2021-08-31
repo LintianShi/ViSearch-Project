@@ -16,7 +16,8 @@ public class Record implements Comparable<Record> {
     public Record(String line) throws Exception {
         String[] cols = line.split(",");
         if (cols.length < 4) {
-            throw new Exception();
+            System.out.println(line);
+            throw new Exception(line);
         }
         this.startTime = Long.parseLong(cols[0]);
         this.endTime = Long.parseLong(cols[1]);

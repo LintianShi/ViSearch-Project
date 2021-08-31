@@ -68,6 +68,6 @@ public class AdtChecker {
                                                     setEnablePrickOperation(true).
                                                     setEnableOutputSchedule(true).build();
         checker.check("set_trace/Set_default_3_3_300_1", configuration);
-        checker.readResult("set_trace/Set_default_3_3_300_1/result.obj");
+        //checker.readResult("set_trace/Set_default_3_3_300_1/result.obj");
     }
 }
