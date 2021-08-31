@@ -2,12 +2,13 @@ package arbitration;
 
 import history.HBGNode;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-public class LinVisibility implements Iterable<HBGNode> {
+public class LinVisibility implements Serializable, Iterable<HBGNode> {
     private HashMap<HBGNode, Set<HBGNode>> visibility = new HashMap<>();
 
     public void setVisibility(HashMap<HBGNode, Set<HBGNode>> visibility) {

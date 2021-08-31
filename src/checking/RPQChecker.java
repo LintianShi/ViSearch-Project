@@ -1,9 +1,7 @@
 package checking;
 
 import datatype.RedisRpq;
-import datatype.RiakSet;
 import history.HappenBeforeGraph;
-import test.TestMinimalRALinCheck;
 import traceprocessing.RawTraceProcessor;
 import validation.HBGPreprocessor;
 
@@ -16,6 +14,6 @@ public class RPQChecker {
 
         //happenBeforeGraph.printStartNodes();
 
-        TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RedisRpq());
+        //TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RedisRpq());
     }
 }

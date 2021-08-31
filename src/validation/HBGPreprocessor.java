@@ -124,13 +124,14 @@ public class HBGPreprocessor {
                 HappenBeforeGraph subHBGraph = new HappenBeforeGraph(relatedNodes);
                 System.out.println("Sub graph size: " + subHBGraph.size());
 
-                SearchConfiguration configuration = new SearchConfiguration(0, -1, -1, 0);
-                configuration.setAdt(adt);
-                configuration.setFindAllAbstractExecution(true);
-                configuration.setEnablePrickOperation(false);
-                configuration.setVisibilityType(VisibilityType.COMPLETE);
-                configuration.setEnableOutputSchedule(false);
-                configuration.setEnableIncompatibleRelation(false);
+                SearchConfiguration configuration = new SearchConfiguration.Builder()
+                                                            .setAdt(adt)
+                                                            .setFindAllAbstractExecution(true)
+                                                            .setEnablePrickOperation(false)
+                                                            .setVisibilityType(VisibilityType.COMPLETE)
+                                                            .setEnableOutputSchedule(false)
+                                                            .setEnableIncompatibleRelation(false)
+                                                            .build();
                 MinimalVisSearch subSearch = new MinimalVisSearch(configuration);
                 subSearch.init(subHBGraph);
                 subSearch.checkConsistency();

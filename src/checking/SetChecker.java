@@ -2,7 +2,6 @@ package checking;
 
 import datatype.RiakSet;
 import history.HappenBeforeGraph;
-import test.TestMinimalRALinCheck;
 import traceprocessing.RawTraceProcessor;
 import validation.HBGPreprocessor;
 
@@ -15,6 +14,6 @@ public class SetChecker {
 
         //happenBeforeGraph.printStartNodes();
 
-        TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RiakSet());
+        //TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RiakSet());
     }
 }

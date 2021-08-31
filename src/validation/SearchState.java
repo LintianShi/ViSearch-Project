@@ -8,21 +8,22 @@ import arbitration.LinVisibility;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import util.Pair;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class SearchState implements Comparable<SearchState> {
-    public static HappenBeforeGraph happenBeforeGraph;
+public class SearchState implements Serializable, Comparable<SearchState> {
+    public static transient HappenBeforeGraph happenBeforeGraph;
     private Linearization linearization;
     private LinVisibility visibility;
-    private ManualRecurse manualRecurse = null;
-    private Set<HBGNode> visibleNodes = null;
-    private List<HBGNode> candidateNodes = null;
-    private int adtState = 0;
-    private VisibilityType visibilityType;
-    private List<ImmutablePair<Integer, Integer>> tempHBRelations = new ArrayList<>();
+    private transient ManualRecurse manualRecurse = null;
+    private transient Set<HBGNode> visibleNodes = null;
+    private transient List<HBGNode> candidateNodes = null;
+    private transient int adtState = 0;
+    private transient VisibilityType visibilityType;
+    private transient List<ImmutablePair<Integer, Integer>> tempHBRelations = new ArrayList<>();
 
     public SearchState() {
         this.linearization = new Linearization();
@@ -202,7 +203,7 @@ public class SearchState implements Comparable<SearchState> {
     }
 
     public String toString() {
-        return Integer.toString(adtState) + ":" + linearization.toString();// + " | " + visibility.toString();
+        return Integer.toString(adtState) + ":" + linearization.toString() + " | " + visibility.toString();
     }
 
 }

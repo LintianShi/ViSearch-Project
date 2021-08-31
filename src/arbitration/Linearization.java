@@ -2,9 +2,10 @@ package arbitration;
 
 import history.HBGNode;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Linearization implements Iterable<HBGNode> {
+public class Linearization implements Serializable, Iterable<HBGNode> {
     private List<HBGNode> lin = new ArrayList<>();
 
     public Linearization() {

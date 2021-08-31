@@ -3,13 +3,14 @@ package history;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-public class Invocation {
+public class Invocation implements Serializable {
     @JSONField(name = "METHOD NAME", ordinal = 1)
     private String methodName;
     @JSONField(name = "ARGUMENTS", ordinal = 2)
@@ -17,12 +18,12 @@ public class Invocation {
     @JSONField(name = "RETVALUE", ordinal = 3)
     private String retValue;
 
-    private int id;
-    private int threadId;
+    private transient int id;
+    private transient int threadId;
     @JSONField(serialize=false)
-    private Pair<Integer, Integer> pairID;
+    private transient Pair<Integer, Integer> pairID;
     @JSONField(serialize=false)
-    private String operationType = "UPDATE";
+    private transient String operationType = "UPDATE";
 
     public Invocation() {
         ;

@@ -13,12 +13,12 @@ import java.util.List;
 
 public class TestMultiThreadCheck {
         public static void minimalExtensionRaLinCheck(String output, HappenBeforeGraph happenBeforeGraph, AbstractDataType adt) {
-        SearchConfiguration configuration1 = new SearchConfiguration(1, -1, 50, 10);
-        configuration1.setAdt(adt);
-        MinimalVisSearch vfs = new MinimalVisSearch(configuration1);
-        vfs.init(happenBeforeGraph);
-        vfs.checkConsistency();
-        List<SearchState> states = vfs.getAllSearchState();
+//        SearchConfiguration configuration1 = new SearchConfiguration(1, -1, 50, 10);
+//        configuration1.setAdt(adt);
+//        MinimalVisSearch vfs = new MinimalVisSearch(configuration1);
+//        vfs.init(happenBeforeGraph);
+//        vfs.checkConsistency();
+//        List<SearchState> states = vfs.getAllSearchState();
 
 //        int i = 0;
 //        for (SearchState state : states) {
@@ -47,10 +47,10 @@ public class TestMultiThreadCheck {
 
 
 
-        SearchConfiguration configuration2 = new SearchConfiguration(0, -1, -1, -10);
-        configuration2.setAdt(adt);
-        MultiThreadSearch multiThreadSearch = new MultiThreadSearch(happenBeforeGraph, configuration2);
-        multiThreadSearch.startSearch(states);
+//        SearchConfiguration configuration2 = new SearchConfiguration(0, -1, -1, -10);
+//        configuration2.setAdt(adt);
+//        MultiThreadSearch multiThreadSearch = new MultiThreadSearch(happenBeforeGraph, configuration2);
+//        multiThreadSearch.startSearch(states);
 
 //        for (SearchState s : states) {
 //            System.out.println(s.toString());
@@ -85,6 +85,6 @@ public class TestMultiThreadCheck {
             rp.load("trace");
             HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RedisRpq()).generateHappenBeforeGraph();
 
-            test.TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RedisRpq());
+            //test.TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RedisRpq());
         }
 }

@@ -1,14 +1,15 @@
 package history;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class HBGNode {
+public class HBGNode implements Serializable {
     private Invocation invocation;
-    private Set<HBGNode> nexts = new HashSet<>();
-    private Set<HBGNode> prevs = new HashSet<>();
-    private HBGNode po;
-    private int threshold = 0;
-    private Set<HBGNode> allPrevs = null;
+    private transient Set<HBGNode> nexts = new HashSet<>();
+    private transient Set<HBGNode> prevs = new HashSet<>();
+    private transient HBGNode po;
+    private transient int threshold = 0;
+    private transient Set<HBGNode> allPrevs = null;
 
     public HBGNode() {
         ;
