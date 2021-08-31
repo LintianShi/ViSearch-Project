@@ -4,33 +4,46 @@ import arbitration.VisibilityType;
 import datatype.AbstractDataType;
 
 public class SearchConfiguration implements Cloneable {
-    private int searchMode; // 0: dfs, 1: bfs, 2: h*
-    private int searchLimit;
-    private int queueLimit;
-    private int visibilityLimit; // -1: unlimited, 0:size of lin
+    private int searchMode = 0; // 0: dfs, 1: bfs, 2: h*
+    private int searchLimit = -1;
+    private int queueLimit = -1;
+    private int visibilityLimit = 0; // -1: unlimited, 0:size of lin
     private boolean findAllAbstractExecution = false;
     private boolean enablePrickOperation = true;
     private boolean enableOutputSchedule = true;
     private boolean enableIncompatibleRelation = true;
     private VisibilityType visibilityType = VisibilityType.CAUSAL;
-    private AbstractDataType adt;
+    private AbstractDataType adt = null;
 
-    public SearchConfiguration() {
-        this.searchMode = 0;
-        this.searchLimit = -1;
-        this.queueLimit = -1;
+//    public SearchConfiguration() {
+//        this.searchMode = 0;
+//        this.searchLimit = -1;
+//        this.queueLimit = -1;
+//    }
+    
+    public SearchConfiguration(Builder builder) {
+        this.searchMode = builder.searchMode;
+        this.searchLimit = builder.searchLimit;
+        this.queueLimit = builder.queueLimit;
+        this.visibilityLimit = builder.visibilityLimit;
+        this.findAllAbstractExecution = builder.findAllAbstractExecution;
+        this.enablePrickOperation = builder.enablePrickOperation;
+        this.enableOutputSchedule = builder.enableOutputSchedule;
+        this.enableIncompatibleRelation = builder.enableIncompatibleRelation;
+        this.visibilityType = builder.visibilityType;
+        this.adt = builder.adt;
     }
 
-    public SearchConfiguration(int searchMode, int searchLimit, int queueLimit, int visibilityLimit) {
-        if (searchMode >= 0 && searchMode <= 2) {
-            this.searchMode = searchMode;
-        } else {
-            this.searchMode = 0;
-        }
-        this.searchLimit = searchLimit;
-        this.queueLimit = queueLimit;
-        this.visibilityLimit = visibilityLimit;
-    }
+//    public SearchConfiguration(int searchMode, int searchLimit, int queueLimit, int visibilityLimit) {
+//        if (searchMode >= 0 && searchMode <= 2) {
+//            this.searchMode = searchMode;
+//        } else {
+//            this.searchMode = 0;
+//        }
+//        this.searchLimit = searchLimit;
+//        this.queueLimit = queueLimit;
+//        this.visibilityLimit = visibilityLimit;
+//    }
 
     public int getSearchMode() {
         return searchMode;
@@ -98,13 +111,96 @@ public class SearchConfiguration implements Cloneable {
 
     @Override
     protected Object clone() {
-        SearchConfiguration configuration =
-                new SearchConfiguration(this.searchMode, this.searchLimit, this.queueLimit, this.visibilityLimit);
-        configuration.setAdt(adt.createInstance());
-        configuration.setEnablePrickOperation(this.enablePrickOperation);
-        configuration.setFindAllAbstractExecution(this.findAllAbstractExecution);
-        configuration.setVisibilityType(this.visibilityType);
-        configuration.setEnableOutputSchedule(this.enableOutputSchedule);
-        return configuration;
+//                new SearchConfiguration(this.searchMode, this.searchLimit, this.queueLimit, this.visibilityLimit);
+//        configuration.setAdt(adt.createInstance());
+//        configuration.setEnablePrickOperation(this.enablePrickOperation);
+//        configuration.setFindAllAbstractExecution(this.findAllAbstractExecution);
+//        configuration.setVisibilityType(this.visibilityType);
+//        configuration.setEnableOutputSchedule(this.enableOutputSchedule);
+        return new SearchConfiguration.Builder(this).build();
+    }
+
+    public static class Builder {
+        private int searchMode = 0; // 0: dfs, 1: bfs, 2: h*
+        private int searchLimit = -1;
+        private int queueLimit = -1;
+        private int visibilityLimit = 0; // -1: unlimited, 0:size of lin
+        private boolean findAllAbstractExecution = false;
+        private boolean enablePrickOperation = true;
+        private boolean enableOutputSchedule = true;
+        private boolean enableIncompatibleRelation = true;
+        private VisibilityType visibilityType = VisibilityType.CAUSAL;
+        private AbstractDataType adt = null;
+
+        public Builder() {
+            ;
+        }
+
+        public Builder(SearchConfiguration configuration) {
+            this.searchMode = configuration.searchMode;
+            this.searchLimit = configuration.searchLimit;
+            this.queueLimit = configuration.queueLimit;
+            this.visibilityLimit = configuration.visibilityLimit;
+            this.findAllAbstractExecution = configuration.findAllAbstractExecution;
+            this.enablePrickOperation = configuration.enablePrickOperation;
+            this.enableOutputSchedule = configuration.enableOutputSchedule;
+            this.enableIncompatibleRelation = configuration.enableIncompatibleRelation;
+            this.visibilityType = configuration.visibilityType;
+            this.adt = configuration.adt.createInstance();
+        }
+
+        public Builder setSearchMode(int searchMode) {
+            this.searchMode = searchMode;
+            return this;
+        }
+
+        public Builder setSearchLimit(int searchLimit) {
+            this.searchLimit = searchLimit;
+            return this;
+        }
+
+        public Builder setQueueLimit(int queueLimit) {
+            this.queueLimit = queueLimit;
+            return this;
+        }
+
+        public Builder setVisibilityLimit(int visibilityLimit) {
+            this.visibilityLimit = visibilityLimit;
+            return this;
+        }
+
+        public Builder setFindAllAbstractExecution(boolean findAllAbstractExecution) {
+            this.findAllAbstractExecution = findAllAbstractExecution;
+            return this;
+        }
+
+        public Builder setEnablePrickOperation(boolean enablePrickOperation) {
+            this.enablePrickOperation = enablePrickOperation;
+            return this;
+        }
+
+        public Builder setEnableOutputSchedule(boolean enableOutputSchedule) {
+            this.enableOutputSchedule = enableOutputSchedule;
+            return this;
+        }
+
+        public Builder setEnableIncompatibleRelation(boolean enableIncompatibleRelation) {
+            this.enableIncompatibleRelation = enableIncompatibleRelation;
+            return this;
+        }
+
+        public Builder setVisibilityType(VisibilityType visibilityType) {
+            this.visibilityType = visibilityType;
+            return this;
+        }
+
+        public Builder setAdt(AbstractDataType adt) {
+            this.adt = adt;
+            return this;
+        }
+
+        public SearchConfiguration build() {
+            return new SearchConfiguration(this);
+        }
     }
 }
