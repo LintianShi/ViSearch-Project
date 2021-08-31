@@ -4,17 +4,16 @@ import history.Invocation;
 import traceprocessing.Record;
 import validation.OperationTypes;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class RRpq extends AbstractDataType {
+public class RedisRpq extends AbstractDataType {
     private ArrayList<Element> data = new ArrayList<>();
     private HashMap<Integer, Element> map = new HashMap<>();
 
     public AbstractDataType createInstance() {
-        return new RRpq();
+        return new RedisRpq();
     }
 
     public String getOperationType(String methodName) {

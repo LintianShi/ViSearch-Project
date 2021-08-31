@@ -1,14 +1,9 @@
 package validation;
 
-import arbitration.VisibilityType;
 import datatype.AbstractDataType;
-import datatype.RRpq;
 import history.HBGNode;
 import history.HappenBeforeGraph;
-import arbitration.Linearization;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import arbitration.LinVisibility;
-import util.Pair;
 
 import java.util.*;
 

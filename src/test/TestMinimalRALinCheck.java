@@ -85,12 +85,12 @@ public class TestMinimalRALinCheck {
     public static void main(String[] args) throws Exception {
         RawTraceProcessor rp = new RawTraceProcessor();
         rp.load("trace");
-        HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RRpq()).generateHappenBeforeGraph();
-        new HBGPreprocessor().preprocess(happenBeforeGraph, new RRpq());
+        HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RedisRpq()).generateHappenBeforeGraph();
+        new HBGPreprocessor().preprocess(happenBeforeGraph, new RedisRpq());
 
         //happenBeforeGraph.printStartNodes();
 
-        TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RRpq());
+        TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RedisRpq());
         // two clients 240/520/60/500/60
         // 25 clients 160/150/160
         // 35 clients 140/120/150

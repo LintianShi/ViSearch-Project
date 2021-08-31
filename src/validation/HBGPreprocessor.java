@@ -3,7 +3,6 @@ package validation;
 import arbitration.VisibilityType;
 import com.google.common.collect.Multimap;
 import datatype.AbstractDataType;
-import datatype.RRpq;
 import history.HBGNode;
 import history.HappenBeforeGraph;
 import org.apache.commons.lang3.tuple.ImmutablePair;

@@ -1,6 +1,5 @@
 package checking;
 
-import datatype.RRpq;
 import datatype.RiakSet;
 import history.HappenBeforeGraph;
 import test.TestMinimalRALinCheck;

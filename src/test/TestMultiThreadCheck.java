@@ -1,7 +1,7 @@
 package test;
 
 import datatype.AbstractDataType;
-import datatype.RRpq;
+import datatype.RedisRpq;
 import history.HappenBeforeGraph;
 import traceprocessing.RawTraceProcessor;
 import validation.MinimalVisSearch;
@@ -83,8 +83,8 @@ public class TestMultiThreadCheck {
         public static void main(String[] args) throws Exception {
             RawTraceProcessor rp = new RawTraceProcessor();
             rp.load("trace");
-            HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RRpq()).generateHappenBeforeGraph();
+            HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RedisRpq()).generateHappenBeforeGraph();
 
-            test.TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RRpq());
+            test.TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RedisRpq());
         }
 }
