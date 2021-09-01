@@ -140,19 +140,9 @@ public class MinimalVisSearch {
                 System.out.println(lastOperation.toString() + " + " + searchState.getLinearization().size() + "/" + happenBeforeGraph.size());
             }
         }
-
-//        System.out.println(retTrace);
-//        System.out.println(excuteTrace);
-//        System.out.println();
         if (excuteTrace.equals(retTrace)) {
-//            System.out.println(retTrace);
-//            System.out.println(excuteTrace);
-//            System.out.println();
             return true;
         } else {
-//            System.out.println(retTrace);
-//            System.out.println(excuteTrace);
-//            System.out.println();
             return false;
         }
     }

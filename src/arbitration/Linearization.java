@@ -1,6 +1,7 @@
 package arbitration;
 
 import history.HBGNode;
+import history.HappenBeforeGraph;
 
 import java.io.Serializable;
 import java.util.*;
@@ -16,10 +17,6 @@ public class Linearization implements Serializable, Iterable<HBGNode> {
         for (HBGNode node : stack) {
             lin.add(node);
         }
-    }
-
-    public List<HBGNode> getLin() {
-        return lin;
     }
 
     public void add(HBGNode node) {
@@ -42,10 +39,6 @@ public class Linearization implements Serializable, Iterable<HBGNode> {
 
     public boolean contains(HBGNode node) {
         return lin.contains(node);
-    }
-
-    public void removeLast() {
-        lin.remove(lin.size() - 1);
     }
 
     public HBGNode getLast() {
@@ -85,11 +78,11 @@ public class Linearization implements Serializable, Iterable<HBGNode> {
         return null;
     }
 
-    public Set<HBGNode> getAdjacencyNodes() {
+    public Set<HBGNode> getAdjacencyNodes(HappenBeforeGraph happenBeforeGraph) {
         Set<HBGNode> adjacencyNodes = new HashSet<>();
         Set<HBGNode> expansion = new HashSet<>();
         for (HBGNode node : lin) {
-            for (HBGNode next : node.getNexts()) {
+            for (HBGNode next :happenBeforeGraph.getNexts(node)) {
                 if (!lin.contains(next)) {
                     expansion.add(next);
                 }
@@ -97,7 +90,7 @@ public class Linearization implements Serializable, Iterable<HBGNode> {
         }
         for (HBGNode node : expansion) {
             boolean flag = true;
-            for (HBGNode prev : node.getPrevs()) {
+            for (HBGNode prev : happenBeforeGraph.getPrevs(node)) {
                 if (!lin.contains(prev)) {    //节点所有的前驱必须都已经被包含在全序里
                     flag = false;
                     break;

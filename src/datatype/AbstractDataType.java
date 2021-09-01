@@ -26,14 +26,14 @@ public abstract class AbstractDataType {
         for (HBGNode startNode : happenBeforeGraph.getStartNodes()) {
             List<HBGNode> tempList = new ArrayList<>();
             HBGNode temp = startNode;
-            while (temp.getPo() != null) {
+            while (happenBeforeGraph.getPo(temp) != null) {
                 if (this.isRelated(node.getInvocation(), temp.getInvocation())) {
                     tempList.add(temp.clone());
                 }
                 if (temp.equals(node)) {
                     break;
                 }
-                temp = temp.getPo();
+                temp = happenBeforeGraph.getPo(temp);
             }
             if (tempList.size() > 0) {
                 lists.add(tempList);

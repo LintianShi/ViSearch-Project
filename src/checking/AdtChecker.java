@@ -22,12 +22,19 @@ public class AdtChecker {
         this.adt = adt;
     }
 
-    public void check(String input, SearchConfiguration configuration) {
+    public void check(String input, SearchConfiguration configuration, boolean enablePreprocess) {
         HappenBeforeGraph happenBeforeGraph = load(input);
+        if (enablePreprocess) {
+            preprocess(happenBeforeGraph);
+        }
         MinimalVisSearch vfs = new MinimalVisSearch(configuration);
         vfs.init(happenBeforeGraph);
         vfs.checkConsistency();
         outputResult(input + "/result.obj", vfs.getResults());
+    }
+
+    protected void preprocess(HappenBeforeGraph happenBeforeGraph) {
+        new HBGPreprocessor().preprocess(happenBeforeGraph, adt);
     }
 
     protected HappenBeforeGraph load(String filename) {
@@ -38,7 +45,6 @@ public class AdtChecker {
             e.printStackTrace();
         }
         HappenBeforeGraph happenBeforeGraph = rp.generateProgram(adt).generateHappenBeforeGraph();
-        new HBGPreprocessor().preprocess(happenBeforeGraph, adt);
         return happenBeforeGraph;
     }
 
@@ -67,7 +73,7 @@ public class AdtChecker {
                                                     setAdt(new RiakSet()).
                                                     setEnablePrickOperation(true).
                                                     setEnableOutputSchedule(true).build();
-        checker.check("set_trace/Set_default_3_3_300_1", configuration);
+        checker.check("set_trace/Set_default_3_3_300_1", configuration, true);
         //checker.readResult("set_trace/Set_default_3_3_300_1/result.obj");
     }
 }

@@ -14,6 +14,6 @@ public class RPQChecker {
                 setAdt(new RedisRpq()).
                 setEnablePrickOperation(true).
                 setEnableOutputSchedule(true).build();
-        checker.check("rpq_trace/RPQ_default_3_1_300_1", configuration);
+        checker.check("rpq_trace/RPQ_default_3_1_300_1", configuration, true);
     }
 }

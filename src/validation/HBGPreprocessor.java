@@ -97,10 +97,8 @@ public class HBGPreprocessor {
 
     private void addHBRelations(HappenBeforeGraph happenBeforeGraph, List<ImmutablePair<Integer, Integer>> hbs) {
         for (ImmutablePair<Integer, Integer> hb : hbs) {
-            HBGNode prev = happenBeforeGraph.get(hb.getLeft());
-            HBGNode next = happenBeforeGraph.get(hb.getRight());
-            prev.addNextNode(next);
-            next.addPrevNode(prev);
+            happenBeforeGraph.addPrevNode(hb.getRight(), hb.getLeft());
+            happenBeforeGraph.addNextNode(hb.getLeft(), hb.getRight());
         }
     }
 

@@ -29,7 +29,7 @@ public class RiakMap extends AbstractDataType {
         for (HBGNode startNode : happenBeforeGraph.getStartNodes()) {
             List<HBGNode> tempList = new ArrayList<>();
             HBGNode temp = startNode;
-            while (temp.getPo() != null) {
+            while (happenBeforeGraph.getPo(temp) != null) {
                 if (this.isRelated(node.getInvocation(), temp.getInvocation())) {
                     if (node.getInvocation().getMethodName().equals("containsValue")) {
                         keys.add((Integer) temp.getInvocation().getArguments().get(0));
@@ -37,7 +37,7 @@ public class RiakMap extends AbstractDataType {
                         tempList.add(temp.clone());
                     }
                 }
-                temp = temp.getPo();
+                temp = happenBeforeGraph.getPo(temp);
             }
             if (tempList.size() > 0) {
                 lists.add(tempList);
@@ -49,11 +49,11 @@ public class RiakMap extends AbstractDataType {
         for (HBGNode startNode : happenBeforeGraph.getStartNodes()) {
             List<HBGNode> tempList = new ArrayList<>();
             HBGNode temp = startNode;
-            while (temp.getPo() != null) {
+            while (happenBeforeGraph.getPo(temp) != null) {
                 if (isRelated(node.getInvocation(), temp.getInvocation(), keys)) {
                     tempList.add(temp.clone());
                 }
-                temp = temp.getPo();
+                temp = happenBeforeGraph.getPo(temp);
             }
             if (tempList.size() > 0) {
                 lists.add(tempList);

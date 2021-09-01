@@ -14,6 +14,6 @@ public class MapChecker {
                 setAdt(new RiakMap()).
                 setEnablePrickOperation(true).
                 setEnableOutputSchedule(false).build();
-        checker.check("map_trace", configuration);
+        checker.check("map_trace", configuration, true);
     }
 }

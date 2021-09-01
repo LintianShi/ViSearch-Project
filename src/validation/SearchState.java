@@ -49,7 +49,7 @@ public class SearchState implements Serializable, Comparable<SearchState> {
         if (linearization.size() == 0) {
             adjacencyNodes = happenBeforeGraph.getNodesWithoutPrev();
         } else {
-            adjacencyNodes = linearization.getAdjacencyNodes();
+            adjacencyNodes = linearization.getAdjacencyNodes(happenBeforeGraph);
             for (HBGNode node : happenBeforeGraph.getNodesWithoutPrev()) {
                 if (!linearization.contains(node)) {   //没有前驱的节点
                     adjacencyNodes.add(node);
@@ -110,7 +110,7 @@ public class SearchState implements Serializable, Comparable<SearchState> {
         Set<HBGNode> visibleNodes = new HashSet<>();
         if (visibilityType == VisibilityType.CAUSAL) {
             HBGNode node = linearization.get(linearization.size() - 1);
-            Set<HBGNode> prevs = node.getAllPrevs();
+            Set<HBGNode> prevs = happenBeforeGraph.getAllPrevs(node);
             for (HBGNode prev : prevs) {
                 visibleNodes.addAll(visibility.getNodeVisibility(prev));
             }
@@ -123,7 +123,7 @@ public class SearchState implements Serializable, Comparable<SearchState> {
             //System.out.println("complete");
         } else if (visibilityType == VisibilityType.BASIC) {
             HBGNode node = linearization.get(linearization.size() - 1);
-            Set<HBGNode> prevs = node.getAllPrevs();
+            Set<HBGNode> prevs = happenBeforeGraph.getAllPrevs(node);
             visibleNodes.addAll(prevs);
             visibleNodes.add(node);
         } else if (visibilityType == VisibilityType.WEAK) {
