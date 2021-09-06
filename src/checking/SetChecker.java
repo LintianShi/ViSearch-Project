@@ -1,9 +1,6 @@
 package checking;
 
 import datatype.RiakSet;
-import history.HappenBeforeGraph;
-import traceprocessing.RawTraceProcessor;
-import validation.HBGPreprocessor;
 import validation.SearchConfiguration;
 
 public class SetChecker {
@@ -12,9 +9,13 @@ public class SetChecker {
         SearchConfiguration configuration = new SearchConfiguration.Builder()
                 .setAdt(new RiakSet())
                 .setEnableIncompatibleRelation(false)
-                .setEnablePrickOperation(true)
-                .setEnableOutputSchedule(true).build();
-        checker.check("set_trace/Set_default_3_3_300_1", configuration, true);
-        checker.readResult("set_trace/Set_default_3_3_300_1/result.obj");
+                .setEnablePrickOperation(false)
+                .setEnableOutputSchedule(true)
+                .build();
+//        checker.normalCheck("set_trace/Set_default_3_3_300_1", configuration, true);
+//        checker.readResult("set_trace/Set_default_3_3_300_1/result.obj");
+        String filename = "set_trace/Set_default_3_3_100_300_1";
+        checker.multiThreadCheck(filename, configuration, true);
+        checker.readResult(filename + "/result.obj");
     }
 }

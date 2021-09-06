@@ -4,10 +4,7 @@ import datatype.AbstractDataType;
 import datatype.RiakSet;
 import history.HappenBeforeGraph;
 import traceprocessing.RawTraceProcessor;
-import validation.HBGPreprocessor;
-import validation.MinimalVisSearch;
-import validation.SearchConfiguration;
-import validation.SearchState;
+import validation.*;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,7 +19,7 @@ public class AdtChecker {
         this.adt = adt;
     }
 
-    public void check(String input, SearchConfiguration configuration, boolean enablePreprocess) {
+    public void normalCheck(String input, SearchConfiguration configuration, boolean enablePreprocess) {
         HappenBeforeGraph happenBeforeGraph = load(input);
         if (enablePreprocess) {
             preprocess(happenBeforeGraph);
@@ -31,6 +28,32 @@ public class AdtChecker {
         vfs.init(happenBeforeGraph);
         vfs.checkConsistency();
         outputResult(input + "/result.obj", vfs.getResults());
+    }
+
+    public void multiThreadCheck(String input, SearchConfiguration configuration, boolean enablePreprocess) {
+        HappenBeforeGraph happenBeforeGraph = load(input);
+        if (enablePreprocess) {
+            preprocess(happenBeforeGraph);
+        }
+        SearchConfiguration configuration1 = new SearchConfiguration.Builder()
+                                                                .setAdt(adt)
+                                                                .setEnableIncompatibleRelation(false)
+                                                                .setEnableOutputSchedule(false)
+                                                                .setEnablePrickOperation(false)
+                                                                .setFindAllAbstractExecution(false)
+                                                                .setVisibilityLimit(0)
+                                                                .setQueueLimit(24)
+                                                                .setSearchMode(1)
+                                                                .setSearchLimit(8)
+                                                                .build();
+        MinimalVisSearch vfs1 = new MinimalVisSearch(configuration1);
+        vfs1.init(happenBeforeGraph);
+        vfs1.checkConsistency();
+        List<SearchState> states = vfs1.getAllSearchState();
+
+        MultiThreadSearch multiThreadSearch = new MultiThreadSearch(happenBeforeGraph, configuration);
+        multiThreadSearch.startSearch(states);
+        outputResult(input + "/result.obj", multiThreadSearch.getResults());
     }
 
     protected void preprocess(HappenBeforeGraph happenBeforeGraph) {
@@ -48,7 +71,7 @@ public class AdtChecker {
         return happenBeforeGraph;
     }
 
-    protected void outputResult(String filename, List<SearchState> results) {
+    protected synchronized void outputResult(String filename, List<SearchState> results) {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filename));
             oos.writeObject(results);
@@ -73,7 +96,7 @@ public class AdtChecker {
                                                     setAdt(new RiakSet()).
                                                     setEnablePrickOperation(true).
                                                     setEnableOutputSchedule(true).build();
-        checker.check("set_trace/Set_default_3_3_300_1", configuration, true);
+        checker.normalCheck("set_trace/Set_default_3_3_300_1", configuration, true);
         //checker.readResult("set_trace/Set_default_3_3_300_1/result.obj");
     }
 }

@@ -15,6 +15,7 @@ public class MinimalVisSearch {
     private HashMap<HBGNode, Integer> prickOperationCounter = new HashMap<>();
     private int readOperationFailLimit = 30;
     private List<SearchState> results = new ArrayList<>();
+    private volatile boolean exit = false;
 
     public MinimalVisSearch(SearchConfiguration configuration) {
         this.configuration = configuration;
@@ -59,7 +60,7 @@ public class MinimalVisSearch {
 
     public boolean checkConsistency() {
         AbstractDataType adt = configuration.getAdt();
-        while (!priorityQueue.isEmpty()
+        while (!priorityQueue.isEmpty() && !exit
                 && (configuration.getSearchLimit() == -1 || stateExplored < configuration.getSearchLimit())
                 && (configuration.getQueueLimit() == -1 || priorityQueue.size() < configuration.getQueueLimit())) {
             stateExplored++;
@@ -70,7 +71,7 @@ public class MinimalVisSearch {
             }
 
             int times = 0;
-            while (state.nextVisibility(configuration.getVisibilityType()) != -1
+            while (state.nextVisibility(configuration.getVisibilityType()) != -1 && !exit
                     && (times < configuration.getVisibilityLimit()
                         || configuration.getVisibilityLimit() == -1
                         || (configuration.getVisibilityLimit() == 0 && times < state.size()))) {
@@ -149,5 +150,13 @@ public class MinimalVisSearch {
 
     public List<SearchState> getResults() {
         return results;
+    }
+
+    public void stopSearch() {
+        exit = true;
+    }
+
+    public boolean isExit() {
+        return exit;
     }
 }

@@ -3,13 +3,16 @@ package history;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import datatype.AbstractDataType;
+import datatype.RiakSet;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import arbitration.Linearization;
+import traceprocessing.RawTraceProcessor;
+import validation.HBGPreprocessor;
 
 import java.util.*;
 
-public class HappenBeforeGraph implements Iterable<HBGNode> {
+public class HappenBeforeGraph implements Iterable<HBGNode>, Cloneable {
     private List<HBGNode> startNodes = new ArrayList<>();
     private HashMap<Integer, HBGNode> nodes = new HashMap<>();
     private HashMap<Integer, Integer> poRelations = new HashMap<>();
@@ -18,6 +21,10 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
     private Multimap<Integer, Integer> allPrevRelations = HashMultimap.create();
     private Set<HBGNode> nodesWithoutPrev = null;
     private Multimap<ImmutablePair<Integer, Integer>, ImmutablePair<Integer, Integer>> ruleTable = null;
+
+    public HappenBeforeGraph() {
+        ;
+    }
 
     public HappenBeforeGraph(List<SubProgram> subPrograms, HappenBefore happenBefore) {
         int index = 0;
@@ -220,6 +227,40 @@ public class HappenBeforeGraph implements Iterable<HBGNode> {
 
     public void print() {
         ;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        HappenBeforeGraph happenBeforeGraph = new HappenBeforeGraph();
+        happenBeforeGraph.startNodes = this.startNodes;
+        happenBeforeGraph.nodes = this.nodes;
+        happenBeforeGraph.poRelations = this.poRelations;
+        happenBeforeGraph.nextRelations = HashMultimap.create(this.nextRelations);
+        happenBeforeGraph.prevRelations = HashMultimap.create(this.prevRelations);
+        happenBeforeGraph.nodesWithoutPrev = this.nodesWithoutPrev;
+        happenBeforeGraph.allPrevRelations = this.allPrevRelations;
+        if (this.ruleTable == null) {
+            happenBeforeGraph.ruleTable = HashMultimap.create();
+        } else {
+            happenBeforeGraph.ruleTable = HashMultimap.create(this.ruleTable);
+        }
+        return happenBeforeGraph;
+    }
+
+    public static void main(String[] args) throws Exception {
+        RawTraceProcessor rp = new RawTraceProcessor();
+        try {
+            rp.load("set_trace/Set_default_3_3_300_2");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RiakSet()).generateHappenBeforeGraph();
+        new HBGPreprocessor().preprocess(happenBeforeGraph, new RiakSet());
+        System.out.println(happenBeforeGraph.get(2).toString());
+        HappenBeforeGraph happenBeforeGraph1 = (HappenBeforeGraph) happenBeforeGraph.clone();
+        happenBeforeGraph1.ruleTable.put(new ImmutablePair<>(1,2), new ImmutablePair<>(3,4));
+        System.out.println(happenBeforeGraph.ruleTable.toString());
+        System.out.println(happenBeforeGraph1.ruleTable.toString());
     }
 }
 

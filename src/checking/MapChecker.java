@@ -1,10 +1,6 @@
 package checking;
 
-import datatype.RedisRpq;
 import datatype.RiakMap;
-import history.HappenBeforeGraph;
-import traceprocessing.RawTraceProcessor;
-import validation.HBGPreprocessor;
 import validation.SearchConfiguration;
 
 public class MapChecker {
@@ -12,8 +8,8 @@ public class MapChecker {
         AdtChecker checker = new AdtChecker(new RiakMap());
         SearchConfiguration configuration = new SearchConfiguration.Builder().
                 setAdt(new RiakMap()).
-                setEnablePrickOperation(true).
-                setEnableOutputSchedule(false).build();
-        checker.check("map_trace", configuration, true);
+                setEnablePrickOperation(false).
+                setEnableOutputSchedule(true).build();
+        checker.normalCheck("map_trace/Map_default_3_3_300_1", configuration, false);
     }
 }
