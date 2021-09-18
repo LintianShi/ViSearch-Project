@@ -32,6 +32,7 @@ public class HappenBeforeGraph implements Iterable<HBGNode>, Cloneable {
             SubProgram sp = subPrograms.get(k);
             for (int i = 0; i < sp.size(); i++) {
                 HBGNode node = new HBGNode(sp.get(i), index);
+                node.getInvocation().setPairID(new ImmutablePair<>(k, i));
                 node.setThreadId(k);
                 nodes.put(index, node);
                 if (i == 0) {
@@ -129,10 +130,12 @@ public class HappenBeforeGraph implements Iterable<HBGNode>, Cloneable {
     }
 
     public void addNextNode(Integer node, Integer next) {
+        allPrevRelations.removeAll(next);
         nextRelations.put(node, next);
     }
 
     public void addPrevNode(Integer node, Integer prev) {
+        allPrevRelations.removeAll(node);
         prevRelations.put(node, prev);
     }
 
@@ -145,10 +148,12 @@ public class HappenBeforeGraph implements Iterable<HBGNode>, Cloneable {
     }
 
     public void removeNextNode(Integer node, Integer next) {
+        allPrevRelations.removeAll(next);
         nextRelations.remove(node, next);
     }
 
     public void removePrevNode(Integer node, Integer prev) {
+        allPrevRelations.removeAll(node);
         prevRelations.remove(node, prev);
     }
 
@@ -204,6 +209,10 @@ public class HappenBeforeGraph implements Iterable<HBGNode>, Cloneable {
         return ruleTable != null;
     }
 
+    public int getRuleTableSize() {
+        return ruleTable.size();
+    }
+
     public Collection<ImmutablePair<Integer, Integer>> getIncompatibleRelations(ImmutablePair<Integer, Integer> pair) {
         if (ruleTable == null) {
             return null;
@@ -213,6 +222,16 @@ public class HappenBeforeGraph implements Iterable<HBGNode>, Cloneable {
         } else {
             return null;
         }
+    }
+
+    public List<ImmutablePair<Integer, Integer>> getRelatedIncompatibleRelations(HBGNode node) {
+        List<ImmutablePair<Integer, Integer>> relatedIncompatibleRelations = new LinkedList<>();
+        for (ImmutablePair<Integer, Integer> pair : ruleTable.keySet()) {
+            if (pair.getLeft().equals(node.getId())) {
+                relatedIncompatibleRelations.add(pair);
+            }
+        }
+        return relatedIncompatibleRelations;
     }
 
     public void addHBRelation(int left, int right) {
@@ -227,6 +246,44 @@ public class HappenBeforeGraph implements Iterable<HBGNode>, Cloneable {
 
     public void print() {
         ;
+    }
+
+    public boolean detectCircle() {
+        Set<Integer> visited = new HashSet<>();
+        Stack<Integer> inStack = new Stack<>();
+        for (HBGNode node : nodes.values()) {
+            if (!visited.contains(node.getId())) {
+                if (detectCircle(node, visited, inStack)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean detectCircle(HBGNode node, Set<Integer> visited, Stack<Integer> inStack) {
+        visited.add(node.getId());
+        inStack.push(node.getId());
+        for (HBGNode nextNode : this.getNexts(node)) {
+            if (!visited.contains(nextNode.getId())) {
+                if (detectCircle(nextNode, visited, inStack)) {
+                    return true;
+                }
+            } else if (inStack.contains(nextNode)) {
+                System.out.println(inStack.toString());
+                System.out.println(get(88));
+                System.out.println(get(92));
+                System.out.println(get(257));
+                System.out.println(get(262));
+                System.out.println(get(48));
+                System.out.println(get(58));
+                System.out.println(get(81));
+                System.out.println(nextNode.getId());
+                return true;
+            }
+        }
+        inStack.pop();
+        return false;
     }
 
     @Override

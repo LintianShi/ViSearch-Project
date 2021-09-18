@@ -64,7 +64,6 @@ public class MinimalVisSearch {
                 && (configuration.getSearchLimit() == -1 || stateExplored < configuration.getSearchLimit())
                 && (configuration.getQueueLimit() == -1 || priorityQueue.size() < configuration.getQueueLimit())) {
             stateExplored++;
-
             SearchState state = priorityQueue.poll();
             if (configuration.isEnableIncompatibleRelation()) {
                 addTempHBRelations(state.getTempHBRelations());
@@ -84,29 +83,42 @@ public class MinimalVisSearch {
                         }
                     }
                     List<SearchState> list =state.linExtent();
-                    Collections.reverse(list);
+                    priorityQueue.offer(state);
+                    if (configuration.isEnableOutputSchedule() && list.size() == 0) {
+                        System.out.println("empty!!!");
+                        Set<HBGNode> expansion = new HashSet<>();
+                        for (HBGNode node : state.getLinearization()) {
+                            for (HBGNode next :happenBeforeGraph.getNexts(node)) {
+                                if (!state.getLinearization().contains(next)) {
+                                    expansion.add(next);
+                                }
+                            }
+                        }
+                        System.out.println(expansion.toString());
+                        for (HBGNode node : expansion) {
+                            boolean flag = true;
+                            for (HBGNode prev : happenBeforeGraph.getPrevs(node)) {
+                                if (!state.getLinearization().contains(prev)) {    //节点所有的前驱必须都已经被包含在全序里
+                                    flag = false;
+                                    System.out.println(node.toString() + "--fail:" + prev.toString());
+                                }
+                            }
+                            if (flag) {
+                                System.out.println("success:" + node.toString());
+                            }
+                        }
+
+                        if (happenBeforeGraph.detectCircle()) {
+                            System.out.println("circle detected!!!");
+                            return false;
+                        }
+                    }
                     for (SearchState newState : list) {
                         priorityQueue.offer(newState);
                     }
                     break;
                } else {
-                    if (!configuration.isEnablePrickOperation()) {
-                        continue;
-                    }
-                    HBGNode prickOperation = state.getLinearization().getLast();
-                    if (!prickOperationCounter.containsKey(prickOperation)) {
-                        prickOperationCounter.put(prickOperation, 1);
-                    } else {
-                        Integer failTimes = prickOperationCounter.get(prickOperation);
-                        if (failTimes == -1) {
-                            continue;
-                        }
-                        prickOperationCounter.put(prickOperation, failTimes + 1);
-                        if (failTimes > readOperationFailLimit) {
-                            System.out.println(state.getLinearization().size() + ": " + "FAIL" + ":" + Integer.toString(failTimes) + " " + prickOperation);
-                            prickOperationCounter.put(prickOperation, -1);
-                        }
-                    }
+                    handlePrickOperation(state);
                 }
             }
             if (configuration.isEnableIncompatibleRelation()) {
@@ -138,13 +150,34 @@ public class MinimalVisSearch {
         if (configuration.isEnableOutputSchedule()) {
             HBGNode lastOperation = searchState.getLinearization().getLast();
             if (searchState.getLinearization().size() % 10 == 0) {
-                System.out.println(lastOperation.toString() + " + " + searchState.getLinearization().size() + "/" + happenBeforeGraph.size());
+                System.out.println(lastOperation.toString() + " + " + searchState.getLinearization().size() + "/" + happenBeforeGraph.size() + "--" + searchState.getQueryOperationSize());
             }
         }
         if (excuteTrace.equals(retTrace)) {
             return true;
         } else {
             return false;
+        }
+    }
+
+    private void handlePrickOperation(SearchState state) {
+        if (!configuration.isEnablePrickOperation()) {
+            return;
+        }
+        HBGNode prickOperation = state.getLinearization().getLast();
+        if (!prickOperationCounter.containsKey(prickOperation)) {
+            prickOperationCounter.put(prickOperation, 1);
+        } else {
+            Integer failTimes = prickOperationCounter.get(prickOperation);
+            if (failTimes == -1) {
+                prickOperationCounter.remove(prickOperation);
+                return;
+            }
+            prickOperationCounter.put(prickOperation, failTimes + 1);
+            if (failTimes > readOperationFailLimit) {
+                System.out.println(state.getLinearization().size() + ": " + "FAIL" + ":" + Integer.toString(failTimes) + " " + prickOperation);
+                prickOperationCounter.put(prickOperation, -1);
+            }
         }
     }
 

@@ -12,10 +12,11 @@ public class SetChecker {
                 .setEnablePrickOperation(false)
                 .setEnableOutputSchedule(true)
                 .build();
-//        checker.normalCheck("set_trace/Set_default_3_3_300_1", configuration, true);
-//        checker.readResult("set_trace/Set_default_3_3_300_1/result.obj");
         String filename = "set_trace/Set_default_3_3_100_300_1";
-        checker.multiThreadCheck(filename, configuration, true);
-        checker.readResult(filename + "/result.obj");
+        checker.normalCheck("set_trace/Set_default_3_3_300_1", configuration, true);
+//        checker.readResult("set_trace/Set_default_3_3_300_1/result.obj");
+
+//        checker.multiThreadCheck(filename, configuration, true);
+//        checker.readResult(filename + "/result.obj");
     }
 }

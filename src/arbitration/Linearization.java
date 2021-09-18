@@ -41,6 +41,15 @@ public class Linearization implements Serializable, Iterable<HBGNode> {
         return lin.contains(node);
     }
 
+    public boolean contains(Integer id) {
+        for (HBGNode node : lin) {
+            if (node.getId() == id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public HBGNode getLast() {
         return lin.get(lin.size() - 1);
     }
@@ -51,6 +60,16 @@ public class Linearization implements Serializable, Iterable<HBGNode> {
 
     public int size() {
         return lin.size();
+    }
+
+    public int getQueryOperationSize() {
+        int sz = 0;
+        for (HBGNode node : lin) {
+            if (node.getInvocation().getOperationType().equals("QUERY")) {
+                sz++;
+            }
+        }
+        return sz;
     }
 
     public Iterator<HBGNode> iterator() {

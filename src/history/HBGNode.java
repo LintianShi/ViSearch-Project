@@ -33,7 +33,7 @@ public class HBGNode implements Serializable {
 
     @Override
     public String toString() { ;
-        return Integer.toString(getId()) + " " + invocation.toString();
+        return getInvocation().getPairID().toString() + " " + invocation.toString();
     }
 
     @Override

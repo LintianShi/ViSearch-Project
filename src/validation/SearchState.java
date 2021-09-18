@@ -9,10 +9,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import util.Pair;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class SearchState implements Serializable, Comparable<SearchState> {
     public static transient HappenBeforeGraph happenBeforeGraph;
@@ -56,7 +53,6 @@ public class SearchState implements Serializable, Comparable<SearchState> {
                 }
             }
         }
-
         List<Linearization> newLins = linearization.extendLin(adjacencyNodes);
 
         List<List<ImmutablePair<Integer, Integer>>> tempHBRelations = new ArrayList<>();
@@ -64,16 +60,15 @@ public class SearchState implements Serializable, Comparable<SearchState> {
             for (Linearization lin :newLins) {
                 HBGNode lastNode = lin.getLast();
                 List<ImmutablePair<Integer, Integer>> tempList = new ArrayList<>(this.tempHBRelations);
-                for (HBGNode node : lin) {
-                    ImmutablePair<Integer, Integer> pair = new ImmutablePair<>(node.getId(), lastNode.getId());
-                    if (happenBeforeGraph.getIncompatibleRelations(pair) != null) {
+                List<ImmutablePair<Integer, Integer>> relatedIncompatibleRelations = happenBeforeGraph.getRelatedIncompatibleRelations(lastNode);
+                for (ImmutablePair<Integer, Integer> pair : relatedIncompatibleRelations) {
+                    if (!linearization.contains(pair.getRight())) {
                         tempList.addAll(happenBeforeGraph.getIncompatibleRelations(pair));
                     }
-                    tempHBRelations.add(new ArrayList<>());
                 }
+                tempHBRelations.add(tempList);
             }
         }
-
 
         List<SearchState> newStates = new ArrayList<>();
         for (int i = 0; i < newLins.size(); i++) {
@@ -200,6 +195,10 @@ public class SearchState implements Serializable, Comparable<SearchState> {
 
     public int size() {
         return linearization.size();
+    }
+
+    public int getQueryOperationSize() {
+        return linearization.getQueryOperationSize();
     }
 
     public String toString() {
