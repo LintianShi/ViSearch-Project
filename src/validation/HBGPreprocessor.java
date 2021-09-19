@@ -125,7 +125,7 @@ public class HBGPreprocessor {
 
                 HappenBeforeGraph subHBGraph = new HappenBeforeGraph(relatedNodes);
                 System.out.println("Sub graph size: " + subHBGraph.size());
-                if (subHBGraph.size() > 4) {
+                if (subHBGraph.size() > 5) {
                     continue;
                 }
 

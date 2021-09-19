@@ -145,19 +145,14 @@ public class MinimalVisSearch {
     }
 
     private boolean executeCheck(AbstractDataType adt, SearchState searchState) {
-        String retTrace = searchState.getLinearization().getRetValueTrace(searchState.getLinearization().size());
-        String excuteTrace = Validation.crdtExecute(adt, searchState).toString();
+        boolean excuteResult = Validation.crdtExecute(adt, searchState);
         if (configuration.isEnableOutputSchedule()) {
             HBGNode lastOperation = searchState.getLinearization().getLast();
             if (searchState.getLinearization().size() % 10 == 0) {
                 System.out.println(lastOperation.toString() + " + " + searchState.getLinearization().size() + "/" + happenBeforeGraph.size() + "--" + searchState.getQueryOperationSize());
             }
         }
-        if (excuteTrace.equals(retTrace)) {
-            return true;
-        } else {
-            return false;
-        }
+        return excuteResult;
     }
 
     private void handlePrickOperation(SearchState state) {

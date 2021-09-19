@@ -8,7 +8,7 @@ public class RPQChecker {
         AdtChecker checker = new AdtChecker(new RedisRpq());
         SearchConfiguration configuration = new SearchConfiguration.Builder().
                 setAdt(new RedisRpq()).
-                setEnablePrickOperation(true).
+                setEnablePrickOperation(false).
                 setEnableOutputSchedule(true).build();
         checker.normalCheck("rpq_trace/Rpq_default_3_1_2000_1631873920", configuration, true);
     }
