@@ -5,13 +5,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class SearchStatePriorityQueue {
     private int mode; //0: stack, 1: queue, 2: priority queue
-    private Stack<SearchState> stack = new Stack<>();
-    private Queue<SearchState> queue = new LinkedList<>();
-    private PriorityQueue<SearchState> priorityQueue = new PriorityQueue<>();
-
-    public SearchStatePriorityQueue() {
-        this.mode = 0;
-    }
+    private List<SearchState> list = new LinkedList<>();
 
     public SearchStatePriorityQueue(int mode) {
         if (mode >= 0 && mode <= 2) {
@@ -23,62 +17,33 @@ public class SearchStatePriorityQueue {
 
     public boolean offer(SearchState searchState) {
         if (mode == 0) {
-            return (stack.push(searchState) != null);
-        } else if (mode == 1) {
-            return queue.offer(searchState);
+            list.add(0, searchState);
+            return true;
         } else {
-            return priorityQueue.offer(searchState);
+            return list.add(searchState);
         }
     }
 
     public SearchState peek() {
-        if (mode == 0) {
-            return stack.peek();
-        } else if (mode == 1) {
-            return queue.peek();
-        } else {
-            return priorityQueue.peek();
-        }
+        return list.get(0);
     }
 
     public SearchState poll() {
-        if (mode == 0) {
-            return stack.pop();
-        } else if (mode == 1) {
-            return queue.poll();
-        } else {
-            return priorityQueue.poll();
-        }
+        SearchState state = list.get(0);
+        list.remove(0);
+        return state;
     }
 
     public boolean isEmpty() {
-        if (mode == 0) {
-            return stack.isEmpty();
-        } else if (mode == 1) {
-            return queue.isEmpty();
-        } else {
-            return priorityQueue.isEmpty();
-        }
+        return list.isEmpty();
     }
 
     public int size() {
-        if (mode == 0) {
-            return stack.size();
-        } else if (mode == 1) {
-            return queue.size();
-        } else {
-            return priorityQueue.size();
-        }
+        return list.size();
     }
 
     public String toString() {
-        if (mode == 0) {
-            return stack.toString();
-        } else if (mode == 1) {
-            return queue.toString();
-        } else {
-            return priorityQueue.toString();
-        }
+        return list.toString();
     }
 
 }
