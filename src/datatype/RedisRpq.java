@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Objects;
 
 public class RedisRpq extends AbstractDataType {
-    private ArrayList<Element> data = new ArrayList<>();
-    private HashMap<Integer, Element> map = new HashMap<>();
+    private ArrayList<RpqElement> data = new ArrayList<>();
+    private HashMap<Integer, RpqElement> map = new HashMap<>();
 
     public AbstractDataType createInstance() {
         return new RedisRpq();
@@ -104,7 +104,7 @@ public class RedisRpq extends AbstractDataType {
 
     private void shiftUp(int s) {
         int j = s, i = (j - 1) / 2;
-        Element temp = data.get(j);
+        RpqElement temp = data.get(j);
         while (j > 0)
         {
             if (data.get(i).getVal().doubleValue() >= temp.getVal().doubleValue())
@@ -124,7 +124,7 @@ public class RedisRpq extends AbstractDataType {
     private void shiftDown(int s)
     {
         int i = s, j = 2 * i + 1, tail = data.size() - 1;
-        Element temp;
+        RpqElement temp;
         if (i < data.size()) {
             temp = data.get(i);
         } else {
@@ -151,7 +151,7 @@ public class RedisRpq extends AbstractDataType {
     private void add(int k, Double v)
     {
         if (!map.containsKey(k)) {
-            Element element = new Element(k, v);
+            RpqElement element = new RpqElement(k, v);
             map.put(k, element);
             data.add(element);
             shiftUp(data.size() - 1);
@@ -190,7 +190,7 @@ public class RedisRpq extends AbstractDataType {
             //return "rwfzscore:" + "NONE";
             return "null";
         } else {
-            Element max = data.get(0);
+            RpqElement max = data.get(0);
             Double val = max.getVal();
             //return "rwfzmax:" + Integer.toString(max.getEle()) + ":" + val.stripTrailingZeros().toPlainString();
             return Integer.toString(max.getEle()) + " " + val.toString();
@@ -243,17 +243,12 @@ public class RedisRpq extends AbstractDataType {
     }
 }
 
-class Element {
+class RpqElement {
     private Integer ele;
     private Double val;
     private Integer index;
 
-    public Element() {
-        this.ele = 0;
-        this.val = 0.0;
-    }
-
-    public Element(Integer ele, Double val) {
+    public RpqElement(Integer ele, Double val) {
         this.ele = ele;
         this.val = val;
     }

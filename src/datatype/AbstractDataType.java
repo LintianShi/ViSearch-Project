@@ -42,8 +42,6 @@ public abstract class AbstractDataType {
         return lists;
     }
 
-    protected abstract boolean isRelated(Invocation src, Invocation dest);
-
     public boolean isReadCluster(Invocation invocation) {
         if (invocation.getOperationType().equals("QUERY")) {
             return true;
@@ -51,6 +49,8 @@ public abstract class AbstractDataType {
             return false;
         }
     }
+
+    protected abstract boolean isRelated(Invocation src, Invocation dest);
 
     public abstract void reset();
 
