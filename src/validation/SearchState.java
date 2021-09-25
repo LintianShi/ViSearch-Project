@@ -104,7 +104,7 @@ public class SearchState implements Serializable, Comparable<SearchState> {
     private Set<HBGNode> getVisibleNodes() {
         Set<HBGNode> visibleNodes = new HashSet<>();
         if (visibilityType == VisibilityType.CAUSAL) {
-            HBGNode node = linearization.get(linearization.size() - 1);
+            HBGNode node = linearization.getLast();
             Set<HBGNode> prevs = happenBeforeGraph.getAllPrevs(node);
             for (HBGNode prev : prevs) {
                 visibleNodes.addAll(visibility.getNodeVisibility(prev));
@@ -163,12 +163,12 @@ public class SearchState implements Serializable, Comparable<SearchState> {
         this.adtState = adtState;
     }
 
-    public List<ImmutablePair<Integer, Integer>> extractHBRelation() {
-        List<ImmutablePair<Integer, Integer>> hbs = new ArrayList<>();
+    public List<Pair> extractHBRelation() {
+        List<Pair> hbs = new ArrayList<>();
         for (int i = 1; i < linearization.size(); i++) {
             for (int j = 0; j < i; j++) {
                 if (linearization.get(j).getThreadId() != linearization.get(i).getThreadId()) {
-                    hbs.add(new ImmutablePair<Integer, Integer>(linearization.get(j).getId(), linearization.get(i).getId()));
+                    hbs.add(new Pair(linearization.get(j).getId(), linearization.get(i).getId()));
                 }
             }
         }

@@ -10,6 +10,6 @@ public class RpqChecker {
                 setAdt(new RedisRpq()).
                 setEnablePrickOperation(false).
                 setEnableOutputSchedule(true).build();
-        checker.normalCheck("rpq_trace/Rpq_default_3_1_2000_1631873920", configuration, true);
+        checker.normalCheck("rpq_trace/rpq_test", configuration, true);
     }
 }

@@ -10,6 +10,6 @@ public class ListChecker {
                 setAdt(new RedisList()).
                 setEnablePrickOperation(false).
                 setEnableOutputSchedule(true).build();
-        checker.normalCheck("list_trace/List_default_3_1_600_1631158025", configuration, false);
+        checker.normalCheck("list_trace/List_default_3_1_1000_1", configuration, false);
     }
 }
