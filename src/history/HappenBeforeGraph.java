@@ -109,14 +109,11 @@ public class HappenBeforeGraph implements Iterable<HBGNode>, Cloneable {
     }
 
     private Collection<Integer> getAllPrevs(Integer node) {
-        Collection<Integer> prevs = allPrevRelations.get(node);
-        if (prevs != null) {
-            return prevs;
-        }
-        prevs = new HashSet<>();
-        Collection<Integer> allPrevs = new HashSet<>(prevs);
+        Collection<Integer> allPrevs = new HashSet<>();
+        Collection<Integer> prevs = prevRelations.get(node);
         for (Integer prevNode : prevs) {
             allPrevs.addAll(getAllPrevs(prevNode));
+            allPrevs.add(prevNode);
         }
         return allPrevs;
     }

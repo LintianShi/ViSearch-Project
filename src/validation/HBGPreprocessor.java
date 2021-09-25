@@ -104,6 +104,7 @@ public class HBGPreprocessor {
         for (HBGNode node : happenBeforeGraph) {
             if (adt.isReadCluster(node.getInvocation())) {
                 System.out.println(node.toString());
+                System.out.println(happenBeforeGraph.getAllPrevs(node).toString());
                 List<List<HBGNode>> relatedNodes = adt.getRelatedOperations(node, happenBeforeGraph);
                 System.out.println(relatedNodes.toString());
 
