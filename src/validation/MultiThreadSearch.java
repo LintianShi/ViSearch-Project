@@ -69,8 +69,9 @@ class SearchThread implements Runnable {
     }
 
     public void run() {
-        visSearch.checkConsistency();
-        countDownLatch.countDown();
+        if (visSearch.checkConsistency()) {
+            countDownLatch.countDown();
+        }
     }
 
     public void stop() {

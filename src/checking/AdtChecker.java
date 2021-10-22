@@ -14,6 +14,7 @@ import java.util.List;
 
 public class AdtChecker {
     protected AbstractDataType adt;
+    protected MinimalVisSearch vfs;
 
     public AdtChecker(AbstractDataType adt) {
         this.adt = adt;
@@ -24,10 +25,10 @@ public class AdtChecker {
         if (enablePreprocess) {
             preprocess(happenBeforeGraph);
         }
-        MinimalVisSearch vfs = new MinimalVisSearch(configuration);
-        vfs.init(happenBeforeGraph);
-        vfs.checkConsistency();
-        outputResult(input + "/result.obj", vfs.getResults());
+        this.vfs = new MinimalVisSearch(configuration);
+        this.vfs.init(happenBeforeGraph);
+        this.vfs.checkConsistency();
+        //outputResult(input + "/result.obj", vfs.getResults());
     }
 
     public void multiThreadCheck(String input, SearchConfiguration configuration, boolean enablePreprocess) {
@@ -36,24 +37,26 @@ public class AdtChecker {
             preprocess(happenBeforeGraph);
         }
         SearchConfiguration configuration1 = new SearchConfiguration.Builder()
-                                                                .setAdt(adt)
+                                                                .setAdt(new RiakSet())
                                                                 .setEnableIncompatibleRelation(false)
-                                                                .setEnableOutputSchedule(false)
+                                                                .setEnableOutputSchedule(true)
                                                                 .setEnablePrickOperation(false)
                                                                 .setFindAllAbstractExecution(false)
-                                                                .setVisibilityLimit(0)
-                                                                .setQueueLimit(24)
+                                                                .setVisibilityLimit(-1)
+                                                                .setQueueLimit(10)
                                                                 .setSearchMode(1)
-                                                                .setSearchLimit(8)
+                                                                .setSearchLimit(-1)
                                                                 .build();
         MinimalVisSearch vfs1 = new MinimalVisSearch(configuration1);
         vfs1.init(happenBeforeGraph);
         vfs1.checkConsistency();
+        System.out.println("starting multithread");
         List<SearchState> states = vfs1.getAllSearchState();
+        System.out.println(states.size());
 
         MultiThreadSearch multiThreadSearch = new MultiThreadSearch(happenBeforeGraph, configuration);
         multiThreadSearch.startSearch(states);
-        outputResult(input + "/result.obj", multiThreadSearch.getResults());
+        //outputResult(input + "/result.obj", multiThreadSearch.getResults());
     }
 
     protected void preprocess(HappenBeforeGraph happenBeforeGraph) {
@@ -88,6 +91,10 @@ public class AdtChecker {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public int getExploredState() {
+        return vfs.getStateExplored();
     }
 
     public static void main(String[] args) {

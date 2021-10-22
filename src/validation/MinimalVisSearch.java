@@ -63,7 +63,7 @@ public class MinimalVisSearch {
         while (!priorityQueue.isEmpty() && !exit
                 && (configuration.getSearchLimit() == -1 || stateExplored < configuration.getSearchLimit())
                 && (configuration.getQueueLimit() == -1 || priorityQueue.size() < configuration.getQueueLimit())) {
-            stateExplored++;
+
             SearchState state = priorityQueue.poll();
             if (configuration.isEnableIncompatibleRelation()) {
                 addTempHBRelations(state.getTempHBRelations());
@@ -75,6 +75,7 @@ public class MinimalVisSearch {
                         || configuration.getVisibilityLimit() == -1
                         || (configuration.getVisibilityLimit() == 0 && times < state.size()))) {
                 times++;
+                stateExplored++;
                 if (executeCheck(adt, state)) {
                     if (state.isComplete()) {
                         results.add(state);
@@ -131,15 +132,7 @@ public class MinimalVisSearch {
     public List<SearchState> getAllSearchState() {
         List<SearchState> states = new ArrayList<>();
         while (!priorityQueue.isEmpty()) {
-            int times = 0;
-            while (priorityQueue.peek().nextVisibility(configuration.getVisibilityType()) != -1 && times < 10) {
-                times++;
-                if (executeCheck(configuration.getAdt(), priorityQueue.peek())) {
-                    states.add(priorityQueue.poll());
-                    break;
-                }
-            }
-
+            states.add(priorityQueue.poll());
         }
         return states;
     }
@@ -149,7 +142,7 @@ public class MinimalVisSearch {
         if (configuration.isEnableOutputSchedule()) {
             HBGNode lastOperation = searchState.getLinearization().getLast();
             if (searchState.getLinearization().size() % 10 == 0) {
-                System.out.println(lastOperation.toString() + " + " + searchState.getLinearization().size() + "/" + happenBeforeGraph.size() + "--" + searchState.getQueryOperationSize());
+                System.out.println(Thread.currentThread().getName() + ":" + lastOperation.toString() + " + " + searchState.getLinearization().size() + "/" + happenBeforeGraph.size() + "--" + searchState.getQueryOperationSize());
             }
         }
         return excuteResult;
@@ -186,5 +179,9 @@ public class MinimalVisSearch {
 
     public boolean isExit() {
         return exit;
+    }
+
+    public int getStateExplored() {
+        return stateExplored;
     }
 }

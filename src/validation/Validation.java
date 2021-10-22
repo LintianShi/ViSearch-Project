@@ -8,7 +8,6 @@ import java.util.*;
 
 public class Validation {
     public static boolean crdtExecute(AbstractDataType adt, SearchState searchState) {
-        Behaviour rets = new Behaviour();
         Linearization lin = searchState.getLinearization();
         LinVisibility visibility = searchState.getVisibility();
         try {
