@@ -37,6 +37,7 @@ public class SetChecker {
                     System.out.println(file.toString());
                     System.out.println(checkerThread.result);
                 }
+
             }
         }
     }

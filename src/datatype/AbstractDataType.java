@@ -28,12 +28,12 @@ public abstract class AbstractDataType {
             HBGNode temp = startNode;
             while (temp != null) {
                 if (this.isRelated(node.getInvocation(), temp.getInvocation())) {
-                    tempList.add(temp.clone());
+                    tempList.add(temp);
                 }
                 if (temp.equals(node)) {
                     break;
                 }
-                temp = happenBeforeGraph.getPo(temp);
+                temp = temp.getNext();
             }
             if (tempList.size() > 0) {
                 lists.add(tempList);

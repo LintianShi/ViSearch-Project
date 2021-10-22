@@ -44,57 +44,15 @@ public class RawTraceProcessor {
     }
 
     public Program generateProgram(AbstractDataType adt) {
-        //Program program = new Program();
-        HappenBefore happenBefore = new HappenBefore();
-//        for (int i = 0; i < rawTrace.size(); i++) {
-//            for (int j = 0; j < rawTrace.size(); j++) {
-//                if (i == j) {
-//                    continue;
-//                }
-//                happenBefore.addHappenBefores(constructHb(rawTrace.get(i), i, rawTrace.get(j), j));
-//            }
-//        }
-        List<SubProgram> subPrograms = new ArrayList<>();
+        List<List<Invocation>> subPrograms = new ArrayList<>();
         for (int i = 0; i < rawTrace.size(); i++) {
             List<Invocation> invocations = new ArrayList<>();
             for (Record r : rawTrace.get(i)) {
                 invocations.add(r.generateInvocation(adt));
             }
-            subPrograms.add(new SubProgram(invocations));
+            subPrograms.add(invocations);
         }
-        return new Program(subPrograms, happenBefore);
-    }
-
-    private List<HBPair> constructHb(List<Record> threadA, int A, List<Record> threadB, int B) {
-        List<HBPair> hbRelations = new ArrayList<>();
-        int i = 0;
-        int j = 0;
-        int last = -1;
-        for ( ; i < threadA.size() && j < threadB.size(); ) {
-            Record a = threadA.get(i);
-            Record b = threadA.get(j);
-            if (a.compareTo(b) == 0) {
-                if (last == -1) {
-                    i++;
-                } else {
-                    HBPair hb = new HBPair(new Integer[]{B,last}, new Integer[]{A,i});
-                    hbRelations.add(hb);
-                    last = -1;
-                    i++;
-                }
-            } else if (a.compareTo(b) > 0) {
-                last = j;
-                j++;
-            } else {
-                last = -1;
-                i++;
-            }
-        }
-        if (last != -1) {
-            HBPair hb = new HBPair(new Integer[]{B,last}, new Integer[]{A,i});
-            hbRelations.add(hb);
-        }
-        return hbRelations;
+        return new Program(subPrograms);
     }
 
     public static void main(String[] args) throws Exception {

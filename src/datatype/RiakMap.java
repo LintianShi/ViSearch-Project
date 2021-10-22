@@ -23,45 +23,45 @@ public class RiakMap extends AbstractDataType {
         }
     }
 
-    public List<List<HBGNode>> getRelatedOperations(HBGNode node, HappenBeforeGraph happenBeforeGraph) {
-        List<List<HBGNode>> lists = new ArrayList<>();
-        Set<Integer> keys = new HashSet<>();
-        for (HBGNode startNode : happenBeforeGraph.getStartNodes()) {
-            List<HBGNode> tempList = new ArrayList<>();
-            HBGNode temp = startNode;
-            while (happenBeforeGraph.getPo(temp) != null) {
-                if (this.isRelated(node.getInvocation(), temp.getInvocation())) {
-                    if (node.getInvocation().getMethodName().equals("containsValue")) {
-                        keys.add((Integer) temp.getInvocation().getArguments().get(0));
-                    } else {
-                        tempList.add(temp.clone());
-                    }
-                }
-                temp = happenBeforeGraph.getPo(temp);
-            }
-            if (tempList.size() > 0) {
-                lists.add(tempList);
-            }
-        }
-        if (!node.getInvocation().getMethodName().equals("containsValue")) {
-            return lists;
-        }
-        for (HBGNode startNode : happenBeforeGraph.getStartNodes()) {
-            List<HBGNode> tempList = new ArrayList<>();
-            HBGNode temp = startNode;
-            while (happenBeforeGraph.getPo(temp) != null) {
-                if (isRelated(node.getInvocation(), temp.getInvocation(), keys)) {
-                    tempList.add(temp.clone());
-                }
-                temp = happenBeforeGraph.getPo(temp);
-            }
-            if (tempList.size() > 0) {
-                lists.add(tempList);
-            }
-        }
-        System.out.println(lists.toString());
-        return lists;
-    }
+//    public List<List<HBGNode>> getRelatedOperations(HBGNode node, HappenBeforeGraph happenBeforeGraph) {
+//        List<List<HBGNode>> lists = new ArrayList<>();
+//        Set<Integer> keys = new HashSet<>();
+//        for (HBGNode startNode : happenBeforeGraph.getStartNodes()) {
+//            List<HBGNode> tempList = new ArrayList<>();
+//            HBGNode temp = startNode;
+//            while (happenBeforeGraph.getPo(temp) != null) {
+//                if (this.isRelated(node.getInvocation(), temp.getInvocation())) {
+//                    if (node.getInvocation().getMethodName().equals("containsValue")) {
+//                        keys.add((Integer) temp.getInvocation().getArguments().get(0));
+//                    } else {
+//                        tempList.add(temp.clone());
+//                    }
+//                }
+//                temp = happenBeforeGraph.getPo(temp);
+//            }
+//            if (tempList.size() > 0) {
+//                lists.add(tempList);
+//            }
+//        }
+//        if (!node.getInvocation().getMethodName().equals("containsValue")) {
+//            return lists;
+//        }
+//        for (HBGNode startNode : happenBeforeGraph.getStartNodes()) {
+//            List<HBGNode> tempList = new ArrayList<>();
+//            HBGNode temp = startNode;
+//            while (happenBeforeGraph.getPo(temp) != null) {
+//                if (isRelated(node.getInvocation(), temp.getInvocation(), keys)) {
+//                    tempList.add(temp.clone());
+//                }
+//                temp = happenBeforeGraph.getPo(temp);
+//            }
+//            if (tempList.size() > 0) {
+//                lists.add(tempList);
+//            }
+//        }
+//        System.out.println(lists.toString());
+//        return lists;
+//    }
 
     private boolean isRelated(Invocation src, Invocation dest, Set<Integer> keys) {
         if (!src.getMethodName().equals("containsValue")) {

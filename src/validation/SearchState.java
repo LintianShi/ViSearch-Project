@@ -15,12 +15,9 @@ public class SearchState implements Serializable, Comparable<SearchState> {
     public static transient HappenBeforeGraph happenBeforeGraph;
     private Linearization linearization;
     private LinVisibility visibility;
-    private transient ManualRecurse manualRecurse = null;
     private transient Set<HBGNode> visibleNodes = null;
-    private transient List<HBGNode> candidateNodes = null;
-    private transient int adtState = 0;
+    private transient ManualRecurse manualRecurse = null;
     private transient VisibilityType visibilityType;
-    private transient List<ImmutablePair<Integer, Integer>> tempHBRelations = new ArrayList<>();
 
     public SearchState() {
         this.linearization = new Linearization();
@@ -42,45 +39,12 @@ public class SearchState implements Serializable, Comparable<SearchState> {
     }
 
     public List<SearchState> linExtent() {
-        Set<HBGNode> adjacencyNodes;
-        if (linearization.size() == 0) {
-            adjacencyNodes = happenBeforeGraph.getNodesWithoutPrev();
-        } else {
-            adjacencyNodes = linearization.getAdjacencyNodes(happenBeforeGraph);
-            for (HBGNode node : happenBeforeGraph.getNodesWithoutPrev()) {
-                if (!linearization.contains(node)) {   //没有前驱的节点
-                    adjacencyNodes.add(node);
-                }
-            }
-        }
-        List<Linearization> newLins = linearization.extendLin(adjacencyNodes);
-
-        List<List<ImmutablePair<Integer, Integer>>> tempHBRelations = new ArrayList<>();
-        if (happenBeforeGraph.isRuleTableExist()) {
-            for (Linearization lin :newLins) {
-                HBGNode lastNode = lin.getLast();
-                List<ImmutablePair<Integer, Integer>> tempList = new ArrayList<>(this.tempHBRelations);
-                List<ImmutablePair<Integer, Integer>> relatedIncompatibleRelations = happenBeforeGraph.getRelatedIncompatibleRelations(lastNode);
-                for (ImmutablePair<Integer, Integer> pair : relatedIncompatibleRelations) {
-                    if (!linearization.contains(pair.getRight())) {
-                        tempList.addAll(happenBeforeGraph.getIncompatibleRelations(pair));
-                    }
-                }
-                tempHBRelations.add(tempList);
-            }
-        }
-
+        List<Linearization> newLins = linearization.extendLin();
         List<SearchState> newStates = new ArrayList<>();
         for (int i = 0; i < newLins.size(); i++) {
             SearchState newState = new SearchState(newLins.get(i), (LinVisibility) visibility.clone());
-            if (happenBeforeGraph.isRuleTableExist()) {
-                for (ImmutablePair<Integer, Integer> pair : tempHBRelations.get(i)) {
-                    newState.addTempHBRelation(pair);
-                }
-            }
             newStates.add(newState);
         }
-
         return newStates;
     }
 
@@ -88,7 +52,7 @@ public class SearchState implements Serializable, Comparable<SearchState> {
         this.visibilityType = visibilityType;
         if (manualRecurse == null) {
             visibleNodes = getVisibleNodes();
-            candidateNodes = getCandinateNodes();
+            List<HBGNode> candidateNodes = getCandinateNodes(visibleNodes);
             this.manualRecurse = new ManualRecurse(candidateNodes);
         }
         List<HBGNode> subset = null;
@@ -103,37 +67,43 @@ public class SearchState implements Serializable, Comparable<SearchState> {
 
     private Set<HBGNode> getVisibleNodes() {
         Set<HBGNode> visibleNodes = new HashSet<>();
-        if (visibilityType == VisibilityType.CAUSAL) {
+        if (visibilityType == VisibilityType.COMPLETE) {
+            for (HBGNode node : linearization) {
+                visibleNodes.add(node);
+            }
+        }  else if (visibilityType == VisibilityType.MONOTONIC || visibilityType == VisibilityType.PEER || visibilityType == VisibilityType.CAUSAL) {
             HBGNode node = linearization.getLast();
-            Set<HBGNode> prevs = happenBeforeGraph.getAllPrevs(node);
+            List<HBGNode> prevs = node.getAllPrevs();
             for (HBGNode prev : prevs) {
                 visibleNodes.addAll(visibility.getNodeVisibility(prev));
             }
             visibleNodes.addAll(prevs);
             visibleNodes.add(node);
-        } else if (visibilityType == VisibilityType.COMPLETE) {
-            for (int i = 0; i < linearization.size(); i++) {
-                visibleNodes.add(linearization.get(i));
-            }
-            //System.out.println("complete");
         } else if (visibilityType == VisibilityType.BASIC) {
-            HBGNode node = linearization.get(linearization.size() - 1);
-            Set<HBGNode> prevs = happenBeforeGraph.getAllPrevs(node);
+            HBGNode node = linearization.getLast();
+            List<HBGNode> prevs = node.getAllPrevs();
             visibleNodes.addAll(prevs);
             visibleNodes.add(node);
         } else if (visibilityType == VisibilityType.WEAK) {
-            HBGNode node = linearization.get(linearization.size() - 1);
+            HBGNode node = linearization.getLast();
             visibleNodes.add(node);
         }
-
         return visibleNodes;
     }
 
-    private List<HBGNode> getCandinateNodes() {
+    private List<HBGNode> getCandinateNodes(Set<HBGNode> visibleNodes) {
         List<HBGNode> candidate = new ArrayList<>();
-        for (HBGNode node1 : linearization) {
-            if (!visibleNodes.contains(node1)) {
-                candidate.add(node1);
+        if (visibilityType == VisibilityType.COMPLETE) {
+            ;
+        } else if (visibilityType == VisibilityType.WEAK) {
+            for (int i = 0; i < linearization.size() - 1; i++) {
+                candidate.add(linearization.get(i));
+            }
+        } else {
+            for (HBGNode node : linearization) {
+                if (!visibleNodes.contains(node)) {
+                    candidate.add(node);
+                }
             }
         }
         return candidate;
@@ -155,14 +125,6 @@ public class SearchState implements Serializable, Comparable<SearchState> {
         return visibility;
     }
 
-    public int getAdtState() {
-        return adtState;
-    }
-
-    public void setAdtState(int adtState) {
-        this.adtState = adtState;
-    }
-
     public List<Pair> extractHBRelation() {
         List<Pair> hbs = new ArrayList<>();
         for (int i = 1; i < linearization.size(); i++) {
@@ -173,14 +135,6 @@ public class SearchState implements Serializable, Comparable<SearchState> {
             }
         }
         return hbs;
-    }
-
-    public void addTempHBRelation(ImmutablePair<Integer, Integer> pair) {
-        tempHBRelations.add(pair);
-    }
-
-    public List<ImmutablePair<Integer, Integer>> getTempHBRelations() {
-        return tempHBRelations;
     }
 
     public int compareTo(SearchState o) {

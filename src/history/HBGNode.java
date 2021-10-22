@@ -5,6 +5,8 @@ import java.util.*;
 
 public class HBGNode implements Serializable {
     private Invocation invocation;
+    private HBGNode prev = null;
+    private HBGNode next = null;
 
     public HBGNode() {
         ;
@@ -29,6 +31,32 @@ public class HBGNode implements Serializable {
 
     public Invocation getInvocation() {
         return invocation;
+    }
+
+    public void setNext(HBGNode next) {
+        this.next = next;
+    }
+
+    public void setPrev(HBGNode prev) {
+        this.prev = prev;
+    }
+
+    public HBGNode getNext() {
+        return next;
+    }
+
+    public HBGNode getPrev() {
+        return prev;
+    }
+
+    public List<HBGNode> getAllPrevs() {
+        List<HBGNode> result = new LinkedList<>();
+        HBGNode node = this;
+        while (node.getPrev() != null) {
+            node = node.getPrev();
+            result.add(node);
+        }
+        return result;
     }
 
     @Override
