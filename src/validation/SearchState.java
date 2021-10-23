@@ -156,7 +156,7 @@ public class SearchState implements Serializable, Comparable<SearchState> {
     }
 
     public String toString() {
-        return Integer.toString(adtState) + ":" + linearization.toString() + " | " + visibility.toString();
+        return linearization.toString() + " | " + visibility.toString();
     }
 
 }

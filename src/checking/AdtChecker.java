@@ -3,7 +3,7 @@ package checking;
 import datatype.AbstractDataType;
 import datatype.RiakSet;
 import history.HappenBeforeGraph;
-import traceprocessing.RawTraceProcessor;
+import traceprocessing.RedisTraceProcessor;
 import validation.*;
 
 import java.io.FileInputStream;
@@ -64,13 +64,8 @@ public class AdtChecker {
     }
 
     protected HappenBeforeGraph load(String filename) {
-        RawTraceProcessor rp = new RawTraceProcessor();
-        try {
-            rp.load(filename);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        HappenBeforeGraph happenBeforeGraph = rp.generateProgram(adt).generateHappenBeforeGraph();
+        RedisTraceProcessor rp = new RedisTraceProcessor();
+        HappenBeforeGraph happenBeforeGraph = rp.generateProgram(filename, adt).generateHappenBeforeGraph();
         return happenBeforeGraph;
     }
 

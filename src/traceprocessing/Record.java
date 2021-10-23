@@ -13,12 +13,8 @@ public class Record implements Comparable<Record> {
     private List<String> arguments = new ArrayList<>();
     private String retValue;
 
-    public Record(String line) throws Exception {
+    public Record(String line) {
         String[] cols = line.split(",");
-        if (cols.length < 4) {
-            System.out.println(line);
-            throw new Exception(line);
-        }
         this.startTime = Long.parseLong(cols[0]);
         this.endTime = Long.parseLong(cols[1]);
         this.operationName = cols[2];
@@ -46,6 +42,16 @@ public class Record implements Comparable<Record> {
 
     public String getArgument(int index) {
         return arguments.get(index);
+    }
+
+    @Override
+    public String toString() {
+        String str = operationName + ":";
+        for (String arg : arguments) {
+            str += " " + arg;
+        }
+        str += "=" + retValue;
+        return str;
     }
 
     @Override

@@ -30,7 +30,7 @@ public class MultiThreadSearch {
         try {
             for (SearchState state : startStates) {
                 MinimalVisSearch visSearch = new MinimalVisSearch((SearchConfiguration) configuration.clone());
-                visSearch.init((HappenBeforeGraph) happenBeforeGraph.clone(), state);
+                visSearch.init(happenBeforeGraph, state);
                 searchs.add(new SearchThread(visSearch, countDownLatch));
             }
         } catch (Exception e) {

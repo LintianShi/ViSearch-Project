@@ -15,9 +15,18 @@ public class RiakSet extends AbstractDataType {
             operationTypes.setOperationType("remove", "UPDATE");
             operationTypes.setOperationType("add", "UPDATE");
             operationTypes.setOperationType("contains", "QUERY");
+            operationTypes.setOperationType("size", "QUERY");
             return operationTypes.getOperationType(methodName);
         } else {
             return operationTypes.getOperationType(methodName);
+        }
+    }
+
+    public boolean isReadCluster(Invocation invocation) {
+        if (invocation.getMethodName().equals("contains")) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -63,6 +72,8 @@ public class RiakSet extends AbstractDataType {
             invocation.addArguments(Integer.parseInt(record.getArgument(0)));
         } else if (record.getOperationName().equals("contains")) {
             invocation.addArguments(Integer.parseInt(record.getArgument(0)));
+        } else if (record.getOperationName().equals("size")) {
+           ;
         } else {
             System.out.println("Unknown operation");
         }
@@ -92,5 +103,9 @@ public class RiakSet extends AbstractDataType {
         } else {
             return "false";
         }
+    }
+
+    public String size(Invocation invocation) {
+        return Integer.toString(data.size());
     }
 }

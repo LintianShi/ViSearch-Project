@@ -239,7 +239,6 @@ public class RedisRpq extends AbstractDataType {
 
     public String max(Invocation invocation) {
         return max();
-        //return invocation.getMethodName();
     }
 }
 

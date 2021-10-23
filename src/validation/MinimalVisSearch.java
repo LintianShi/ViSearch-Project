@@ -31,17 +31,17 @@ public class MinimalVisSearch {
         }
     }
 
-    private void addTempHBRelations(Collection<ImmutablePair<Integer, Integer>> tempRelations) {
-        for (ImmutablePair<Integer, Integer> pair : tempRelations) {
-            happenBeforeGraph.addHBRelation(pair.right, pair.left);
-        }
-    }
-
-    private void removeTempHBRelations(Collection<ImmutablePair<Integer, Integer>> tempRelations) {
-        for (ImmutablePair<Integer, Integer> pair : tempRelations) {
-            happenBeforeGraph.removeHBRelation(pair.right, pair.left);
-        }
-    }
+//    private void addTempHBRelations(Collection<ImmutablePair<Integer, Integer>> tempRelations) {
+//        for (ImmutablePair<Integer, Integer> pair : tempRelations) {
+//            happenBeforeGraph.addHBRelation(pair.right, pair.left);
+//        }
+//    }
+//
+//    private void removeTempHBRelations(Collection<ImmutablePair<Integer, Integer>> tempRelations) {
+//        for (ImmutablePair<Integer, Integer> pair : tempRelations) {
+//            happenBeforeGraph.removeHBRelation(pair.right, pair.left);
+//        }
+//    }
 
     public void init(HappenBeforeGraph happenBeforeGraph, SearchState initState) {
         SearchState.happenBeforeGraph = happenBeforeGraph;
@@ -65,9 +65,9 @@ public class MinimalVisSearch {
                 && (configuration.getQueueLimit() == -1 || priorityQueue.size() < configuration.getQueueLimit())) {
 
             SearchState state = priorityQueue.poll();
-            if (configuration.isEnableIncompatibleRelation()) {
-                addTempHBRelations(state.getTempHBRelations());
-            }
+//            if (configuration.isEnableIncompatibleRelation()) {
+//                addTempHBRelations(state.getTempHBRelations());
+//            }
 
             int times = 0;
             while (state.nextVisibility(configuration.getVisibilityType()) != -1 && !exit
@@ -85,35 +85,6 @@ public class MinimalVisSearch {
                     }
                     List<SearchState> list =state.linExtent();
                     priorityQueue.offer(state);
-                    if (configuration.isEnableOutputSchedule() && list.size() == 0) {
-                        System.out.println("empty!!!");
-                        Set<HBGNode> expansion = new HashSet<>();
-                        for (HBGNode node : state.getLinearization()) {
-                            for (HBGNode next :happenBeforeGraph.getNexts(node)) {
-                                if (!state.getLinearization().contains(next)) {
-                                    expansion.add(next);
-                                }
-                            }
-                        }
-                        System.out.println(expansion.toString());
-                        for (HBGNode node : expansion) {
-                            boolean flag = true;
-                            for (HBGNode prev : happenBeforeGraph.getPrevs(node)) {
-                                if (!state.getLinearization().contains(prev)) {    //节点所有的前驱必须都已经被包含在全序里
-                                    flag = false;
-                                    System.out.println(node.toString() + "--fail:" + prev.toString());
-                                }
-                            }
-                            if (flag) {
-                                System.out.println("success:" + node.toString());
-                            }
-                        }
-
-                        if (happenBeforeGraph.detectCircle()) {
-                            System.out.println("circle detected!!!");
-                            return false;
-                        }
-                    }
                     for (SearchState newState : list) {
                         priorityQueue.offer(newState);
                     }
@@ -122,9 +93,9 @@ public class MinimalVisSearch {
                     handlePrickOperation(state);
                 }
             }
-            if (configuration.isEnableIncompatibleRelation()) {
-                removeTempHBRelations(state.getTempHBRelations());
-            }
+//            if (configuration.isEnableIncompatibleRelation()) {
+//                removeTempHBRelations(state.getTempHBRelations());
+//            }
         }
         return false;
     }

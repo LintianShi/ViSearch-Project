@@ -1,14 +1,8 @@
 package history;
 
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-import datatype.AbstractDataType;
 import datatype.RiakSet;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import arbitration.Linearization;
-import traceprocessing.RawTraceProcessor;
-import validation.HBGPreprocessor;
+import traceprocessing.RedisTraceProcessor;
 
 import java.util.*;
 
@@ -72,16 +66,6 @@ public class HappenBeforeGraph implements Iterable<HBGNode>, Cloneable {
 
     public List<HBGNode> getStartNodes() {
         return startNodes;
-    }
-
-    public static void main(String[] args) throws Exception {
-        RawTraceProcessor rp = new RawTraceProcessor();
-        try {
-            rp.load("set_trace/Set_default_3_3_300_2");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RiakSet()).generateHappenBeforeGraph();
     }
 }
 

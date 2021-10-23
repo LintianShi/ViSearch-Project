@@ -3,13 +3,7 @@ package test;
 import datatype.AbstractDataType;
 import datatype.RedisRpq;
 import history.HappenBeforeGraph;
-import traceprocessing.RawTraceProcessor;
-import validation.MinimalVisSearch;
-import validation.MultiThreadSearch;
-import validation.SearchConfiguration;
-import validation.SearchState;
-
-import java.util.List;
+import traceprocessing.RedisTraceProcessor;
 
 public class TestMultiThreadCheck {
         public static void minimalExtensionRaLinCheck(String output, HappenBeforeGraph happenBeforeGraph, AbstractDataType adt) {
@@ -81,9 +75,8 @@ public class TestMultiThreadCheck {
         }
 
         public static void main(String[] args) throws Exception {
-            RawTraceProcessor rp = new RawTraceProcessor();
-            rp.load("trace");
-            HappenBeforeGraph happenBeforeGraph = rp.generateProgram(new RedisRpq()).generateHappenBeforeGraph();
+            RedisTraceProcessor rp = new RedisTraceProcessor();
+            HappenBeforeGraph happenBeforeGraph = rp.generateProgram("trace", new RedisRpq()).generateHappenBeforeGraph();
 
             //test.TestMinimalRALinCheck.minimalExtensionRaLinCheck("result.txt", happenBeforeGraph, new RedisRpq());
         }
