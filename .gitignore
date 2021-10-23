@@ -4,5 +4,6 @@
 *.obj
 *.json
 *.txt
-/.idea/workspace.xml
+/lib/
+/.idea/
 *.zip
