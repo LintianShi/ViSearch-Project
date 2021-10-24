@@ -11,15 +11,10 @@ import java.util.PriorityQueue;
 public class ManualRecurse {
     private PriorityQueue<StateFrame> frameStack = new PriorityQueue<>();
     private List<HBGNode> elements;
-    private boolean[] isPruned;
     private boolean start = false;
 
     public ManualRecurse(List<HBGNode> elements) {
         this.elements = elements;
-        isPruned = new boolean[elements.size()];
-        for (int i = 0; i < elements.size(); i++) {
-            isPruned[i] = false;
-        }
     }
 
     public List<HBGNode> enumerate() {
@@ -61,21 +56,18 @@ public class ManualRecurse {
         data.add(new HBGNode(new Invocation(), 3));
         data.add(new HBGNode(new Invocation(), 4));
         data.add(new HBGNode(new Invocation(), 5));
+        data.add(new HBGNode(new Invocation(), 6));
+        data.add(new HBGNode(new Invocation(), 7));
         ManualRecurse manualRecurse = new ManualRecurse(data);
 
         List<HBGNode> subset = null;
         while ((subset = manualRecurse.enumerate()) != null) {
-//            if (subset.size() == 1 && subset.get(0).getId() == 2)
-//            if (subset.size() == 2 && subset.get(0).getId() == 3 && subset.get(1).getId() == 4)
-//            if (subset.size() == 0)
-//                manualRecurse.prune(subset);
             for (HBGNode node : subset) {
                 System.out.print(node.getId());
                 System.out.print(" ");
             }
             System.out.println();
         }
-
     }
 }
 

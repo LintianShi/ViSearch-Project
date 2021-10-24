@@ -73,7 +73,7 @@ class CheckerThread implements Runnable {
                 .setEnableIncompatibleRelation(false)
                 .setEnablePrickOperation(false)
                 .setEnableOutputSchedule(false)
-                .setVisibilityType(VisibilityType.BASIC)
+                .setVisibilityType(VisibilityType.MONOTONIC)
                 .setFindAllAbstractExecution(false)
                 .build();
         result = checker.normalCheck(filename, configuration, false);

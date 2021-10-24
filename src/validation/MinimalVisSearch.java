@@ -62,7 +62,6 @@ public class MinimalVisSearch {
     public boolean checkConsistency() {
         AbstractDataType adt = configuration.getAdt();
         while (!priorityQueue.isEmpty() && !exit
-                && (configuration.getSearchLimit() == -1 || stateExplored < configuration.getSearchLimit())
                 && (configuration.getQueueLimit() == -1 || priorityQueue.size() < configuration.getQueueLimit())) {
 
             SearchState state = priorityQueue.poll();
@@ -70,24 +69,18 @@ public class MinimalVisSearch {
 //                addTempHBRelations(state.getTempHBRelations());
 //            }
 
-            int times = 0;
             List<HBGNode> subset = null;
-            while ((subset = state.nextVisibility(configuration.getVisibilityType())) != null && !exit
-                    && (times < configuration.getVisibilityLimit()
-                        || configuration.getVisibilityLimit() == -1
-                        || (configuration.getVisibilityLimit() == 0 && times < state.size()))) {
-                times++;
+            while ((subset = state.nextVisibility(configuration.getVisibilityType())) != null && !exit) {
                 stateExplored++;
-//                System.out.println(state.toString());
                 if (executeCheck(adt, state)) {
                     if (state.isComplete()) {
+                        System.out.println(stateExplored);
+                        System.out.println(state.toString());
                         results.add(state);
-//                        System.out.println("Explored State: " + stateExplored);
                         if (!configuration.isFindAllAbstractExecution()) {
                             return true;
                         }
                     }
-                    System.out.println(subset.toString());
                     state.pruneVisibility(subset);
                     List<SearchState> list =state.linExtent();
                     priorityQueue.offer(state);
@@ -97,12 +90,13 @@ public class MinimalVisSearch {
                     break;
                } else {
                     handlePrickOperation(state);
-                }
+               }
             }
 //            if (configuration.isEnableIncompatibleRelation()) {
 //                removeTempHBRelations(state.getTempHBRelations());
 //            }
         }
+        System.out.println(stateExplored);
         return false;
     }
 
