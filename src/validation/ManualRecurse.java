@@ -31,7 +31,6 @@ public class ManualRecurse {
         }
 
         while (!frameStack.isEmpty()) {
-            //System.out.println(frameStack);
             StateFrame state = frameStack.poll();
             if (state.isPruned) {
                 continue;
@@ -39,11 +38,9 @@ public class ManualRecurse {
             if (state.index == elements.size()) {
                 return state.stack;
             }
-            if (!isPruned[state.index]) {
-                ArrayList<HBGNode> temp = (ArrayList<HBGNode>) state.stack.clone();
-                temp.add(elements.get(state.index));
-                frameStack.offer(new StateFrame(temp, state.index + 1));
-            }
+            ArrayList<HBGNode> temp = (ArrayList<HBGNode>) state.stack.clone();
+            temp.add(elements.get(state.index));
+            frameStack.offer(new StateFrame(temp, state.index + 1));
             frameStack.offer(new StateFrame((ArrayList<HBGNode>)state.stack.clone(), state.index + 1));
         }
         return null;
@@ -54,9 +51,6 @@ public class ManualRecurse {
             if (stateFrame.stack.containsAll(list)) {
                 stateFrame.isPruned = true;
             }
-        }
-        for (HBGNode node : list) {
-            isPruned[elements.indexOf(node)] = true;
         }
     }
 

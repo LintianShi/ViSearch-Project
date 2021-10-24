@@ -19,7 +19,6 @@ public class RiakTraceProcessor extends TraceProcessor {
                     for (int j = 0; j < Integer.parseInt(header[i+1]); j++) {
                         temp = br.readLine();
                         Record record = new Record(temp);
-                        System.out.println(record.toString());
                         thread.add(record);
                     }
                     rawTrace.add(thread);

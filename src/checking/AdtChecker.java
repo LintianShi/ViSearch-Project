@@ -4,6 +4,7 @@ import datatype.AbstractDataType;
 import datatype.RiakSet;
 import history.HappenBeforeGraph;
 import traceprocessing.RedisTraceProcessor;
+import traceprocessing.RiakTraceProcessor;
 import validation.*;
 
 import java.io.FileInputStream;
@@ -20,15 +21,14 @@ public class AdtChecker {
         this.adt = adt;
     }
 
-    public void normalCheck(String input, SearchConfiguration configuration, boolean enablePreprocess) {
+    public boolean normalCheck(String input, SearchConfiguration configuration, boolean enablePreprocess) {
         HappenBeforeGraph happenBeforeGraph = load(input);
         if (enablePreprocess) {
             preprocess(happenBeforeGraph);
         }
         this.vfs = new MinimalVisSearch(configuration);
         this.vfs.init(happenBeforeGraph);
-        this.vfs.checkConsistency();
-        //outputResult(input + "/result.obj", vfs.getResults());
+        return this.vfs.checkConsistency();
     }
 
     public void multiThreadCheck(String input, SearchConfiguration configuration, boolean enablePreprocess) {
@@ -64,7 +64,7 @@ public class AdtChecker {
     }
 
     protected HappenBeforeGraph load(String filename) {
-        RedisTraceProcessor rp = new RedisTraceProcessor();
+        RiakTraceProcessor rp = new RiakTraceProcessor();
         HappenBeforeGraph happenBeforeGraph = rp.generateProgram(filename, adt).generateHappenBeforeGraph();
         return happenBeforeGraph;
     }

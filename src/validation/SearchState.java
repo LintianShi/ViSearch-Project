@@ -48,7 +48,7 @@ public class SearchState implements Serializable, Comparable<SearchState> {
         return newStates;
     }
 
-    public int nextVisibility(VisibilityType visibilityType) {
+    public List<HBGNode> nextVisibility(VisibilityType visibilityType) {
         this.visibilityType = visibilityType;
         if (manualRecurse == null) {
             visibleNodes = getVisibleNodes();
@@ -58,11 +58,13 @@ public class SearchState implements Serializable, Comparable<SearchState> {
         List<HBGNode> subset = null;
         if ((subset = manualRecurse.enumerate()) != null) {
             Set<HBGNode> vis = new HashSet<>(visibleNodes);
-            vis.addAll(visClosure(subset));
+            vis.addAll(subset);
             visibility.updateNodeVisibility(linearization.getLast(), vis);
-            return 0;
         }
-        return -1;
+        return subset;
+    }
+    public void pruneVisibility(List<HBGNode> vis) {
+        manualRecurse.prune(vis);
     }
 
     private Set<HBGNode> getVisibleNodes() {
@@ -107,14 +109,6 @@ public class SearchState implements Serializable, Comparable<SearchState> {
             }
         }
         return candidate;
-    }
-
-    private Set<HBGNode> visClosure(List<HBGNode> vis) {
-        Set<HBGNode> closure = new HashSet<>(vis);
-        for (HBGNode node : vis) {
-            closure.addAll(visibility.getNodeVisibility(node));
-        }
-        return closure;
     }
 
     public Linearization getLinearization() {

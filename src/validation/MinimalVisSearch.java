@@ -25,6 +25,7 @@ public class MinimalVisSearch {
         SearchState.happenBeforeGraph = happenBeforeGraph;
         this.happenBeforeGraph = happenBeforeGraph;
         SearchState startState = new SearchState();
+        startState.getLinearization().addFront(happenBeforeGraph.getStartNodes());
         priorityQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
         for (SearchState newState : startState.linExtent()) {
             priorityQueue.offer(newState);
@@ -70,19 +71,24 @@ public class MinimalVisSearch {
 //            }
 
             int times = 0;
-            while (state.nextVisibility(configuration.getVisibilityType()) != -1 && !exit
+            List<HBGNode> subset = null;
+            while ((subset = state.nextVisibility(configuration.getVisibilityType())) != null && !exit
                     && (times < configuration.getVisibilityLimit()
                         || configuration.getVisibilityLimit() == -1
                         || (configuration.getVisibilityLimit() == 0 && times < state.size()))) {
                 times++;
                 stateExplored++;
+//                System.out.println(state.toString());
                 if (executeCheck(adt, state)) {
                     if (state.isComplete()) {
                         results.add(state);
+//                        System.out.println("Explored State: " + stateExplored);
                         if (!configuration.isFindAllAbstractExecution()) {
                             return true;
                         }
                     }
+                    System.out.println(subset.toString());
+                    state.pruneVisibility(subset);
                     List<SearchState> list =state.linExtent();
                     priorityQueue.offer(state);
                     for (SearchState newState : list) {

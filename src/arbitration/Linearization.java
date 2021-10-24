@@ -41,6 +41,10 @@ public class Linearization implements Serializable, Iterable<HBGNode> {
         return false;
     }
 
+    public void addFront(List<HBGNode> nodes) {
+        front.addAll(nodes);
+    }
+
     public HBGNode getLast() {
         return lin.get(lin.size() - 1);
     }
@@ -92,6 +96,9 @@ public class Linearization implements Serializable, Iterable<HBGNode> {
         List<Linearization> extentLins = new ArrayList<>();
         for (int i = 0; i < front.size(); i++) {
             HBGNode node = front.get(i);
+            if (node == null) {
+                continue;
+            }
             Linearization linearization = (Linearization) this.clone();
             linearization.add(node);
             linearization.front.set(i, node.getNext());
