@@ -74,8 +74,8 @@ public class MinimalVisSearch {
                 stateExplored++;
                 if (executeCheck(adt, state)) {
                     if (state.isComplete()) {
-                        System.out.println(stateExplored);
-                        System.out.println(state.toString());
+//                        System.out.println(stateExplored);
+//                        System.out.println(state.toString());
                         results.add(state);
                         if (!configuration.isFindAllAbstractExecution()) {
                             return true;
@@ -96,7 +96,7 @@ public class MinimalVisSearch {
 //                removeTempHBRelations(state.getTempHBRelations());
 //            }
         }
-        System.out.println(stateExplored);
+        //System.out.println(stateExplored);
         return false;
     }
 
