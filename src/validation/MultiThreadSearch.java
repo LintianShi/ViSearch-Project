@@ -1,6 +1,5 @@
 package validation;
 
-import datatype.AbstractDataType;
 import history.HappenBeforeGraph;
 
 import java.util.ArrayList;
@@ -8,10 +7,9 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 public class MultiThreadSearch {
-    private int threadNum = 6;
     private SearchConfiguration configuration;
     private HappenBeforeGraph happenBeforeGraph;
-    private List<SearchThread> searchs = new ArrayList<>();
+    private List<SearchThread> searchThreads = new ArrayList<>();
     private List<SearchState> results = new ArrayList<>();
 
     public MultiThreadSearch(HappenBeforeGraph happenBeforeGraph, SearchConfiguration configuration) {
@@ -24,29 +22,29 @@ public class MultiThreadSearch {
     }
 
     public void startSearch(List<SearchState> startStates) {
-        threadNum = startStates.size();
+        int threadNum = startStates.size();
         System.out.println(threadNum);
         CountDownLatch countDownLatch = new CountDownLatch(1);
         try {
             for (SearchState state : startStates) {
                 MinimalVisSearch visSearch = new MinimalVisSearch((SearchConfiguration) configuration.clone());
                 visSearch.init(happenBeforeGraph, state);
-                searchs.add(new SearchThread(visSearch, countDownLatch));
+                searchThreads.add(new SearchThread(visSearch, countDownLatch));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
 
-        for (SearchThread search : searchs) {
+        for (SearchThread search : searchThreads) {
             new Thread(search).start();
         }
         try {
             countDownLatch.await();
-            for (SearchThread search : searchs) {
+            for (SearchThread search : searchThreads) {
                 search.stop();
             }
-            for (SearchThread search : searchs) {
+            for (SearchThread search : searchThreads) {
                 if (search.isExit()) {
                     results.addAll(search.getResults());
                 }

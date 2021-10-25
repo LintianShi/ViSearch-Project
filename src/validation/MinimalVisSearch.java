@@ -19,6 +19,7 @@ public class MinimalVisSearch {
 
     public MinimalVisSearch(SearchConfiguration configuration) {
         this.configuration = configuration;
+        SearchState.visibilityType = configuration.getVisibilityType();
     }
 
     public void init(HappenBeforeGraph happenBeforeGraph) {
@@ -70,12 +71,12 @@ public class MinimalVisSearch {
 //            }
 
             List<HBGNode> subset = null;
-            while ((subset = state.nextVisibility(configuration.getVisibilityType())) != null && !exit) {
+            while ((subset = state.nextVisibility()) != null && !exit) {
                 stateExplored++;
                 if (executeCheck(adt, state)) {
                     if (state.isComplete()) {
 //                        System.out.println(stateExplored);
-//                        System.out.println(state.toString());
+                        System.out.println(state.toString());
                         results.add(state);
                         if (!configuration.isFindAllAbstractExecution()) {
                             return true;

@@ -17,7 +17,7 @@ public class SearchState implements Serializable, Comparable<SearchState> {
     private LinVisibility visibility;
     private transient Set<HBGNode> visibleNodes = null;
     private transient ManualRecurse manualRecurse = null;
-    private transient VisibilityType visibilityType;
+    public static VisibilityType visibilityType;
 
     public SearchState() {
         this.linearization = new Linearization();
@@ -48,8 +48,7 @@ public class SearchState implements Serializable, Comparable<SearchState> {
         return newStates;
     }
 
-    public List<HBGNode> nextVisibility(VisibilityType visibilityType) {
-        this.visibilityType = visibilityType;
+    public List<HBGNode> nextVisibility() {
         if (manualRecurse == null) {
             visibleNodes = getVisibleNodes();
             List<HBGNode> candidateNodes = getCandinateNodes(visibleNodes);
@@ -58,11 +57,36 @@ public class SearchState implements Serializable, Comparable<SearchState> {
         List<HBGNode> subset = null;
         if ((subset = manualRecurse.enumerate()) != null) {
             Set<HBGNode> vis = new HashSet<>(visibleNodes);
-            vis.addAll(subset);
+            if (visibilityType == VisibilityType.CAUSAL || visibilityType == VisibilityType.PEER) {
+                vis.addAll(closure(subset));
+                //vis = closure(vis);
+            } else {
+                vis.addAll(subset);
+            }
             visibility.updateNodeVisibility(linearization.getLast(), vis);
         }
         return subset;
     }
+
+    private Set<HBGNode> closure(Collection<HBGNode> nodes) {
+        if (visibilityType == VisibilityType.CAUSAL) {
+            Set<HBGNode> result = new HashSet<>();
+            for (HBGNode node : nodes) {
+                result.addAll(visibility.getNodeVisibility(node));
+            }
+            return result;
+        } else if (visibilityType == VisibilityType.PEER) {
+            Set<HBGNode> result = new HashSet<>();
+            for (HBGNode node : nodes) {
+                result.addAll(node.getAllPrevs());
+            }
+            return result;
+        } else {
+            return new HashSet<>();
+        }
+    }
+
+
     public void pruneVisibility(List<HBGNode> vis) {
         manualRecurse.prune(vis);
     }

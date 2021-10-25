@@ -68,7 +68,7 @@ public class SetChecker {
                 .setEnableIncompatibleRelation(false)
                 .setEnablePrickOperation(false)
                 .setEnableOutputSchedule(false)
-                .setVisibilityType(VisibilityType.BASIC)
+                .setVisibilityType(VisibilityType.CAUSAL)
                 .setFindAllAbstractExecution(false)
                 .build();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -86,9 +86,9 @@ public class SetChecker {
         String str = null;
         int i = 0;
         while ((str = br.readLine()) != null) {
-            if (i >= 34)
+            //if (i >= 34)
                 new SetChecker().testTrace(str);
-            i++;
+            //i++;
         }
     }
 }
@@ -111,7 +111,7 @@ class CheckerThread implements Runnable {
                 .setEnableIncompatibleRelation(false)
                 .setEnablePrickOperation(false)
                 .setEnableOutputSchedule(false)
-                .setVisibilityType(VisibilityType.COMPLETE)
+                .setVisibilityType(VisibilityType.CAUSAL)
                 .setFindAllAbstractExecution(false)
                 .build();
         result = checker.normalCheck(filename, configuration, false);
