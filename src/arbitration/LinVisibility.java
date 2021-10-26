@@ -35,7 +35,7 @@ public class LinVisibility implements Serializable, Iterable<HBGNode> {
         String result = "";
         for (Map.Entry<HBGNode, Set<HBGNode>> entry : visibility.entrySet()) {
             if (entry.getValue().size() > 1) {
-                result += entry.toString() + ", ";
+                result += entry.toString() + "\n";
             }
         }
         return result;

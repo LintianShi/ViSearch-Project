@@ -162,4 +162,8 @@ public class RiakMap extends AbstractDataType {
             return "false";
         }
     }
+
+    public String size(Invocation invocation) {
+        return Integer.toString(data.size());
+    }
 }

@@ -76,7 +76,7 @@ public class MinimalVisSearch {
                 if (executeCheck(adt, state)) {
                     if (state.isComplete()) {
 //                        System.out.println(stateExplored);
-//                        System.out.println(state.toString());
+                        System.out.println(state.toString());
                         results.add(state);
                         if (!configuration.isFindAllAbstractExecution()) {
                             return true;

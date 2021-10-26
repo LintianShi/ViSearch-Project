@@ -60,7 +60,7 @@ public class SetChecker {
                 .setEnableIncompatibleRelation(false)
                 .setEnablePrickOperation(false)
                 .setEnableOutputSchedule(false)
-                .setVisibilityType(VisibilityType.BASIC)
+                .setVisibilityType(VisibilityType.PEER)
                 .setFindAllAbstractExecution(false)
                 .build();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -80,16 +80,16 @@ public class SetChecker {
     }
 
     public static void main(String[] args) throws Exception {
-        //new SetChecker().testTrace("D:\\set311_with_size\\result\\set311_default_5_3_15_1634985195455.trc");
+        new SetChecker().testTrace("D:\\set311_with_size\\result\\set311_default_5_3_15_1634987852347.trc", true);
 //        new SetChecker().testDataSet("D:\\set311_with_size\\result", true);
-        BufferedReader br = new BufferedReader(new FileReader(new File("experiment_data/set311_complete_violation.txt")));
-        String str = null;
-        int i = 0;
-        while ((str = br.readLine()) != null) {
-            //if (i >= 34)
-                new SetChecker().testTrace(str, true);
-            //i++;
-        }
+//        BufferedReader br = new BufferedReader(new FileReader(new File("experiment_data/set311_complete_violation.txt")));
+//        String str = null;
+//        int i = 0;
+//        while ((str = br.readLine()) != null) {
+//            //if (i >= 34)
+//                new SetChecker().testTrace(str, true);
+//            //i++;
+//        }
     }
 }
 
