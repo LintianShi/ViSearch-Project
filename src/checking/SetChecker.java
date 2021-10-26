@@ -18,7 +18,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class SetChecker {
-    public void testDataSet(String filepath) throws Exception {
+    public void testDataSet(String filepath, boolean enableMulti) throws Exception {
         File baseFile = new File(filepath);
         if (baseFile.isFile() || !baseFile.exists()) {
             throw new FileNotFoundException();
@@ -27,22 +27,14 @@ public class SetChecker {
         int i = 0;
         for (File file : files) {
             i++;
-            CountDownLatch countDownLatch = new CountDownLatch(1);
-            CheckerThread checkerThread = new CheckerThread(file.toString(), countDownLatch);
-            Thread thread = new Thread(checkerThread);
-            thread.start();
-            countDownLatch.await(180, TimeUnit.SECONDS);
-            thread.stop();
             if (i % 1000 == 0) {
                 System.out.println(i);
             }
-            if (!checkerThread.result) {
-                System.out.println(file.toString() + ":" + checkerThread.result);
-            }
+            testTrace(file.toString(), enableMulti);
         }
     }
 
-    public void testDataSet(List<String> dataset) throws Exception {
+    public void testDataSet(List<String> dataset, boolean enableMulti) throws Exception {
         int i = 0;
         for (String file : dataset) {
             i++;
@@ -61,19 +53,27 @@ public class SetChecker {
         }
     }
 
-    public void testTrace(String filename) throws Exception {
+    public void testTrace(String filename, boolean enableMulti) throws Exception {
         AdtChecker checker = new AdtChecker(new RiakSet());
         SearchConfiguration configuration = new SearchConfiguration.Builder()
                 .setAdt(new RiakSet())
                 .setEnableIncompatibleRelation(false)
                 .setEnablePrickOperation(false)
                 .setEnableOutputSchedule(false)
-                .setVisibilityType(VisibilityType.CAUSAL)
+                .setVisibilityType(VisibilityType.BASIC)
                 .setFindAllAbstractExecution(false)
                 .build();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println("Starting " + df.format(new Date()));
-        Boolean result = checker.normalCheck(filename, configuration, false);
+        Boolean result;
+        if (enableMulti) {
+            result = checker.multiThreadCheck(filename, configuration, false);
+        } else {
+            result = checker.normalCheck(filename, configuration, false);
+        }
+//        if (!result) {
+//            System.out.println(filename + ":" + result);
+//        }
         System.out.println("Finishing " + df.format(new Date()));
         System.out.println(filename + ":" + result);
         System.out.println();
@@ -81,13 +81,13 @@ public class SetChecker {
 
     public static void main(String[] args) throws Exception {
         //new SetChecker().testTrace("D:\\set311_with_size\\result\\set311_default_5_3_15_1634985195455.trc");
-        //new SetChecker().testDataSet("D:\\set322_with_size\\result");
+//        new SetChecker().testDataSet("D:\\set311_with_size\\result", true);
         BufferedReader br = new BufferedReader(new FileReader(new File("experiment_data/set311_complete_violation.txt")));
         String str = null;
         int i = 0;
         while ((str = br.readLine()) != null) {
             //if (i >= 34)
-                new SetChecker().testTrace(str);
+                new SetChecker().testTrace(str, true);
             //i++;
         }
     }

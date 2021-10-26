@@ -5,70 +5,85 @@ import history.HappenBeforeGraph;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MultiThreadSearch {
     private SearchConfiguration configuration;
-    private HappenBeforeGraph happenBeforeGraph;
+    private static HappenBeforeGraph happenBeforeGraph;
     private List<SearchThread> searchThreads = new ArrayList<>();
-    private List<SearchState> results = new ArrayList<>();
 
     public MultiThreadSearch(HappenBeforeGraph happenBeforeGraph, SearchConfiguration configuration) {
-        this.happenBeforeGraph = happenBeforeGraph;
+        MultiThreadSearch.happenBeforeGraph = happenBeforeGraph;
         this.configuration = configuration;
     }
 
-    public List<SearchState> getResults() {
-        return results;
-    }
 
-    public void startSearch(List<SearchState> startStates) {
+    public boolean startSearch(List<SearchState> startStates) {
         int threadNum = startStates.size();
-        System.out.println(threadNum);
-        CountDownLatch countDownLatch = new CountDownLatch(1);
-        try {
-            for (SearchState state : startStates) {
-                MinimalVisSearch visSearch = new MinimalVisSearch((SearchConfiguration) configuration.clone());
-                visSearch.init(happenBeforeGraph, state);
-                searchThreads.add(new SearchThread(visSearch, countDownLatch));
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+//        System.out.println(threadNum);
+        SearchLock searchLock = new SearchLock(threadNum);
+        for (SearchState state : startStates) {
+            MinimalVisSearch visSearch = new MinimalVisSearch((SearchConfiguration) configuration.clone());
+            visSearch.init(happenBeforeGraph, state);
+            searchThreads.add(new SearchThread(visSearch, searchLock));
         }
-
 
         for (SearchThread search : searchThreads) {
             new Thread(search).start();
         }
-        try {
-            countDownLatch.await();
-            for (SearchThread search : searchThreads) {
-                search.stop();
-            }
-            for (SearchThread search : searchThreads) {
-                if (search.isExit()) {
-                    results.addAll(search.getResults());
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        searchLock.hold();
+        for (SearchThread search : searchThreads) {
+            search.stop();
         }
+        return searchLock.getResult();
+    }
+}
 
+class SearchLock {
+    private final int size;
+    private AtomicBoolean satisfication = new AtomicBoolean(false);
+    private AtomicInteger finished = new AtomicInteger(0);
+
+    public SearchLock(int size) {
+        this.size = size;
+    }
+
+    public void hold() {
+        while (!satisfication.get() && finished.get() < size) {
+            ;
+        }
+    }
+
+    public void finish() {
+        finished.incrementAndGet();
+    }
+
+    public void find() {
+        satisfication.set(true);
+    }
+
+    public boolean getResult() {
+        return satisfication.get();
     }
 }
 
 class SearchThread implements Runnable {
     private MinimalVisSearch visSearch;
-    private CountDownLatch countDownLatch;
-    private List<SearchState> results;
+    private SearchLock searchLock;
 
-    public SearchThread(MinimalVisSearch visSearch, CountDownLatch countDownLatch) {
+    public SearchThread(MinimalVisSearch visSearch, SearchLock searchLock) {
         this.visSearch = visSearch;
-        this.countDownLatch = countDownLatch;
+        this.searchLock = searchLock;
     }
 
     public void run() {
-        if (visSearch.checkConsistency()) {
-            countDownLatch.countDown();
+        boolean result = visSearch.checkConsistency();
+        if (result) {
+            searchLock.find();
+            searchLock.finish();
+        } else {
+            searchLock.finish();
         }
     }
 

@@ -9,7 +9,7 @@ import java.util.*;
 
 public class MinimalVisSearch {
     private SearchStatePriorityQueue priorityQueue;
-    private HappenBeforeGraph happenBeforeGraph;
+    private static HappenBeforeGraph happenBeforeGraph;
     private SearchConfiguration configuration;
     private int stateExplored = 0;
     private HashMap<HBGNode, Integer> prickOperationCounter = new HashMap<>();
@@ -24,7 +24,7 @@ public class MinimalVisSearch {
 
     public void init(HappenBeforeGraph happenBeforeGraph) {
         SearchState.happenBeforeGraph = happenBeforeGraph;
-        this.happenBeforeGraph = happenBeforeGraph;
+        MinimalVisSearch.happenBeforeGraph = happenBeforeGraph;
         SearchState startState = new SearchState();
         startState.getLinearization().addFront(happenBeforeGraph.getStartNodes());
         priorityQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
@@ -47,14 +47,14 @@ public class MinimalVisSearch {
 
     public void init(HappenBeforeGraph happenBeforeGraph, SearchState initState) {
         SearchState.happenBeforeGraph = happenBeforeGraph;
-        this.happenBeforeGraph = happenBeforeGraph;
+        MinimalVisSearch.happenBeforeGraph = happenBeforeGraph;
         priorityQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
         priorityQueue.offer(initState);
     }
 
     public void init(HappenBeforeGraph happenBeforeGraph, List<SearchState> initStates) {
         SearchState.happenBeforeGraph = happenBeforeGraph;
-        this.happenBeforeGraph = happenBeforeGraph;
+        MinimalVisSearch.happenBeforeGraph = happenBeforeGraph;
         priorityQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
         for (SearchState state : initStates)
         priorityQueue.offer(state);
@@ -76,7 +76,7 @@ public class MinimalVisSearch {
                 if (executeCheck(adt, state)) {
                     if (state.isComplete()) {
 //                        System.out.println(stateExplored);
-                        System.out.println(state.toString());
+//                        System.out.println(state.toString());
                         results.add(state);
                         if (!configuration.isFindAllAbstractExecution()) {
                             return true;

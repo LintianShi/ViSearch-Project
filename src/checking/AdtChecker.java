@@ -31,32 +31,31 @@ public class AdtChecker {
         return this.vfs.checkConsistency();
     }
 
-    public void multiThreadCheck(String input, SearchConfiguration configuration, boolean enablePreprocess) {
+    public boolean multiThreadCheck(String input, SearchConfiguration configuration, boolean enablePreprocess) {
         HappenBeforeGraph happenBeforeGraph = load(input);
         if (enablePreprocess) {
             preprocess(happenBeforeGraph);
         }
-        SearchConfiguration configuration1 = new SearchConfiguration.Builder()
-                                                                .setAdt(new RiakSet())
+        SearchConfiguration subConfiguration = new SearchConfiguration.Builder()
+                                                                .setVisibilityType(configuration.getVisibilityType())
+                                                                .setAdt(configuration.getAdt().createInstance())
                                                                 .setEnableIncompatibleRelation(false)
-                                                                .setEnableOutputSchedule(true)
+                                                                .setEnableOutputSchedule(false)
                                                                 .setEnablePrickOperation(false)
                                                                 .setFindAllAbstractExecution(false)
                                                                 .setVisibilityLimit(-1)
-                                                                .setQueueLimit(10)
+                                                                .setQueueLimit(4)
                                                                 .setSearchMode(1)
                                                                 .setSearchLimit(-1)
                                                                 .build();
-        MinimalVisSearch vfs1 = new MinimalVisSearch(configuration1);
-        vfs1.init(happenBeforeGraph);
-        vfs1.checkConsistency();
-        System.out.println("starting multithread");
-        List<SearchState> states = vfs1.getAllSearchState();
-        System.out.println(states.size());
+        MinimalVisSearch subVfs = new MinimalVisSearch(subConfiguration);
+        subVfs.init(happenBeforeGraph);
+        subVfs.checkConsistency();
+//        System.out.println("starting multithread");
+        List<SearchState> states = subVfs.getAllSearchState();
 
         MultiThreadSearch multiThreadSearch = new MultiThreadSearch(happenBeforeGraph, configuration);
-        multiThreadSearch.startSearch(states);
-        //outputResult(input + "/result.obj", multiThreadSearch.getResults());
+        return multiThreadSearch.startSearch(states);
     }
 
     protected void preprocess(HappenBeforeGraph happenBeforeGraph) {

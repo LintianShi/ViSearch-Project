@@ -7,7 +7,7 @@ public class SearchConfiguration implements Cloneable {
     private int searchMode = 0; // 0: dfs, 1: bfs, 2: h*
     private int searchLimit = -1;
     private int queueLimit = -1;
-    private int visibilityLimit = 0; // -1: unlimited, 0:size of lin
+    private int visibilityLimit = -1; // -1: unlimited, 0:size of lin
     private boolean findAllAbstractExecution = false;
     private boolean enablePrickOperation = true;
     private boolean enableOutputSchedule = true;
