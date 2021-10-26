@@ -1,6 +1,7 @@
 package checking;
 
 import arbitration.VisibilityType;
+import datatype.RiakMap;
 import datatype.RiakSet;
 import traceprocessing.Record;
 import validation.MinimalVisSearch;
@@ -54,34 +55,34 @@ public class SetChecker {
     }
 
     public void testTrace(String filename, boolean enableMulti) throws Exception {
-        AdtChecker checker = new AdtChecker(new RiakSet());
+        AdtChecker checker = new AdtChecker(new RiakMap());
         SearchConfiguration configuration = new SearchConfiguration.Builder()
-                .setAdt(new RiakSet())
+                .setAdt(new RiakMap())
                 .setEnableIncompatibleRelation(false)
                 .setEnablePrickOperation(false)
                 .setEnableOutputSchedule(false)
-                .setVisibilityType(VisibilityType.PEER)
+                .setVisibilityType(VisibilityType.COMPLETE)
                 .setFindAllAbstractExecution(false)
                 .build();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println("Starting " + df.format(new Date()));
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        System.out.println("Starting " + df.format(new Date()));
         Boolean result;
         if (enableMulti) {
             result = checker.multiThreadCheck(filename, configuration, false);
         } else {
             result = checker.normalCheck(filename, configuration, false);
         }
-//        if (!result) {
-//            System.out.println(filename + ":" + result);
-//        }
-        System.out.println("Finishing " + df.format(new Date()));
-        System.out.println(filename + ":" + result);
-        System.out.println();
+        if (!result) {
+            System.out.println(filename + ":" + result);
+        }
+//        System.out.println("Finishing " + df.format(new Date()));
+//        System.out.println(filename + ":" + result);
+//        System.out.println();
     }
 
     public static void main(String[] args) throws Exception {
-        new SetChecker().testTrace("D:\\set311_with_size\\result\\set311_default_5_3_15_1634987852347.trc", true);
-//        new SetChecker().testDataSet("D:\\set311_with_size\\result", true);
+//        new SetChecker().testTrace("D:\\set311_with_size\\result\\set311_default_5_3_15_1634987852347.trc", true);
+        new SetChecker().testDataSet("D:\\map311_with_size\\result", true);
 //        BufferedReader br = new BufferedReader(new FileReader(new File("experiment_data/set311_complete_violation.txt")));
 //        String str = null;
 //        int i = 0;

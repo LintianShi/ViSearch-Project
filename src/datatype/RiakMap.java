@@ -17,6 +17,7 @@ public class RiakMap extends AbstractDataType {
             operationTypes.setOperationType("put", "UPDATE");
             operationTypes.setOperationType("get", "QUERY");
             operationTypes.setOperationType("containsValue", "QUERY");
+            operationTypes.setOperationType("size", "QUERY");
             return operationTypes.getOperationType(methodName);
         } else {
             return operationTypes.getOperationType(methodName);
@@ -115,6 +116,8 @@ public class RiakMap extends AbstractDataType {
             invocation.addArguments(Integer.parseInt(record.getArgument(0)));
         } else if (record.getOperationName().equals("containsValue")) {
             invocation.addArguments(Integer.parseInt(record.getArgument(0)));
+        } else if (record.getOperationName().equals("size")) {
+            ;
         } else {
             System.out.println("Unknown operation");
         }
@@ -134,7 +137,7 @@ public class RiakMap extends AbstractDataType {
     }
 
     public AbstractDataType createInstance() {
-        return new RiakSet();
+        return new RiakMap();
     }
 
     public String put(Invocation invocation) {
