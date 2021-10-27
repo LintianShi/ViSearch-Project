@@ -1,5 +1,5 @@
 package arbitration;
 
 public enum VisibilityType {
-    COMPLETE, CAUSAL, PEER, MONOTONIC, BASIC, WEAK
+    COMPLETE, CAUSAL, PEER, MONOTONIC, BASIC, WEAK;
 }

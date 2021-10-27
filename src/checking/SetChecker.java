@@ -1,15 +1,13 @@
 package checking;
 
 import arbitration.VisibilityType;
+import datatype.RiakMap;
 import datatype.RiakSet;
 import traceprocessing.Record;
 import validation.MinimalVisSearch;
 import validation.SearchConfiguration;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,52 +17,67 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class SetChecker {
-    public void testDataSet(String filepath, boolean enableMulti) throws Exception {
+    public void testDataSet(String filepath, boolean enableMulti, VisibilityType visibilityType) throws Exception {
         File baseFile = new File(filepath);
         if (baseFile.isFile() || !baseFile.exists()) {
             throw new FileNotFoundException();
         }
         File[] files = baseFile.listFiles();
+        BufferedWriter bw = new BufferedWriter(new FileWriter(new File("experiment_data/set321_COMPLETE.txt")));
         int i = 0;
         for (File file : files) {
             i++;
             if (i % 1000 == 0) {
                 System.out.println(i);
             }
-            testTrace(file.toString(), enableMulti);
+            AdtChecker checker = new AdtChecker(new RiakMap());
+            SearchConfiguration configuration = new SearchConfiguration.Builder()
+                    .setAdt(new RiakSet())
+                    .setEnableIncompatibleRelation(false)
+                    .setEnablePrickOperation(false)
+                    .setEnableOutputSchedule(false)
+                    .setVisibilityType(visibilityType)
+                    .setFindAllAbstractExecution(false)
+                    .build();
+            Boolean result = checker.multiThreadCheck(file.toString(), configuration, false);
+            if (!result) {
+                bw.write(file.toString() + "\n");
+            }
         }
+        bw.close();
     }
 
-    public void testDataSet(List<String> dataset, boolean enableMulti) throws Exception {
+    public void testDataSet(List<String> dataset, boolean enableMulti, VisibilityType visibilityType) throws Exception {
+        BufferedWriter bw = new BufferedWriter(new FileWriter(new File("experiment_data/set321_" + visibilityType.name() + ".txt")));
         for (String file : dataset) {
-            testTrace(file, true);
+            testTrace(file, true, visibilityType);
         }
     }
 
-    public void testTrace(String filename, boolean enableMulti) throws Exception {
+    public String testTrace(String filename, boolean enableMulti, VisibilityType visibilityType) throws Exception {
         AdtChecker checker = new AdtChecker(new RiakSet());
         SearchConfiguration configuration = new SearchConfiguration.Builder()
-                .setAdt(new RiakSet())
+                .setAdt(new RiakMap())
                 .setEnableIncompatibleRelation(false)
                 .setEnablePrickOperation(false)
                 .setEnableOutputSchedule(false)
-                .setVisibilityType(VisibilityType.BASIC)
+                .setVisibilityType(visibilityType)
                 .setFindAllAbstractExecution(false)
                 .build();
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println("Starting " + df.format(new Date()));
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        System.out.println("Starting " + df.format(new Date()));
         Boolean result;
         if (enableMulti) {
             result = checker.multiThreadCheck(filename, configuration, false);
         } else {
             result = checker.normalCheck(filename, configuration, false);
         }
-//        if (!result) {
-//            System.out.println(filename + ":" + result);
-//        }
-        System.out.println("Finishing " + df.format(new Date()));
-        System.out.println(filename + ":" + result);
-        System.out.println();
+
+        return filename + ":" + result;
+
+//        System.out.println("Finishing " + df.format(new Date()));
+//        System.out.println(filename + ":" + result);
+//        System.out.println();
     }
 
     public List<String> filter(String filename) throws Exception {
@@ -89,8 +102,17 @@ public class SetChecker {
 //                new SetChecker().testTrace(str, true);
 //            //i++;
 //        }
-        List<String> r = new SetChecker().filter("experiment_data/set311_monotonic.txt");
-        new SetChecker().testDataSet(r, true);
+
+
+        String datatype = "set321";
+        for (int i = 0; i < 6; i++) {
+            if (i == 0) {
+                new SetChecker().testDataSet("D:\\" + datatype + "\\result", true, VisibilityType.COMPLETE);
+            } else {
+                List<String> r = new SetChecker().filter("experiment_data/" + datatype + "_" + VisibilityType.values()[i].name() + ".txt");
+                new SetChecker().testDataSet(r, true, VisibilityType.values()[i]);
+            }
+        }
     }
 }
 
