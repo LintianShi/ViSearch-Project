@@ -64,24 +64,23 @@ public class RedisRpq extends AbstractDataType {
 
     public Invocation generateInvocation(Record record) {
         Invocation invocation = new Invocation();
-        if (record.getRetValue().equals("null")) {
-            invocation.setRetValue(record.getRetValue());
-        } else {
-            invocation.setRetValue(record.getRetValue() + ".0");
-        }
+        invocation.setRetValue(record.getRetValue());
         invocation.setMethodName(record.getOperationName());
         invocation.setOperationType(getOperationType(record.getOperationName()));
 
         if (record.getOperationName().equals("add")) {
             invocation.addArguments(Integer.parseInt(record.getArgument(0)));
-            invocation.addArguments(Double.parseDouble(record.getArgument(1)));
+            invocation.addArguments(Integer.parseInt(record.getArgument(1)));
         } else if (record.getOperationName().equals("rem")) {
             invocation.addArguments(Integer.parseInt(record.getArgument(0)));
         } else if (record.getOperationName().equals("incrby")) {
             invocation.addArguments(Integer.parseInt(record.getArgument(0)));
-            invocation.addArguments(Double.parseDouble(record.getArgument(1)));
+            invocation.addArguments(Integer.parseInt(record.getArgument(1)));
         } else if (record.getOperationName().equals("max")) {
-            //
+            String ret = record.getRetValue();
+            if (!ret.equals("null")) {
+                invocation.setRetValue(ret.split(" ")[1]);
+            }
         } else if (record.getOperationName().equals("score")) {
             invocation.addArguments(Integer.parseInt(record.getArgument(0)));
         } else {
@@ -148,13 +147,19 @@ public class RedisRpq extends AbstractDataType {
         data.set(i, temp);
     }
 
-    private void add(int k, Double v)
+    private void add(int k, Integer v)
     {
         if (!map.containsKey(k)) {
             RpqElement element = new RpqElement(k, v);
             map.put(k, element);
             data.add(element);
             shiftUp(data.size() - 1);
+        } else {
+            RpqElement element = map.get(k);
+            if (element.getTemp()) {
+                inc(k, v);
+                element.setTemp(false);
+            }
         }
     }
 
@@ -170,17 +175,23 @@ public class RedisRpq extends AbstractDataType {
         }
     }
 
-    private void inc(int k, Double i)
+    private void inc(int k, int i)
     {
-        if (i.doubleValue() == 0)
+        if (i == 0)
             return;
         if (map.containsKey(k))
         {
             map.get(k).inc(i);
-            if (i.doubleValue() > 0)
+            if (i > 0)
                 shiftUp(map.get(k).getIndex());
             else
                 shiftDown(map.get(k).getIndex());
+        } else {
+            RpqElement element = new RpqElement(k, i);
+            element.setTemp(true);
+            map.put(k, element);
+            data.add(element);
+            shiftUp(data.size() - 1);
         }
     }
 
@@ -191,9 +202,9 @@ public class RedisRpq extends AbstractDataType {
             return "null";
         } else {
             RpqElement max = data.get(0);
-            Double val = max.getVal();
+            Integer val = max.getVal();
             //return "rwfzmax:" + Integer.toString(max.getEle()) + ":" + val.stripTrailingZeros().toPlainString();
-            return Integer.toString(max.getEle()) + " " + val.toString();
+            return  val.toString();
         }
     }
 
@@ -202,7 +213,7 @@ public class RedisRpq extends AbstractDataType {
             //return "rwfzscore:" + Integer.toString(k) + ":" + "NONE";
             return "null";
         } else {
-            Double val = map.get(k).getVal();
+            Integer val = map.get(k).getVal();
             //return "rwfzscore:" + Integer.toString(k) + ":" + val.stripTrailingZeros().toPlainString();
             return val.toString();
         }
@@ -210,7 +221,7 @@ public class RedisRpq extends AbstractDataType {
 
     public String add(Invocation invocation) {
         Integer k = (Integer) invocation.getArguments().get(0);
-        Double i = (Double) invocation.getArguments().get(1);
+        Integer i = (Integer) invocation.getArguments().get(1);
         add(k, i);
         return "null";
         //return invocation.getMethodName() + ":" + Integer.toString(k) + ":" + v.toString();
@@ -225,7 +236,7 @@ public class RedisRpq extends AbstractDataType {
 
     public String incrby(Invocation invocation) {
         Integer k = (Integer) invocation.getArguments().get(0);
-        Double i = (Double) invocation.getArguments().get(1);
+        Integer i = (Integer) invocation.getArguments().get(1);
         inc(k, i);
         return "null";
         //return invocation.getMethodName() + ":" + Integer.toString(k) + ":" + i.toString();
@@ -244,15 +255,16 @@ public class RedisRpq extends AbstractDataType {
 
 class RpqElement {
     private Integer ele;
-    private Double val;
+    private Integer val;
     private Integer index;
+    private Boolean temp = false;
 
-    public RpqElement(Integer ele, Double val) {
+    public RpqElement(Integer ele, Integer val) {
         this.ele = ele;
         this.val = val;
     }
 
-    public Double getVal() {
+    public Integer getVal() {
         return val;
     }
 
@@ -264,7 +276,7 @@ class RpqElement {
         this.ele = ele;
     }
 
-    public void setVal(Double val) {
+    public void setVal(Integer val) {
         this.val = val;
     }
 
@@ -276,7 +288,15 @@ class RpqElement {
         this.index = index;
     }
 
-    public void inc(Double i) {
+    public Boolean getTemp() {
+        return temp;
+    }
+
+    public void setTemp(Boolean temp) {
+        this.temp = temp;
+    }
+
+    public void inc(Integer i) {
         val = val + i;
     }
 

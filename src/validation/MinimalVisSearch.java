@@ -97,7 +97,7 @@ public class MinimalVisSearch {
 //                removeTempHBRelations(state.getTempHBRelations());
 //            }
         }
-        //System.out.println(stateExplored);
+        System.out.println(stateExplored);
         return false;
     }
 

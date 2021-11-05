@@ -60,6 +60,10 @@ public class HappenBeforeGraph implements Iterable<HBGNode>, Cloneable {
         return nodes.size();
     }
 
+    public int threadNum() {
+        return startNodes.size();
+    }
+
     public HBGNode get(int id) {
         return nodes.get(id);
     }

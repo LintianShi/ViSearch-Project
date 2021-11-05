@@ -1,5 +1,6 @@
 package datatype;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import history.Invocation;
 import traceprocessing.Record;
 import validation.OperationTypes;
@@ -30,18 +31,29 @@ public class RedisList extends AbstractDataType {
         String prevId = (String) invocation.getArguments().get(0);
         int index = indexOfKey(prevId);
         if (index != -1) {
-            data.remove(index);
+            data.get(index).setTombstone(true);
         }
         return "null";
     }
 
-    private String get(Invocation invocation) {
-        Integer index = (Integer) invocation.getArguments().get(0);
-        if (index >= 0 && index < data.size()) {
-            ListElement element = data.get(index);
-            return element.getId() + ":" + element.getVal();
+    private String read(Invocation invocation) {
+        if (data.size() == 0) {
+            return "null";
         }
-        return "null";
+        String result = "";
+        int i = 0;
+        for (ListElement element : data) {
+            if (!element.getTombstone()) {
+                result += element.getVal();
+                i++;
+            }
+        }
+        if (i != 0) {
+            return result;
+        } else {
+            return "null";
+        }
+
     }
 
     private int indexOfKey(String id) {
@@ -70,8 +82,8 @@ public class RedisList extends AbstractDataType {
             invocation.addArguments(record.getArgument(2));
         } else if (record.getOperationName().equals("remove")) {
             invocation.addArguments(record.getArgument(0));
-        } else if (record.getOperationName().equals("get")) {
-            invocation.addArguments(Integer.parseInt(record.getArgument(0)));
+        } else if (record.getOperationName().equals("read")) {
+            ;
         } else {
             System.out.println("Unknown operation");
         }
@@ -87,7 +99,7 @@ public class RedisList extends AbstractDataType {
             operationTypes = new OperationTypes();
             operationTypes.setOperationType("insert", "UPDATE");
             operationTypes.setOperationType("remove", "UPDATE");
-            operationTypes.setOperationType("get", "QUERY");
+            operationTypes.setOperationType("read", "QUERY");
             return operationTypes.getOperationType(methodName);
         } else {
             return operationTypes.getOperationType(methodName);
@@ -110,9 +122,11 @@ public class RedisList extends AbstractDataType {
 class ListElement {
     String id;
     String val;
+    Boolean tombstone = false;
     public ListElement(String id, String val) {
         this.id = id;
         this.val = val;
+
     }
 
     public String getId() {
@@ -121,5 +135,13 @@ class ListElement {
 
     public String getVal() {
         return val;
+    }
+
+    public Boolean getTombstone() {
+        return tombstone;
+    }
+
+    public void setTombstone(Boolean tombstone) {
+        this.tombstone = tombstone;
     }
 }

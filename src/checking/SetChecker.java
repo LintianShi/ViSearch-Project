@@ -1,9 +1,7 @@
 package checking;
 
 import arbitration.VisibilityType;
-import datatype.AbstractDataType;
-import datatype.RiakMap;
-import datatype.RiakSet;
+import datatype.*;
 import traceprocessing.Record;
 import validation.MinimalVisSearch;
 import validation.SearchConfiguration;
@@ -30,22 +28,19 @@ public class SetChecker {
         System.out.println("Starting " + df.format(new Date()));
         for (File file : files) {
             i++;
-            if (i % 1000 == 0) {
-                System.out.println(i);
+//            if (i % 1000 == 0) {
+//                System.out.println(i);
+//            }
+//            Boolean result = testTrace(adt, file.toString(), enableMulti, visibilityType);
+//            if (!result) {
+//                System.out.println(file.toString() + ":" + result);
+//            }
+            if (i<69) {
+                continue;
             }
-//            AdtChecker checker = new AdtChecker(new RiakSet());
-//            SearchConfiguration configuration = new SearchConfiguration.Builder()
-//                    .setAdt(new RiakSet())
-//                    .setEnableIncompatibleRelation(false)
-//                    .setEnablePrickOperation(false)
-//                    .setEnableOutputSchedule(false)
-//                    .setVisibilityType(visibilityType)
-//                    .setFindAllAbstractExecution(false)
-//                    .build();
-            Boolean result = testTrace(adt, file.toString(), enableMulti, visibilityType);
-            if (!result) {
-                System.out.println(file.toString() + ":" + result);
-            }
+            System.out.print(file.toString() + ":");
+            String result = measureVisibility(adt.createInstance(), file.toString());
+            System.out.println(result);
         }
         System.out.println("Finishing " + df.format(new Date()));
     }
@@ -101,32 +96,32 @@ public class SetChecker {
         return result;
     }
 
+    public String measureVisibility(AbstractDataType adt, String filename) throws Exception {
+        for (int i = 0; i < 6; i++) {
+            System.out.println("state:" + VisibilityType.values()[i].name());
+            boolean result = testTrace(adt.createInstance(), filename, true, VisibilityType.values()[i]);
+            if (result) {
+                return VisibilityType.values()[i].name();
+            }
+        }
+        return "undefined";
+    }
+
     public static void main(String[] args) throws Exception {
-        //new SetChecker().testTrace("D:\\set311_with_size\\result\\set311_default_5_3_15_1634985195455.trc");
-//        new SetChecker().testDataSet(new RiakMap(), "D:\\map311_with_size\\result", true, VisibilityType.COMPLETE);
-//        new SetChecker().testTrace("D:\\set321\\result\\set321_default_5_3_15_1635249615444.trc", true, VisibilityType.WEAK);
+//        String result = new SetChecker().measureVisibility(new RedisList(), "D:\\list_rwf\\result\\rwf_list_default_1636094400419538430.trc");
+//        System.out.println(result);
+        new SetChecker().testDataSet(new RedisList(), "D:\\list_rwf\\result", true, VisibilityType.COMPLETE);
 
-        List<String> r = new SetChecker().filter("experiment_data/map311_complete.txt");
-        new SetChecker().testDataSet(new RiakMap(), r, true, VisibilityType.CAUSAL);
-//        BufferedReader br = new BufferedReader(new FileReader(new File("experiment_data/set311_complete_violation.txt")));
-//        String str = null;
-//        int i = 0;
-//        while ((str = br.readLine()) != null) {
-//            //if (i >= 34)
-//                new SetChecker().testTrace(str, true);
-//            //i++;
-//        }
+//        boolean result = new SetChecker().testTrace(new RedisRpq(), "D:\\rpq_rwf_1\\result\\rwf_rpq_default_1636084479236446532.trc", true, VisibilityType.WEAK);
+//        System.out.println(result);
+//        boolean result1 = new SetChecker().testTrace(new RedisRpq(), "D:\\rpq_rwf_1\\result\\rwf_rpq_default_1636084634233693904.trc", true, VisibilityType.WEAK);
+//        System.out.println(result1);
 
+//        List<String> r = new SetChecker().filter("experiment_data/list_complete.txt");
+//        new SetChecker().testDataSet(new RedisList(), r, true, VisibilityType.CAUSAL);
 
-//        String datatype = "set321";
-//        for (int i = 0; i < 6; i++) {
-//            if (i == 0) {
-//                new SetChecker().testDataSet("D:\\" + datatype + "\\result", true, VisibilityType.COMPLETE);
-//            } else {
-//                List<String> r = new SetChecker().filter("experiment_data/" + datatype + "_" + VisibilityType.values()[i].name() + ".txt");
-//                new SetChecker().testDataSet(r, true, VisibilityType.values()[i]);
-//            }
-//        }
+//        String result = new SetChecker().measureVisibility(new RedisList(), "D:\\list_rwf\\result\\rwf_list_default_1636094400419538430");
+//        System.out.println(result);
     }
 }
 

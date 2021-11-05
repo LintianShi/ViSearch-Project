@@ -44,15 +44,17 @@ public class AdtChecker {
                                                                 .setEnablePrickOperation(false)
                                                                 .setFindAllAbstractExecution(false)
                                                                 .setVisibilityLimit(-1)
-                                                                .setQueueLimit(4)
+                                                                .setQueueLimit(6)
                                                                 .setSearchMode(1)
                                                                 .setSearchLimit(-1)
                                                                 .build();
         MinimalVisSearch subVfs = new MinimalVisSearch(subConfiguration);
         subVfs.init(happenBeforeGraph);
-        subVfs.checkConsistency();
-//        System.out.println("starting multithread");
+        boolean result = subVfs.checkConsistency();
         List<SearchState> states = subVfs.getAllSearchState();
+        if (states.size() == 0) {
+            return result;
+        }
 
         MultiThreadSearch multiThreadSearch = new MultiThreadSearch(happenBeforeGraph, configuration);
         return multiThreadSearch.startSearch(states);
