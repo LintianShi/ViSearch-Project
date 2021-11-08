@@ -13,7 +13,7 @@ public class SearchConfiguration implements Cloneable {
     private boolean enableOutputSchedule = true;
     private boolean enableIncompatibleRelation = true;
     private VisibilityType visibilityType = VisibilityType.CAUSAL;
-    private AbstractDataType adt = null;
+    private String adt = null;
 
 //    public SearchConfiguration() {
 //        this.searchMode = 0;
@@ -34,17 +34,6 @@ public class SearchConfiguration implements Cloneable {
         this.adt = builder.adt;
     }
 
-//    public SearchConfiguration(int searchMode, int searchLimit, int queueLimit, int visibilityLimit) {
-//        if (searchMode >= 0 && searchMode <= 2) {
-//            this.searchMode = searchMode;
-//        } else {
-//            this.searchMode = 0;
-//        }
-//        this.searchLimit = searchLimit;
-//        this.queueLimit = queueLimit;
-//        this.visibilityLimit = visibilityLimit;
-//    }
-
     public int getSearchMode() {
         return searchMode;
     }
@@ -61,11 +50,11 @@ public class SearchConfiguration implements Cloneable {
         return visibilityLimit;
     }
 
-    public void setAdt(AbstractDataType adt) {
+    public void setAdt(String adt) {
         this.adt = adt;
     }
 
-    public AbstractDataType getAdt() {
+    public String getAdt() {
         return adt;
     }
 
@@ -109,17 +98,6 @@ public class SearchConfiguration implements Cloneable {
         return enableIncompatibleRelation;
     }
 
-    @Override
-    protected Object clone() {
-//                new SearchConfiguration(this.searchMode, this.searchLimit, this.queueLimit, this.visibilityLimit);
-//        configuration.setAdt(adt.createInstance());
-//        configuration.setEnablePrickOperation(this.enablePrickOperation);
-//        configuration.setFindAllAbstractExecution(this.findAllAbstractExecution);
-//        configuration.setVisibilityType(this.visibilityType);
-//        configuration.setEnableOutputSchedule(this.enableOutputSchedule);
-        return new SearchConfiguration.Builder(this).build();
-    }
-
     public static class Builder {
         private int searchMode = 0; // 0: dfs, 1: bfs, 2: h*
         private int searchLimit = -1;
@@ -130,7 +108,7 @@ public class SearchConfiguration implements Cloneable {
         private boolean enableOutputSchedule = true;
         private boolean enableIncompatibleRelation = true;
         private VisibilityType visibilityType = VisibilityType.CAUSAL;
-        private AbstractDataType adt = null;
+        private String adt = null;
 
         public Builder() {
             ;
@@ -146,7 +124,7 @@ public class SearchConfiguration implements Cloneable {
             this.enableOutputSchedule = configuration.enableOutputSchedule;
             this.enableIncompatibleRelation = configuration.enableIncompatibleRelation;
             this.visibilityType = configuration.visibilityType;
-            this.adt = configuration.adt.createInstance();
+            this.adt = configuration.adt;
         }
 
         public Builder setSearchMode(int searchMode) {
@@ -194,7 +172,7 @@ public class SearchConfiguration implements Cloneable {
             return this;
         }
 
-        public Builder setAdt(AbstractDataType adt) {
+        public Builder setAdt(String adt) {
             this.adt = adt;
             return this;
         }

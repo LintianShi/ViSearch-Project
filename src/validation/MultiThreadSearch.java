@@ -3,8 +3,8 @@ package validation;
 import history.HappenBeforeGraph;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -12,6 +12,7 @@ public class MultiThreadSearch {
     private SearchConfiguration configuration;
     private static HappenBeforeGraph happenBeforeGraph;
     private List<SearchThread> searchThreads = new ArrayList<>();
+    private int searchThreadNum = 4;
 
     public MultiThreadSearch(HappenBeforeGraph happenBeforeGraph, SearchConfiguration configuration) {
         MultiThreadSearch.happenBeforeGraph = happenBeforeGraph;
@@ -20,12 +21,15 @@ public class MultiThreadSearch {
 
 
     public boolean startSearch(List<SearchState> startStates) {
-        int threadNum = startStates.size();
-//        System.out.println(threadNum);
-        SearchLock searchLock = new SearchLock(threadNum);
-        for (SearchState state : startStates) {
-            MinimalVisSearch visSearch = new MinimalVisSearch((SearchConfiguration) configuration.clone());
-            visSearch.init(happenBeforeGraph, state);
+        int stateNum = startStates.size();
+        SearchLock searchLock = new SearchLock(searchThreadNum);
+        for (int i = 0; i < searchThreadNum; i++) {
+            List<SearchState> initStates = new LinkedList<>();
+            for (int k = i; k < stateNum; k = k + searchThreadNum) {
+                initStates.add(startStates.get(k));
+            }
+            MinimalVisSearch visSearch = new MinimalVisSearch(configuration);
+            visSearch.init(happenBeforeGraph, initStates);
             searchThreads.add(new SearchThread(visSearch, searchLock));
         }
 

@@ -1,14 +1,16 @@
 package validation;
 
 import datatype.AbstractDataType;
+import datatype.DataTypeFactory;
 import history.HBGNode;
 import history.HappenBeforeGraph;
-import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import java.util.*;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class MinimalVisSearch {
-    private SearchStatePriorityQueue priorityQueue;
+    private SearchStatePriorityQueue stateQueue;
+//    private LinkedBlockingDeque<SearchState> stateQueue = new LinkedBlockingDeque<>();
     private static HappenBeforeGraph happenBeforeGraph;
     private SearchConfiguration configuration;
     private int stateExplored = 0;
@@ -27,9 +29,9 @@ public class MinimalVisSearch {
         MinimalVisSearch.happenBeforeGraph = happenBeforeGraph;
         SearchState startState = new SearchState();
         startState.getLinearization().addFront(happenBeforeGraph.getStartNodes());
-        priorityQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
+        stateQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
         for (SearchState newState : startState.linExtent()) {
-            priorityQueue.offer(newState);
+            stateQueue.offer(newState);
         }
     }
 
@@ -48,24 +50,24 @@ public class MinimalVisSearch {
     public void init(HappenBeforeGraph happenBeforeGraph, SearchState initState) {
         SearchState.happenBeforeGraph = happenBeforeGraph;
         MinimalVisSearch.happenBeforeGraph = happenBeforeGraph;
-        priorityQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
-        priorityQueue.offer(initState);
+        stateQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
+        stateQueue.offer(initState);
     }
 
     public void init(HappenBeforeGraph happenBeforeGraph, List<SearchState> initStates) {
         SearchState.happenBeforeGraph = happenBeforeGraph;
         MinimalVisSearch.happenBeforeGraph = happenBeforeGraph;
-        priorityQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
+        stateQueue = new SearchStatePriorityQueue(configuration.getSearchMode());
         for (SearchState state : initStates)
-        priorityQueue.offer(state);
+            stateQueue.offer(state);
     }
 
     public boolean checkConsistency() {
-        AbstractDataType adt = configuration.getAdt();
-        while (!priorityQueue.isEmpty() && !exit
-                && (configuration.getQueueLimit() == -1 || priorityQueue.size() < configuration.getQueueLimit())) {
+        AbstractDataType adt = new DataTypeFactory().getDataType(configuration.getAdt());
+        while (!stateQueue.isEmpty() && !exit
+                && (configuration.getQueueLimit() == -1 || stateQueue.size() < configuration.getQueueLimit())) {
 
-            SearchState state = priorityQueue.poll();
+            SearchState state = stateQueue.poll();
 //            if (configuration.isEnableIncompatibleRelation()) {
 //                addTempHBRelations(state.getTempHBRelations());
 //            }
@@ -84,9 +86,9 @@ public class MinimalVisSearch {
                     }
                     state.pruneVisibility(subset);
                     List<SearchState> list =state.linExtent();
-                    priorityQueue.offer(state);
+                    stateQueue.offer(state);
                     for (SearchState newState : list) {
-                        priorityQueue.offer(newState);
+                        stateQueue.offer(newState);
                     }
                     break;
                } else {
@@ -97,14 +99,14 @@ public class MinimalVisSearch {
 //                removeTempHBRelations(state.getTempHBRelations());
 //            }
         }
-        System.out.println(stateExplored);
+//        System.out.println(stateExplored);
         return false;
     }
 
     public List<SearchState> getAllSearchState() {
         List<SearchState> states = new ArrayList<>();
-        while (!priorityQueue.isEmpty()) {
-            states.add(priorityQueue.poll());
+        while (!stateQueue.isEmpty()) {
+            states.add(stateQueue.poll());
         }
         return states;
     }
