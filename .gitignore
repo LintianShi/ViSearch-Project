@@ -1,4 +1,5 @@
 /out/
+/target/
 /commons-lang3-3.10/
 *.trc
 *.obj

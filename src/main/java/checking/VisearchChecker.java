@@ -1,20 +1,21 @@
 package checking;
 
 import arbitration.VisibilityType;
-import datatype.AbstractDataType;
 import datatype.DataTypeFactory;
-import datatype.RiakSet;
 import history.HappenBeforeGraph;
-import traceprocessing.RedisTraceProcessor;
 import traceprocessing.RiakTraceProcessor;
 import validation.*;
+import static net.sourceforge.argparse4j.impl.Arguments.storeTrue;
+import net.sourceforge.argparse4j.ArgumentParsers;
+import net.sourceforge.argparse4j.inf.ArgumentParser;
+import net.sourceforge.argparse4j.inf.ArgumentParserException;
+import net.sourceforge.argparse4j.inf.Namespace;
 
+import java.util.LinkedList;
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.LinkedBlockingDeque;
 
 public class VisearchChecker {
     private String adt;
@@ -154,7 +155,7 @@ public class VisearchChecker {
 
     public List<String> filter(String filename) throws Exception {
         BufferedReader br = new BufferedReader(new FileReader(new File(filename)));
-        List<String> result = new LinkedList<>();
+        List<String> result = new LinkedList<String>();
         String str = null;
         while ((str = br.readLine()) != null) {
             if (str.endsWith(":false"))
@@ -175,11 +176,34 @@ public class VisearchChecker {
     }
 
     public static void main(String[] args) throws Exception {
-        VisearchChecker checker = new VisearchChecker("list");
+        ArgumentParser parser = ArgumentParsers
+                .newFor("vs")
+                .build()
+                .defaultHelp(true)
+                .description(
+                        "ViSearch: A measurement framework for replicated data type on Vis-Ar weak consistency");
+        parser.addArgument("-t", "--type").help(". Data type for checking")
+                .type(String.class);
+        parser.addArgument("-v", "--vis").help(". Visibility Level")
+                .type(String.class);
+        parser.addArgument("--measure").help(". Enable measure")
+                .action(storeTrue());
+        parser.addArgument("--dataset").help(". Checking for data set")
+                .action(storeTrue());
+        Namespace res;
+        try {
+            res = parser.parseArgs(args);
+            System.out.println(res);
+        } catch (ArgumentParserException e) {
+            parser.handleError(e);
+            System.exit(1);
+        }
+
+//        VisearchChecker checker = new VisearchChecker("list");
 //        checker.testDataSet( "D:\\list_rwf_1\\result", true, VisibilityType.CAUSAL);
 
-        List<String> r = checker.filter("experiment_data/list_causal.txt");
-        checker.testDataSet( r, true, VisibilityType.BASIC);
+//        List<String> r = checker.filter("experiment_data/list_causal.txt");
+//        checker.testDataSet( r, true, VisibilityType.BASIC);
 //        checker.measureDataSet(r);
     }
 }
