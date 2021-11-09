@@ -1,7 +1,10 @@
 /out/
+/target/
 /commons-lang3-3.10/
 *.trc
 *.obj
 *.json
 *.txt
-/.idea/workspace.xml
+/lib/
+/.idea/
+*.zip
