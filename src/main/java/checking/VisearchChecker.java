@@ -205,32 +205,38 @@ public class VisearchChecker {
                 .description(
                         "ViSearch: A measurement framework for replicated data type on Vis-Ar weak consistency");
         parser.addArgument("-t", "--type").help(". Data type for checking")
-                .type(String.class);
+                .type(String.class)
+                .dest("type");
         parser.addArgument("-f", "--filepath").help(". File path to check")
-                .type(String.class);
+                .type(String.class)
+                .dest("filepath");
         parser.addArgument("-v", "--vis").help(". Visibility Level")
-                .type(String.class);
+                .type(String.class)
+                .dest("vis")
+                .setDefault("complete");
         parser.addArgument("--measure").help(". Enable measure")
+                .dest("measure")
                 .action(storeTrue());
         parser.addArgument("--dataset").help(". Checking for data set")
+                .dest("dataset")
                 .action(storeTrue());
         Namespace res;
         try {
             res = parser.parseArgs(args);
-            String dataType = res.getString("-t");
-            String filepath = res.getString("-f");
+            String dataType = res.getString("type");
+            String filepath = res.getString("filepath");
             VisearchChecker checker = new VisearchChecker(dataType);
-            if (res.getBoolean("--dataset")) {
-                if (res.getBoolean("--measure")) {
+            if (res.getBoolean("dataset")) {
+                if (res.getBoolean("measure")) {
                     checker.measureDataSet(filepath);
                 } else {
-                    checker.testDataSet(filepath, true, VisibilityType.getVisibility(res.getString("-v")));
+                    checker.testDataSet(filepath, true, VisibilityType.getVisibility(res.getString("vis")));
                 }
             } else {
-                if (res.getBoolean("--measure")) {
+                if (res.getBoolean("measure")) {
                     checker.measureVisibility(filepath);
                 } else {
-                    checker.testTrace(filepath, true, VisibilityType.getVisibility(res.getString("-v")));
+                    checker.testTrace(filepath, true, VisibilityType.getVisibility(res.getString("vis")));
                 }
             }
             System.out.println(res);

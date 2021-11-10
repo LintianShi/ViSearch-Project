@@ -1,6 +1,5 @@
 package datatype;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import history.Invocation;
 import traceprocessing.Record;
 import validation.OperationTypes;
