@@ -145,14 +145,11 @@ public class VisearchChecker {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         System.out.println("Starting " + df.format(new Date()));
         for (File file : files) {
-            i++;
-            if (i % 1000 == 0) {
-                System.out.println(i);
-            }
             String result = measureVisibility(file.toString());
             if (!result.equals("COMPLETE")) {
-                System.out.println(file + ":" + result);
+                System.out.println(i + ":" + file + ":" + result);
             }
+            i++;
         }
         System.out.println("Finishing " + df.format(new Date()));
     }
@@ -187,8 +184,7 @@ public class VisearchChecker {
     }
 
     public String measureVisibility(String filename) throws Exception {
-        for (int i = 1; i < 6; i++) {
-//            System.out.println("state:" + VisibilityType.values()[i].name());
+        for (int i = 0; i < 6; i++) {
             boolean result = testTrace(filename, true, VisibilityType.values()[i]);
             if (result) {
                 return VisibilityType.values()[i].name();
@@ -223,6 +219,7 @@ public class VisearchChecker {
         Namespace res;
         try {
             res = parser.parseArgs(args);
+            System.out.println(res);
             String dataType = res.getString("type");
             String filepath = res.getString("filepath");
             VisearchChecker checker = new VisearchChecker(dataType);
