@@ -1,6 +1,12 @@
-# Visibility-Checking
+# ViSearch
 
-A checking framework for the trace produced by weak-consistent distributed data storage.
+A framework for consistency measurement of replicated data type. 
+
+# INSTALL
+* Java 9, Maven 3.3.9
+* mvn compile & mvn package
+
+# USAGE
 
 # Document
 
