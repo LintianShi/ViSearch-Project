@@ -1,3 +1,9 @@
 [submodule "src/main/java"]
 	path = src/main/java
 	url = https://github.com/LintianShi/ViSearch-Src.git
+[submodule "experiment/crdt-riak"]
+	path = experiment/crdt-riak
+	url = https://github.com/LintianShi/Riak-CRDT-Experiment.git
+[submodule "experiment/crdt-redis"]
+	path = experiment/crdt-redis
+	url = https://github.com/LintianShi/Redis-CRDT-Experiment.git
